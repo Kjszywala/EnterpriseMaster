@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriseMaster.DbServices.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231001134305_initialCreate")]
+    [Migration("20231001140023_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Services", b =>
+            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ApplicationServices", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Services");
+                    b.ToTable("ApplicationServices");
                 });
 #pragma warning restore 612, 618
         }

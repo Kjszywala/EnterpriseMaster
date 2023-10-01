@@ -14,7 +14,7 @@ namespace EnterpriseMaster.DbServices.Models
 
         #region DbSets
 
-        public virtual DbSet<Services> Services { get; set; }
+        public virtual DbSet<ApplicationServices> ApplicationServices { get; set; }
 
         #endregion
     }

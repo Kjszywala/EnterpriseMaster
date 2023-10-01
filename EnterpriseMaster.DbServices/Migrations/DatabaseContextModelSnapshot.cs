@@ -22,7 +22,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Services", b =>
+            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ApplicationServices", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Services");
+                    b.ToTable("ApplicationServices");
                 });
 #pragma warning restore 612, 618
         }

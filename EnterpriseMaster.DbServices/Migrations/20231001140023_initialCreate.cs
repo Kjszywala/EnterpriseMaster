@@ -12,7 +12,7 @@ namespace EnterpriseMaster.DbServices.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Services",
+                name: "ApplicationServices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -28,7 +28,7 @@ namespace EnterpriseMaster.DbServices.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.PrimaryKey("PK_ApplicationServices", x => x.Id);
                 });
         }
 
@@ -36,7 +36,7 @@ namespace EnterpriseMaster.DbServices.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "ApplicationServices");
         }
     }
 }

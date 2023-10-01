@@ -1,6 +1,6 @@
 ﻿namespace EnterpriseMaster.DbServices.Models.Database
 {
-    public class Services : Bases
+    public class ApplicationServices : Bases
     {
         public string ServiceName { get; set; }
         public string Description { get; set; }
