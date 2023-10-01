@@ -1,3 +1,6 @@
+using EnterpriseMaster.DbServices.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EnterpriseMaster.WebApi
 {
@@ -13,7 +16,17 @@ namespace EnterpriseMaster.WebApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+            });
+            builder.Services.AddDbContext<DatabaseContext>(
+                options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("EskinsDbContext"))
+                );
+            //===
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EnterpriseMaster.DbServices.Database
+namespace EnterpriseMaster.DbServices.Models.Database
 {
     public class Bases
     {

@@ -1,4 +1,4 @@
-﻿namespace EnterpriseMaster.DbServices.Database
+﻿namespace EnterpriseMaster.DbServices.Models.Database
 {
     public class Services : Bases
     {
