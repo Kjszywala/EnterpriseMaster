@@ -3,6 +3,8 @@
 	public class Orders : Bases
 	{
         public int Quantity { get; set; }
+        public int? QuantityTypeId { get; set; }
+        public QuantityTypes? QuantityType { get; set; }
         public decimal PricePaid { get; set; }
         public decimal Discount { get; set; }
         public int? CustomerInformationId { get; set; }
