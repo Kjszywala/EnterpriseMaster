@@ -2,6 +2,7 @@
 {
 	public class Products : Bases
 	{
-		public List<Orders>? Orders { get; set; }
+        public string ProductName { get; set; }
+        public List<Orders>? Orders { get; set; }
 	}
 }

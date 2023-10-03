@@ -11,5 +11,6 @@
 		public Employees? Employee { get; set; }
 		public int? ProductId { get; set; }
 		public Products? Product { get; set; }
+		public List<Invoices>? Invoices { get; set; }
 	}
 }

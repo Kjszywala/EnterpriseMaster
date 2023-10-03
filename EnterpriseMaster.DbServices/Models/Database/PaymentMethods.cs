@@ -4,5 +4,6 @@
 	{
         public string PaymentType { get; set; }
 		public byte[]? ItemImage { get; set; }
+		public List<Invoices>? Invoices { get; set; }
 	}
 }
