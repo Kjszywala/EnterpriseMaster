@@ -8,6 +8,5 @@
         public SubscriptionTypes? SubscriptionType { get; set; }
         public int Quantity { get; set; }
         public DateTime CreationDate { get; set; }
-
     }
 }

@@ -6,7 +6,7 @@
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public int? FeatureId { get; set; }
-        public byte[] ItemImage { get; set; }
+        public byte[]? Image { get; set; }
         public ApplicationFeatures? Feature { get; set; }
         public List<Users>? Users { get; set; }
     }

@@ -6,8 +6,8 @@
         public string SecondName { get; set; }
         public string? CompanyName { get; set; }
         public int? SubscriptionTypeId { get; set; }
-        public SubscriptionTypes? SubscriptionType { get; set; }
-
+		public byte[]? Image { get; set; }
+		public SubscriptionTypes? SubscriptionType { get; set; }
 
     }
 }
