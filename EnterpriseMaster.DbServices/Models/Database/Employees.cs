@@ -10,5 +10,7 @@
         public string? Salary { get; set; }
         public DateTime HireDate { get; set; }
         public List<Orders>? Orders { get; set; }
+        public int? EmployeeAddressID { get; set; }
+        public EmployeeAddresses? EmployeeAddress { get; set; }
     }
 }
