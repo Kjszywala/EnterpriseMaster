@@ -9,7 +9,7 @@
 		public SubscriptionTypes? SubscriptionType { get; set; }
 		public byte[]? Image { get; set; }
 		public int? UserAddressId { get; set; }
-		public UsersAdresses? UserAddress { get; set; }
-
+        public bool IsEmployee { get; set; }
+        public UsersAdresses? UserAddress { get; set; }
     }
 }

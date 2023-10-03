@@ -9,5 +9,6 @@
         public string Position { get; set; }
         public string? Salary { get; set; }
         public DateTime HireDate { get; set; }
+        public List<Orders>? Orders { get; set; }
     }
 }

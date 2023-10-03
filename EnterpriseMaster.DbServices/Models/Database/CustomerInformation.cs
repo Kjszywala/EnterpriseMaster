@@ -11,5 +11,6 @@
         public BillingAddresses? BillingAddress { get; set; }
         public int? ShippingAddressId { get; set; }
         public ShippingAddresses? ShippingAddress { get; set; }
-    }
+		public List<Orders>? Orders { get; set; }
+	}
 }
