@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EnterpriseMaster.DbServices.Models.Database
+﻿namespace EnterpriseMaster.DbServices.Models.Database
 {
-    internal class ApplicationBookmarks
+    public class ApplicationBookmarks : Bases
     {
+        public string? Name { get; set; }
+        public string? Page { get; set; }
+        public byte[]? Image { get; set; }
     }
 }
