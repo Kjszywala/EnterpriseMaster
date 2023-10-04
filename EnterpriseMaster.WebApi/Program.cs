@@ -27,7 +27,7 @@ namespace EnterpriseMaster.WebApi
             builder.Services.AddDbContext<DatabaseContext>(
                 options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("EnterpriseMasterDbContext"))
-                );
+            );
 
             //===
             var app = builder.Build();
