@@ -50,7 +50,8 @@
     .sidebar1:hover .sidebar-item span {
         display: block;
         margin-left:10px;
-        margin-top:5px;
+        margin-top: 5px;
+        z-index: 1;
     }
 
     /* Sidebar2 styles */
@@ -58,12 +59,11 @@
         width: calc(100% - 60px); /* Adjust the width based on your sidebar1 width */
         margin-left: 60px; /* Set to the same width as sidebar1 */
         transition: 0.3s;
+        position: relative; /* Add relative positioning */
     }
 
-    /* Expand sidebar2 when sidebar1 is hovered */
-    .sidebar1:hover + .sidebar2 {
-        width: calc(100% - 250px); /* Adjust the width when sidebar1 is expanded */
-        margin-left: 250px; /* Set to the same width as expanded sidebar1 */
+    .page {
+        display: flex;
     }
 
 </style>
