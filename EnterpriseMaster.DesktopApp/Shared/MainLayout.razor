@@ -17,7 +17,6 @@
     /* Sidebar content styles */
     .sidebar-content {
         padding-top: 20px;
-        display: flex;
         flex-direction: column;
         align-items: center;
         color: white;
@@ -26,7 +25,8 @@
     /* Sidebar item styles */
     .sidebar-item {
         padding: 10px;
-        text-align: center;
+        display: flex;
+        text-align: left;
         cursor: pointer;
         transition: 0.3s;
     }
@@ -40,48 +40,31 @@
     .sidebar-item span {
         display: none;
     }
-
+    
     /* Expand the sidebar on hover */
     .sidebar1:hover {
-        width: 200px; /* Expanded width */
-        cursor: inherit;
+        width: 250px; /* Expanded width */
     }
 
     /* Show text when sidebar is expanded */
     .sidebar1:hover .sidebar-item span {
         display: block;
+        margin-left:10px;
+        margin-top:5px;
     }
 
     /* Sidebar2 styles */
-.sidebar2 {
-    width: calc(100% - 60px); /* Adjust the width based on your sidebar1 width */
-    margin-left: 60px; /* Set to the same width as sidebar1 */
-    transition: 0.3s;
-}
-
-/* Expand sidebar2 when sidebar1 is hovered */
-.sidebar1:hover + .sidebar2 {
-    width: calc(100% - 200px); /* Adjust the width when sidebar1 is expanded */
-    margin-left: 200px; /* Set to the same width as expanded sidebar1 */
-}
-
-/* Rest of your styles for the page, content, and other elements */
-.page {
-    /* Add your page styles here */
-}
-
-/* You can also apply responsive styles as needed */
-@@media (max-width: 768px) {
-    /* Adjust styles for smaller screens if necessary */
-    .sidebar1 {
-        width: 0;
-    }
     .sidebar2 {
-        margin-left: 0;
-        width: 100%;
+        width: calc(100% - 60px); /* Adjust the width based on your sidebar1 width */
+        margin-left: 60px; /* Set to the same width as sidebar1 */
+        transition: 0.3s;
     }
-}
 
+    /* Expand sidebar2 when sidebar1 is hovered */
+    .sidebar1:hover + .sidebar2 {
+        width: calc(100% - 250px); /* Adjust the width when sidebar1 is expanded */
+        margin-left: 250px; /* Set to the same width as expanded sidebar1 */
+    }
 
 </style>
 <div class="page">
@@ -92,7 +75,7 @@
                 <span>Home</span>
             </div>
             <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
+                <Icon Name="IconName.Alarm"></Icon>
                 <span>Profile</span>
             </div>
             <div class="sidebar-item">
