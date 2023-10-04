@@ -3,6 +3,7 @@
 	public class Invoices : Bases
 	{
         public string InvoiceNumber { get; set; }
+        public byte[]? Image { get; set; }
         public int? OrderId { get; set; }
         public Orders? Order { get; set; }
         public int? PaymentMethodId { get; set; }
