@@ -16,10 +16,10 @@ namespace EnterpriseMaster.DesktopApp
                 });
 
             builder.Services.AddMauiBlazorWebView();
-
+            builder.Services.AddBlazorBootstrap();
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+            builder.Services.AddBlazorWebViewDeveloperTools();
+		    builder.Logging.AddDebug();
 #endif
 
             builder.Services.AddSingleton<WeatherForecastService>();
