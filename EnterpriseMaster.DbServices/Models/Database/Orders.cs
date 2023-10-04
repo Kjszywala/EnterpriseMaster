@@ -1,11 +1,15 @@
-﻿namespace EnterpriseMaster.DbServices.Models.Database
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EnterpriseMaster.DbServices.Models.Database
 {
 	public class Orders : Bases
 	{
         public int Quantity { get; set; }
         public int? QuantityTypeId { get; set; }
         public QuantityTypes? QuantityType { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal PricePaid { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Discount { get; set; }
         public int? CustomerInformationId { get; set; }
 		public CustomerInformation? CustomerInformation { get; set; }

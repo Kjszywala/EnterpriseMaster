@@ -11,7 +11,7 @@ namespace EnterpriseMaster.DbServices.Models
         public DatabaseContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-            optionsBuilder.UseSqlServer("Server=Kamil;Database=EnterpriseMaster;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
+            optionsBuilder.UseSqlServer("Server=DORD0049\\SQLEXPRESS;Database=EnterpriseMaster;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true;");
 
             return new DatabaseContext(optionsBuilder.Options);
         }

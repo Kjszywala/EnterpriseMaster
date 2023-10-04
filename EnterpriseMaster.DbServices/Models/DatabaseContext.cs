@@ -14,7 +14,30 @@ namespace EnterpriseMaster.DbServices.Models
 
         #region DbSets
 
+        public virtual DbSet<ApplicationBookmarks> ApplicationBookmarks { get; set; }
         public virtual DbSet<ApplicationFeatures> ApplicationFeatures { get; set; }
+        public virtual DbSet<BillingAddresses> BillingAddresses { get; set; }
+        public virtual DbSet<Categories> Categories { get; set; }
+        public virtual DbSet<CustomerInformation> CustomerInformation { get; set; }
+        public virtual DbSet<EmployeeAddresses> EmployeeAddresses { get; set; }
+        public virtual DbSet<Employees> Employees { get; set; }
+        public virtual DbSet<ErrorLogs> ErrorLogs { get; set; }
+        public virtual DbSet<FxRates> FxRates { get; set; }
+        public virtual DbSet<Invoices> Invoices { get; set; }
+        public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<OrderStatuses> OrderStatuses { get; set; }
+        public virtual DbSet<PaymentMethods> PaymentMethods { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<QuantityTypes> QuantityTypes { get; set; }
+        public virtual DbSet<SaleCart> SaleCart { get; set; }
+        public virtual DbSet<ShippingAddresses> ShippingAddresses { get; set; }
+        public virtual DbSet<SubscriptionOrders> SubscriptionOrders { get; set; }
+        public virtual DbSet<SubscriptionTypes> SubscriptionTypes { get; set; }
+        public virtual DbSet<Suppliers> Suppliers { get; set; }
+        public virtual DbSet<SuppliersAddresses> SuppliersAddresses { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<UsersAdresses> UsersAdresses { get; set; }
+        public virtual DbSet<WhatsNew> WhatsNew { get; set; }
 
         #endregion
     }
