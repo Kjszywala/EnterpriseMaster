@@ -5,13 +5,14 @@
     /* Sidebar container styles */
     .sidebar1 {
         width: 60px; /* Initial width when not hovered */
-        background-color: #333;
+        background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
         height: 100%;
         position: fixed;
         left: 0;
         top: 0;
         overflow-x: hidden;
         transition: 0.3s;
+        z-index: 2;
     }
 
     /* Sidebar content styles */
@@ -22,6 +23,10 @@
         color: white;
     }
 
+    .sidebar-item:hover{
+        background-color: blue;
+        border-radius: 10px;
+    }
     /* Sidebar item styles */
     .sidebar-item {
         padding: 10px;
@@ -33,7 +38,7 @@
 
     /* Icon styles */
     .sidebar-item i {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     /* Text styles (hide by default) */
@@ -50,8 +55,7 @@
     .sidebar1:hover .sidebar-item span {
         display: block;
         margin-left:10px;
-        margin-top: 5px;
-        z-index: 1;
+        margin-top: 2px;
     }
 
     /* Sidebar2 styles */
@@ -65,7 +69,9 @@
     .page {
         display: flex;
     }
-
+    .topbar{
+        background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    }
 </style>
 <div class="page">
     <div class="sidebar1" id="sidebar1">
@@ -112,7 +118,7 @@
     </div>
     <div class="sidebar2">
         <main>
-            <div class="top-row px-4">
+            <div class="top-row px-4 topbar">
                 <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
             </div>
 
