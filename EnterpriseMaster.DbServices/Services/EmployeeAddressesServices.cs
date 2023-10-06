@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IEmployeeAddressesServices
     {
         public EmployeeAddressesServices()
-          : base("/api/v1.0/EmployeeAddresses")
+            : base("/api/v1.0/EmployeeAddresses")
         {
         }
     }

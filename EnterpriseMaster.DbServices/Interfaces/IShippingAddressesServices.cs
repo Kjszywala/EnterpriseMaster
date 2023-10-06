@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.DbServices.Interfaces
 {
-    public interface IQuantityTypesServices : IBaseServices<QuantityTypes>
+    public interface IShippingAddressesServices : IBaseServices<ShippingAddresses>
     {
     }
 }

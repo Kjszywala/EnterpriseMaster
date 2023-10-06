@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         ICustomerInformationsServices
     {
         public CustomerInformationsServices()
-          : base("/api/v1.0/CustomerInformations")
+            : base("/api/v1.0/CustomerInformations")
         {
         }
     }

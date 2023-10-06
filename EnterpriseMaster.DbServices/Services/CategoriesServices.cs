@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         ICategoriesServices
     {
         public CategoriesServices()
-           : base("/api/v1.0/Categories")
+            : base("/api/v1.0/Categories")
         {
         }
     }

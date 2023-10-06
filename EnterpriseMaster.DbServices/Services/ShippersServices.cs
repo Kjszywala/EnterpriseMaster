@@ -3,12 +3,12 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    public class InvoicesServices :
-        BaseServices<Invoices>,
-        IInvoicesServices
+    public class ShippersServices :
+        BaseServices<Shippers>,
+        IShippersServices
     {
-        public InvoicesServices()
-            : base("/api/v1.0/Invoices")
+        public ShippersServices()
+           : base("/api/v1.0/Shippers")
         {
         }
     }

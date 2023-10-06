@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EnterpriseMaster.DbServices.Interfaces;
+using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    internal class PaymentMethodsServices
+    public class PaymentMethodsServices :
+        BaseServices<PaymentMethods>,
+        IPaymentMethodsServices
     {
+        public PaymentMethodsServices()
+            : base("/api/v1.0/PaymentMethods")
+        {
+        }
     }
 }

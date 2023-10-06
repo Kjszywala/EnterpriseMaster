@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EnterpriseMaster.DbServices.Interfaces;
+using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    internal class ProductsServices
+    public class ProductsServices :
+        BaseServices<Products>,
+        IProductsServices
     {
+        public ProductsServices()
+            : base("/api/v1.0/Products")
+        {
+        }
     }
 }

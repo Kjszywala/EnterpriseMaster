@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EnterpriseMaster.DbServices.Interfaces;
+using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    internal class SaleCartsServices
+    public class SaleCartsServices :
+        BaseServices<SaleCart>,
+        ISaleCartsServices
     {
+        public SaleCartsServices()
+           : base("/api/v1.0/SaleCart")
+        {
+        }
     }
 }

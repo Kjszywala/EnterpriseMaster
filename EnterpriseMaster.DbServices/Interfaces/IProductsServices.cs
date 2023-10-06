@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Interfaces
 {
-    internal interface IProductsServices
+    public interface IProductsServices : IBaseServices<Products>
     {
     }
 }
