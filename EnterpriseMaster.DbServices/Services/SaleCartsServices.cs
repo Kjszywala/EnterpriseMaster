@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         ISaleCartsServices
     {
         public SaleCartsServices()
-           : base("/api/v1.0/SaleCart")
+            : base("/api/v1.0/SaleCart")
         {
         }
     }
