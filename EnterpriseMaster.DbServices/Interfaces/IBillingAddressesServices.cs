@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.DbServices.Interfaces
 {
-    public interface IApplicationBookmarksServices : IBaseServices<ApplicationBookmarks>
+    public interface IBillingAddressesServices : IBaseServices<BillingAddresses>
     {
     }
 }

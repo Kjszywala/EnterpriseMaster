@@ -3,7 +3,7 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    internal class AppplicationBookmarksServices :
+    public class AppplicationBookmarksServices :
         BaseServices<ApplicationBookmarks>,
         IApplicationBookmarksServices
     {
