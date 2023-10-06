@@ -8,5 +8,7 @@
         public Orders? Order { get; set; }
         public int? PaymentMethodId { get; set; }
         public PaymentMethods? PaymentMethod { get; set; }
+        public int? InvoiceStatusId { get; set; }
+        public InvoiceStatuses? InvoiceStatus { get; set; }
     }
 }
