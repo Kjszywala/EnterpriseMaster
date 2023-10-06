@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using EnterpriseMaster.DbServices.Models;
+using EnterpriseMaster.DbServices.Models.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EnterpriseMaster.DbServices.Models;
-using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class SubscriptionTypesController : ControllerBase
     {
@@ -110,8 +106,9 @@ namespace EnterpriseMaster.WebApi.Controllers
                 return NotFound();
             }
 
-            _context.SubscriptionTypes.Remove(subscriptionTypes);
-            await _context.SaveChangesAsync();
+            subscriptionTypes.ModificationDate = DateTime.Now;
+            subscriptionTypes.IsActive = false;
+            await PutSubscriptionTypes(id, subscriptionTypes);
 
             return NoContent();
         }
