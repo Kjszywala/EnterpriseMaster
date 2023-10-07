@@ -1,44 +1,208 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EnterpriseMaster</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/EnterpriseMaster.styles.css" asp-append-version="true" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Solutions</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+<style>
+/* Reset some default styles */
+body, h1, h2, h3, p {
+margin: 0;
+padding: 0;
+}
+
+body {
+font-family: Arial, sans-serif;
+}
+
+/* Header Styles */
+header {
+background-color: #333;
+color: #fff;
+padding: 20px 0;
+}
+
+nav {
+display: flex;
+justify-content: space-between;
+align-items: center;
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 20px;
+}
+
+.logo h1 {
+font-size: 24px;
+}
+
+nav ul {
+list-style-type: none;
+display: flex;
+}
+
+nav ul li {
+margin-right: 20px;
+}
+
+nav ul li a {
+text-decoration: none;
+color: #fff;
+font-weight: bold;
+}
+
+.hello {
+text-align: center;
+padding: 150px 0;
+color: black;
+}
+
+/* Hero Section Styles */
+.hero {
+background-image: url('hero-bg.jpg');
+background-size: cover;
+text-align: center;
+padding: 150px 0;
+color: #fff;
+}
+
+.hero h2 {
+font-size: 36px;
+margin-bottom: 20px;
+}
+
+.cta-button {
+display: inline-block;
+background-color: #ff6600;
+color: #fff;
+padding: 10px 20px;
+border-radius: 5px;
+text-decoration: none;
+font-weight: bold;
+transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+background-color: #ff9900;
+}
+
+/* Features Section Styles */
+.features {
+max-width: 1200px;
+margin: 0 auto;
+padding: 40px 0;
+}
+
+.features h2 {
+font-size: 32px;
+text-align: center;
+margin-bottom: 40px;
+}
+
+.feature {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.feature img {
+max-width: 100%;
+height: auto;
+}
+
+/* Pricing Section Styles */
+.pricing {
+background-color: #f9f9f9;
+padding: 80px 0;
+}
+
+.pricing h2 {
+font-size: 32px;
+text-align: center;
+margin-bottom: 40px;
+}
+
+.plan {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.price {
+font-size: 24px;
+color: #ff6600;
+margin-top: 10px;
+}
+
+/* Contact Section Styles */
+.contact {
+max-width: 1200px;
+margin: 0 auto;
+padding: 80px 0;
+}
+
+.contact h2 {
+font-size: 32px;
+text-align: center;
+margin-bottom: 40px;
+}
+
+.contact form {
+display: flex;
+flex-direction: column;
+max-width: 400px;
+margin: 0 auto;
+}
+
+.contact input,
+.contact textarea,
+.contact button {
+margin-bottom: 20px;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+.contact button {
+background-color: #ff6600;
+color: #fff;
+font-weight: bold;
+border: none;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.contact button:hover {
+background-color: #ff9900;
+}
+
+/* Footer Styles */
+footer {
+background-color: #333;
+color: #fff;
+text-align: center;
+padding: 20px 0;
+}
+</style>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EnterpriseMaster</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+        <nav>
+            <div class="logo">
+                <h1>Enterprise Master</h1>
             </div>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div>
+        @RenderBody()
     </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - EnterpriseMaster - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p>&copy; 2023 Enterprise Master. All rights reserved.</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

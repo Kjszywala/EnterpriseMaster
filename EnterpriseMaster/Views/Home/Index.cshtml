@@ -2,7 +2,59 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero">
+    <div class="hero-content">
+        <h2>Welcome to ERP Solutions</h2>
+        <p>Your One-Stop Shop for Efficient Business Management</p>
+        <a href="#contact" class="cta-button">Get Started</a>
+    </div>
+</section>
+
+<section id="features" class="features">
+    <h2>Key Features</h2>
+    <div class="feature">
+        <img src="feature1.png" alt="Feature 1">
+        <h3>Feature 1</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+    <div class="feature">
+        <img src="feature2.png" alt="Feature 2">
+        <h3>Feature 2</h3>
+        <p>Proin tristique massa id justo bibendum, sit amet luctus dolor.</p>
+    </div>
+    <div class="feature">
+        <img src="feature3.png" alt="Feature 3">
+        <h3>Feature 3</h3>
+        <p>Suspendisse potenti. Nunc non lacus sit amet elit suscipit euismod.</p>
+    </div>
+</section>
+
+<section id="pricing" class="pricing">
+    <h2>Pricing Plans</h2>
+    <div class="plan">
+        <h3>Basic Plan</h3>
+        <p>Perfect for small businesses</p>
+        <p class="price">$99/month</p>
+    </div>
+    <div class="plan">
+        <h3>Pro Plan</h3>
+        <p>For growing businesses</p>
+        <p class="price">$199/month</p>
+    </div>
+    <div class="plan">
+        <h3>Enterprise Plan</h3>
+        <p>Customized solutions for large enterprises</p>
+        <p class="price">Contact Us</p>
+    </div>
+</section>
+
+<section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <p>Ready to streamline your business operations? Contact us today!</p>
+    <form action="contact.php" method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+</section>
