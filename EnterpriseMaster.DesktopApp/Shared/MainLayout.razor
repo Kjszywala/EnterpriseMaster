@@ -23,11 +23,14 @@
         color: white;
     }
 
-    .sidebar-item:hover{
-        background-color: blue;
-        border-radius: 10px;
-    }
     /* Sidebar item styles */
+
+    .sidebar-item:hover{
+        background-color: #6c757d;
+        border-radius: 10px;
+        border-color: #e9ecef #e9ecef #dee2e6;
+        isolation: isolate
+    }
     .sidebar-item {
         padding: 10px;
         display: flex;
@@ -76,45 +79,9 @@
 <div class="page">
     <div class="sidebar1" id="sidebar1">
         <div class="sidebar-content">
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Home</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm"></Icon>
-                <span>Profile</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Home</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Profile</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Home</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Profile</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Home</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Profile</span>
-            </div>
-            <div class="sidebar-item">
-                <Icon Name="IconName.Alarm" />
-                <span>Home</span>
-            </div>
-            <!-- Add more sidebar items as needed -->
+            <NavMenu />
         </div>
-       @*  <NavMenu /> *@
+         
     </div>
     <div class="sidebar2">
         <main>
