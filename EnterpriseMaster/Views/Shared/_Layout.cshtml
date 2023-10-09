@@ -349,25 +349,15 @@ h1 strong {
 background-color: #bbbbbb;
 }
 .brand {
-  position: fixed;
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--navbar-background-color);
-  visibility: visible;
-  top: 0;
-  left: 22.5%;
-  width: 50%;
-}
-.brand-icon {
-  font-size: 1.8rem;
-  font-weight: bolder;
-  color: rebeccapurple;
-}
-.brand-name {
-  margin-left: 8px;
-  font-weight: bolder;
+position: fixed;
+display: inline-flex;
+flex-direction: row;
+background-color: var(--navbar-background-color);
+visibility: visible;
+top: 0;
+left: 22.5%;
+width: 50%;
+background-color: transparent;
 }
 
 /* helpers */
@@ -475,6 +465,7 @@ background-color: #bbbbbb;
     left: 0;
     transform: translate(0, 0);
     white-space: nowrap;
+    margin-left: 50px;
   }
 }
 @@media (min-width: 1200px) {
@@ -487,6 +478,15 @@ background-color: #bbbbbb;
   .navbar form {
     margin-top: 0;
   }
+}
+
+@@media (max-width: 730px) {
+    .brand {
+        margin-top: 20px;
+        align-items: center;
+        visibility: visible;
+        justify-content: center;
+    }
 }
 
 .input-minimal {
