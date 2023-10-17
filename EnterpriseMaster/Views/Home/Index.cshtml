@@ -8,18 +8,22 @@ img {vertical-align: middle;}
 /* Slideshow container */
 .slideshow-container {
   position: relative;
-  height: 500px;
 }
 
 /* Caption text */
 .text {
-  color: #f2f2f2;
-  font-size: 15px;
-  padding: 8px 12px;
-  position: absolute;
-  bottom: 8px;
-  width: 100%;
-  text-align: center;
+    color: #f2f2f2;
+    font-size: 15px;
+    padding: 8px 12px;
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 /* Number text (1/3 etc) */
@@ -56,79 +60,219 @@ img {vertical-align: middle;}
   from {opacity: .4} 
   to {opacity: 1}
 }
+/* Hero Section Styles */
+.hero {
+text-align: center;
+color: black;
+margin-top: 56px;
+position: relative;
+}
+
+.hero h2 {
+font-size: 36px;
+margin-bottom: 20px;
+}
+
+.cta-button {
+display: inline-block;
+background-color: #6b118f;
+color: #fff;
+padding: 10px 20px;
+border-radius: 5px;
+text-decoration: none;
+font-weight: bold;
+transition: background-color 0.3s ease;
+margin:10px;
+}
+
+.cta-button:hover {
+background-color: #ae13eb;
+}
+/*features*/
+.feature-container {
+display: flex;
+flex-direction: row;
+}
+
+.feature-description {
+flex: 1;
+padding: 20px;
+}
+
+.feature-image {
+flex: 1;
+text-align: right;
+padding: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.feature-image img {
+max-width: 100%;
+height: auto;
+}
+
+/* Pricing Section Styles */
+.pricing {
+background-color: #f9f9f9;
+padding: 80px 0;
+text-align: center;
+}
+
+.pricing h2 {
+font-size: 32px;
+text-align: center;
+margin-bottom: 40px;
+}
+
+.plan {
+flex: 1;
+background-color: #fff;
+border: 1px solid #ccc;
+padding: 20px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+transition: transform 0.2s;
+border-radius: 8px;
+}
+
+.price {
+font-size: 24px;
+color: #ff6600;
+margin-top: 10px;
+}
+
+.pricing {
+text-align: center;
+}
+
+.plan-container {
+display: flex;
+justify-content: space-between;
+margin: 20px auto;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.plan {
+flex: 1;
+background-color: #fff;
+border: 1px solid #ccc;
+padding: 20px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+transition: transform 0.2s;
+height: 400px;
+max-width: 300px;
+}
+
+.plan:hover {
+transform: scale(1.05);
+}
 
 </style>
 <section class="hero">
     <div class="slideshow-container">
         <div class="mySlides fade">
-            <img src="~/content/analyticserp.jpg" style="width:100%; max-height: 500px;">
+            <img src="~/content/analyticserp.jpg" style="width:100%; max-height: 800px;">
             <div class="text">
                 <h2>Welcome to Enterprise Master solutions</h2>
                 <p>Your One-Stop Shop for Efficient Business Management</p>
                 <a href="#contact" class="cta-button">Get Started</a>
             </div>
         </div>
-
-        <div class="mySlides fade">
-            <img src="~/content/boardmeeting.jpg" style="width:100%">
-            <div class="text">
-                <h2>Welcome to Enterprise Master solutions</h2>
-                <p>Your One-Stop Shop for Efficient Business Management</p>
-                <a href="#contact" class="cta-button">Get Started</a>
-            </div>
-        </div>
-
-        <div class="mySlides fade">
-            <img src="~/content/erp.jpg" style="width:100%">
-            <div class="text">
-                <h2>Welcome to Enterprise Master solutions</h2>
-                <p>Your One-Stop Shop for Efficient Business Management</p>
-                <a href="#contact" class="cta-button">Get Started</a>
-            </div>
-        </div>
-    </div>
-    <div style="text-align:center">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
     </div>
 </section>
-
+<br />
 <section id="features" class="features">
-    <h2>Key Features</h2>
-    <div class="feature">
-        <img src="" alt="Feature 1">
-        <h3>Feature 1</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <div class="feature-container">
+        <div class="feature-description">
+            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">Key Advantages of Analytics</h2>
+            <ul style="list-style-type: disc; padding-left: 20px; font-size: 16px; color: #333;">
+                <li><strong>Enhanced Decision-Making:</strong> Analytics enables informed and data-backed decision-making, giving you the upper hand in the marketplace.</li>
+                <li><strong>Optimized Performance:</strong> Uncover opportunities for operational efficiency and cost savings that lead to increased profitability.</li>
+                <li><strong>Deeper Customer Insights:</strong> Understand your customers better, personalize experiences, and foster loyalty through tailored solutions.</li>
+                <li><strong>Market Trend Identification:</strong> Stay ahead of the curve by identifying market trends and adapting your strategies accordingly.</li>
+                <li><strong>Risk Mitigation:</strong> Spot potential risks and challenges early on, allowing you to proactively address issues before they become major setbacks.</li>
+            </ul>
+            <p style="font-size: 16px; line-height: 1.4; color: #333;">
+                Invest in analytics, and watch your business thrive with data-driven success. Whether it's web analytics, business intelligence, or data science, analytics is a powerful tool that can transform your business across various industries and sectors.
+            </p>
+        </div>
+        <div class="feature-image">
+            <img src="~/content/analytics.png" alt="Analytics Image" style="max-width: 100%; height: auto;">
+        </div>
     </div>
-    <div class="feature">
-        <img src="" alt="Feature 2">
-        <h3>Feature 2</h3>
-        <p>Proin tristique massa id justo bibendum, sit amet luctus dolor.</p>
+    <hr />
+    <div class="feature-container">
+        <div class="feature-image">
+            <img src="~/content/salesmanagement.png" alt="Feature 1 Image" style="max-width: 100%; height: auto;">
+        </div>
+        <div class="feature-description">
+            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">Unlock Sales Management Advantages</h2>
+            <p style="font-size: 16px; line-height: 1.4; color: #333;">
+                Effective sales management is your path to success in a competitive marketplace. Discover how managing sales can benefit your business in numerous ways:
+                <ul style="list-style-type: disc; padding-left: 20px; font-size: 16px; color: #333;">
+                    <li><strong>Increased Revenue:</strong> By optimizing your sales processes, you can boost revenue and maximize profits.</li>
+                    <li><strong>Streamlined Operations:</strong> Efficient sales management streamlines your business operations, reducing waste and increasing productivity.</li>
+                    <li><strong>Customer Satisfaction:</strong> Delight your customers with superior service, tailored solutions, and timely responses, leading to enhanced satisfaction and loyalty.</li>
+                    <li><strong>Data-Driven Insights:</strong> Gain valuable data insights that inform your sales strategies, helping you identify opportunities and address challenges proactively.</li>
+                    <li><strong>Market Expansion:</strong> With effective sales management, you can expand your market reach and tap into new customer segments.</li>
+                </ul>
+                Invest in sales management, and watch your business thrive with data-driven success. Whether you're in e-commerce, retail, or B2B, effective sales management is a powerful tool to drive growth and success across various industries and sectors.
+            </p>
+        </div>
     </div>
-    <div class="feature">
-        <img src="" alt="Feature 3">
-        <h3>Feature 3</h3>
-        <p>Suspendisse potenti. Nunc non lacus sit amet elit suscipit euismod.</p>
+    <hr />
+    <div class="feature-container">
+        <div class="feature-description">
+            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">Experience the Benefits of Warehouse Management</h2>
+            <p style="font-size: 16px; line-height: 1.4; color: #333;">
+                Warehouse management is the backbone of efficient supply chain operations. Discover how strategic warehouse management can transform your business with a range of advantages:
+                <ul style="list-style-type: disc; padding-left: 20px; font-size: 16px; color: #333;">
+                    <li><strong>Optimized Inventory:</strong> Maintain precise control over your inventory, reducing carrying costs while ensuring products are readily available when needed.</li>
+                    <li><strong>Reduced Operating Costs:</strong> Efficient warehouse management helps reduce operating costs through better resource utilization and streamlined processes.</li>
+                    <li><strong>Swift Order Fulfillment:</strong> Accelerate order processing, packing, and shipping, delivering orders to customers faster and enhancing their satisfaction.</li>
+                    <li><strong>Accurate Data Insights:</strong> Leverage data-driven insights to make informed decisions, monitor inventory trends, and forecast demand, improving overall decision-making.</li>
+                    <li><strong>Enhanced Customer Service:</strong> Satisfy customers with on-time, error-free deliveries and real-time order tracking, boosting loyalty and repeat business.</li>
+                </ul>
+                Invest in warehouse management and witness your business flourish with efficiency and precision. Whether you operate in manufacturing, e-commerce, or logistics, effective warehouse management is a game-changer for success across various industries and sectors.
+            </p>
+        </div>
+        <div class="feature-image">
+            <img src="~/content/inventorymanagement.png" alt="Feature 1 Image" style="max-width: 100%; height: auto;">
+        </div>
     </div>
 </section>
 
 <section id="pricing" class="pricing">
-    <h2>Pricing Plans</h2>
-    <div class="plan">
-        <h3>Basic Plan</h3>
-        <p>Perfect for small businesses</p>
-        <p class="price">$99/month</p>
-    </div>
-    <div class="plan">
-        <h3>Pro Plan</h3>
-        <p>For growing businesses</p>
-        <p class="price">$199/month</p>
-    </div>
-    <div class="plan">
-        <h3>Enterprise Plan</h3>
-        <p>Customized solutions for large enterprises</p>
-        <p class="price">Contact Us</p>
+    <h2>Subscritions</h2>
+    <br />
+    <div class="plan-container">
+        <div class="plan">
+            <div class="feature-image">
+                <img src="~/content/subs/Built-in-Artificial-Icon.png" alt="Feature 1 Image" style="max-width: 100%; height: auto;">
+            </div>
+            <h3>Basic Plan</h3>
+            <p>Perfect for small businesses</p>
+            <p class="price">$99/month</p>
+        </div>
+        <div class="plan">
+            <div class="feature-image">
+                <img src="~/content/subs/Connect-Enterprise-Icon.png" alt="Feature 1 Image" style="max-width: 100%; height: auto;">
+            </div>
+            <h3>Pro Plan</h3>
+            <p>For growing businesses</p>
+            <p class="price">$199/month</p>
+        </div>
+        <div class="plan">
+            <div class="feature-image">
+                <img src="~/content/subs/Human-First-Icon.png" alt="Feature 1 Image" style="max-width: 100%; height: auto;">
+            </div>
+            <h3>Enterprise Plan</h3>
+            <p>Customized solutions for large enterprises</p>
+            <p class="price">Contact Us</p>
+        </div>
     </div>
 </section>
 
