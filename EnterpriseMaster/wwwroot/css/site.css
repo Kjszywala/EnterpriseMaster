@@ -20,6 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.mainRenderBody {
+    min-height: 88vh;
+}
 /* Reset some default styles */
 body, h1, h2, h3, p {
     margin: 0;
@@ -35,8 +39,6 @@ body, h1, h2, h3, p {
     padding: 150px 0;
     color: black;
 }
-
-
 
 /*********** start of navbar code ************/
 :root {
@@ -395,6 +397,6 @@ body, h1, h2, h3, p {
     transition: color 0.3s;
 }
 
-    .social-icon:hover {
-        color: #0056b3;
-    }
+.social-icon:hover {
+color: #0056b3;
+}

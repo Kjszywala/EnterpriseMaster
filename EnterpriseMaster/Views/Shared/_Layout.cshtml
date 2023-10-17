@@ -18,8 +18,8 @@
         </div>
 
         <div class="nav">
-            <a href="#top">Home</a>
-            <a href="#about">About</a>
+            <a href="@Url.Action("Index", "Home")">Home</a>
+            <a href="@Url.Action("Index", "About")">About</a>
 
             <div class="dropdown" onmouseover="showDropdownServices()" onmouseout="hideDropdownServices()">
                 <label for="toggle-1" id="dropdown-label">Services</label>
@@ -47,7 +47,7 @@
             <a href="#">Register</a>
         </div>
     </div>
-    <div>
+    <div class="mainRenderBody">
         @RenderBody()
     </div>
     <footer class="border-top bg-dark text-light mainfooter">
