@@ -61,6 +61,7 @@ body, h1, h2, h3, p {
     background-color: var(--navbar-background-color);
     font-family: var(--navbar-font-family);
     z-index: 9999;
+    
 }
 
 .navbar #togglericon {
@@ -115,7 +116,6 @@ body, h1, h2, h3, p {
     font: var(--navbar-item-font);
     text-decoration: none;
     color: var(--navbar-item-text-color);
-    background-color: var(--navbar-item-background-color);
     cursor: pointer;
 }
 
@@ -278,26 +278,6 @@ body, h1, h2, h3, p {
         margin: 0 8px;
     }
 
-        .dropdown ul {
-            position: absolute;
-            top: 24px;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--navbar-background-color);
-            padding: 0;
-            border: 1px solid white;
-        }
-
-        .dropdown input:checked ~ ul {
-            max-height: 500px;
-            transition: max-height 0.5s ease;
-            margin: 16px 0;
-            border-left: 1px solid #cccccc;
-            border-bottom: 1px solid #cccccc;
-            border-right: 1px solid #cccccc;
-            box-shadow: 5px 5px 5px 0px #99999988;
-        }
-
         .dropdown ul li {
             width: 100%;
             margin: 4px;
@@ -330,6 +310,71 @@ body, h1, h2, h3, p {
         white-space: nowrap;
         margin-left: 50px;
     }
+}
+/* Style for the dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Style for the label */
+#dropdown-label {
+    cursor: pointer;
+    padding: 10px;
+    color: #888888;
+    border-radius: 5px;
+}
+
+    #dropdown-label:hover {
+        color: #663399;
+    }
+/* Style for the hidden checkbox */
+#toggle-1 {
+    display: none;
+}
+
+/* Style for the dropdown content */
+#dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    margin-top: -5px;
+}
+
+@media (max-width: 730px) {
+    #dropdown-content {
+        list-style: none;
+        position: relative;
+    }
+}
+/* Style for the list items */
+#dropdown-content li {
+    padding: 10px;
+    list-style: none;
+}
+
+    /* Hover effect for list items */
+    #dropdown-content li:hover {
+        background-color: #f0f0f0;
+    }
+
+/* Show the dropdown when the checkbox is checked */
+#toggle-1:checked + #dropdown-content {
+    opacity: 1;
+    visibility: visible;
+}
+/* Show the dropdown when the checkbox is checked */
+#toggle-2:checked + #dropdown-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+.amain {
+    background-color: transparent;
 }
 
 @media (min-width: 1200px) {
