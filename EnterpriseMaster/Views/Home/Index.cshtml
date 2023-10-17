@@ -1,29 +1,113 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<style>
+.mySlides {display: none;}
+img {vertical-align: middle;}
 
+/* Slideshow container */
+.slideshow-container {
+  position: relative;
+  height: 500px;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+</style>
 <section class="hero">
-    <div class="hero-content">
-        <h2>Welcome to Enterprise Master solutions</h2>
-        <p>Your One-Stop Shop for Efficient Business Management</p>
-        <a href="#contact" class="cta-button">Get Started</a>
+    <div class="slideshow-container">
+        <div class="mySlides fade">
+            <img src="~/content/analyticserp.jpg" style="width:100%; max-height: 500px;">
+            <div class="text">
+                <h2>Welcome to Enterprise Master solutions</h2>
+                <p>Your One-Stop Shop for Efficient Business Management</p>
+                <a href="#contact" class="cta-button">Get Started</a>
+            </div>
+        </div>
+
+        <div class="mySlides fade">
+            <img src="~/content/boardmeeting.jpg" style="width:100%">
+            <div class="text">
+                <h2>Welcome to Enterprise Master solutions</h2>
+                <p>Your One-Stop Shop for Efficient Business Management</p>
+                <a href="#contact" class="cta-button">Get Started</a>
+            </div>
+        </div>
+
+        <div class="mySlides fade">
+            <img src="~/content/erp.jpg" style="width:100%">
+            <div class="text">
+                <h2>Welcome to Enterprise Master solutions</h2>
+                <p>Your One-Stop Shop for Efficient Business Management</p>
+                <a href="#contact" class="cta-button">Get Started</a>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
     </div>
 </section>
 
 <section id="features" class="features">
     <h2>Key Features</h2>
     <div class="feature">
-        <img src="feature1.png" alt="Feature 1">
+        <img src="" alt="Feature 1">
         <h3>Feature 1</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     </div>
     <div class="feature">
-        <img src="feature2.png" alt="Feature 2">
+        <img src="" alt="Feature 2">
         <h3>Feature 2</h3>
         <p>Proin tristique massa id justo bibendum, sit amet luctus dolor.</p>
     </div>
     <div class="feature">
-        <img src="feature3.png" alt="Feature 3">
+        <img src="" alt="Feature 3">
         <h3>Feature 3</h3>
         <p>Suspendisse potenti. Nunc non lacus sit amet elit suscipit euismod.</p>
     </div>

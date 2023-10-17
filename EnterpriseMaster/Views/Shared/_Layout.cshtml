@@ -482,7 +482,13 @@ background-color: transparent;
 
 @@media (max-width: 730px) {
     .brand {
-        margin-top: 20px;
+        display: none;
+    }
+}
+
+@@media (min-width: 730px) {
+    .brand {
+        margin-left: -50px;
         align-items: center;
         visibility: visible;
         justify-content: center;
@@ -514,10 +520,10 @@ border-color: #e74c3c;
             <a href="#top">Home</a>
             <a href="#about">About</a>
 
-            <div class="dropdown">
-                <label for="toggle-1">Services</label>
+            <div class="dropdown" onmouseover="showDropdownServices()" onmouseout="hideDropdownServices()">
+                <label for="toggle-1" id="dropdown-label">Services</label>
                 <input type="checkbox" id="toggle-1" />
-                <ul>
+                <ul id="dropdown-content">
                     <li><a href="#">Internet Of Things</a></li>
                     <li><a href="#">Game Development</a></li>
                     <li><a href="#">Game Design</a></li>
@@ -525,7 +531,7 @@ border-color: #e74c3c;
                 </ul>
             </div>
 
-            <div class="dropdown">
+            <div class="dropdown" onmouseover="showDropdownSupport()" onmouseout="hideDropdownSupport()">
                 <label for="toggle-2">Support</label>
                 <input type="checkbox" id="toggle-2" />
                 <ul>
@@ -536,7 +542,7 @@ border-color: #e74c3c;
                 </ul>
             </div>
             <a href="#">Contact</a>
-            <a href="#">Sign In</a>
+            <a href="#">Login</a>
             <a href="#">Register</a>
         </div>
     </div>
