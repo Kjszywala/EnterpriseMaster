@@ -6,27 +6,33 @@ img {
     vertical-align: middle;
 }
 
-/* Slideshow container */
-.slideshow-container {
-    position: relative;
-}
 
 /* Caption text */
 .text {
-    color: #f2f2f2;
     font-size: 15px;
     padding: 8px 12px;
     position: absolute;
-    bottom: 8px;
-    width: 100%;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    max-height: 400px;
+    background-color: rgba(255, 255, 255, 0.9); /* Silver with opacity */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for a nice effect */
+    font-family: 'Verdana', sans-serif;
 }
 
+.mainImageTextDiv {
+    color: black;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    display: flex; /* Add display: flex; to make it a flex container */
+    align-items: center;
+}
 /* Hero Section Styles */
 .hero {
     text-align: center;

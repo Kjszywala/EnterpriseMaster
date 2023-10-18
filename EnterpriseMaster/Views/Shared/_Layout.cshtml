@@ -6,9 +6,9 @@
     <title>Enterprise Master</title>
     <link rel="stylesheet" href="style.css">
     <link href="~/css/site.css" rel="stylesheet" type="text/css">
-    <link href="~/css/contact.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 </head>
 <style>
 
@@ -41,18 +41,15 @@
                 <ul id="dropdown-content">
                     <li><a class="amain" href="#">Internet Of Things2</a></li>
                     <li><a class="amain" href="#">Game Development2</a></li>
-                    <li><a class="amain" href="#">Game Design2</a></li>
-                    <li><a class="amain" href="#">History Telling2</a></li>
+                    <li><a class="amain" href="#">Returns And Refunds</a></li>
+                    <li><a class="amain" href="@Url.Action("Index", "Privacy")">Privacy Policy</a></li>
                 </ul>
             </div>
-            <a onclick="window.dialog.showModal();">Contact</a>
+            <a href="@Url.Action("Index", "Contact")">Contact</a>
             <a href="#">Login</a>
             <a href="#">Register</a>
         </div>
     </div>
-    <dialog id="dialog">
-        @await Component.InvokeAsync("ContactComponent")
-    </dialog>
     <div class="mainRenderBody">
         @RenderBody()
     </div>

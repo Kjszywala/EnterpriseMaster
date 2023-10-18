@@ -1,11 +1,39 @@
-﻿<div class="container d-flex justify-content-center align-items-center">
-
-	<!-- // SVG
-					  from: https://www.freepik.com/free-vector/new-message-concept-landing-page_5777076.htm
-	-------------------------------------------------------------
-	-- Note: need to use inline svg to manipulate its components
-	------------------------------------------------------------>
-	<div class = "contactLeftDiv">
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	Layout = "_Layout";
+}
+<link href="~/css/contact2.css" rel="stylesheet" type="text/css">
+<style>
+.contact2Styles{
+	margin-top: 150px;
+	flex-direction: row;
+    justify-content: center;
+    align-items: center;
+	display: flex;
+}
+@@media (max-width: 730px) {
+    .contact2Styles{
+		margin-top: 150px;
+		display: block;
+	}
+}
+.contactLeftDiv{
+	min-heigh: 500px;
+}
+.contactRightDiv{
+	min-heigh: 500px;
+}
+.contact2BottomDiv{
+	min-heigh: 200px;
+}
+.contactForm input{
+	margin: 10px;
+}
+</style>
+<div class="contact2Styles">
+	<div class = "contactLeftDiv" style="float: left;">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 563" fill="none">
 			<g id="Image">
 				<g id="g14">
@@ -303,40 +331,150 @@
 		</svg>
 	</div>
 
-
 	<!-- // FORM
 	-------------------------------------------------------------
 	------------------------------------------------------------>
-	<div class="contactRightDiv">
-		<form>
-			<h1 class="title text-center mb-4">Talk to Us</h1>
+	<div class="contactRightDiv" style="float: right;">
+		<form class="contactForm">
+			<h1 class="title text-center mb-4 " style="justify-content: center;align-items: center;display: flex;">Talk to Us</h1>
 
 			<!-- Name -->
-			<div class="form-group position-relative" style="max-heigh: 40px; min-width: 230px;">
+			<div class="form-group position-relative" style="max-heigh: 40px; min-width: 230px;justify-content: center;align-items: center;display: flex;">
 				<label for="formName" class="d-block">
 					<i class="icon" data-feather="user"></i>
 				</label>
-				<input type="text" id="formName" class="form-control form-control-lg thick" placeholder="Name" style="max-heigh: 40px; min-width: 150px;">
+				<input type="text" id="formName" class="form-control form-control-lg thick " placeholder="Name" style="max-heigh: 40px; min-width: 150px;">
 			</div>
 
 			<!-- E-mail -->
-			<div class="form-group position-relative">
+			<div class="form-group position-relative" style="justify-content: center;align-items: center;display: flex;">
 				<label for="formEmail" class="d-block">
 					<i class="icon" data-feather="mail"></i>
 				</label>
-				<input type="email" id="formEmail" class="form-control form-control-lg thick" placeholder="E-mail" style="max-heigh: 40px; min-width: 150px;">
+				<input type="email" id="formEmail" class="form-control form-control-lg thick " placeholder="E-mail" style="max-heigh: 40px; min-width: 150px;">
 			</div>
 
 			<!-- Message -->
-			<div class="form-group message">
-				<textarea id="formMessage" class="form-control form-control-lg" rows="7" placeholder="Message" style="min-heigh: 100px; min-width: 230px;"></textarea>
+			<div class="form-group message" style="justify-content: center;align-items: center;display: flex;">
+				<textarea id="formMessage" class="form-control form-control-lg " rows="7" placeholder="Message" style="min-heigh: 100px; min-width: 230px;"></textarea>
 			</div>
 
 			<!-- Submit btn -->
-			<div class="text-center">
+			<div class="text-center" style="justify-content: center;align-items: center;display: flex; margin-top: 10px;">
 				<button type="submit" class="btn btn-primary" tabIndex="-1">Send message</button>
 			</div>
 		</form>
 	</div>
-
 </div>
+<br />
+<style>
+
+.container1 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+	float: 
+}
+
+/* Header Styles */
+.page-title {
+    color: #333;
+    font-size: 36px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Section Styles */
+.contact-section, .hours-section, .faqs-section, .privacy-policy-section {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+/* Section Titles */
+.contact-section h2, .hours-section h2, .faqs-section h2, .privacy-policy-section h2 {
+    color: #007BFF;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* Contact Information Styles */
+.contact-info {
+    color: #666;
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+/* Operating Hours Styles */
+.hours-info {
+    color: #666;
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+/* FAQs Styles */
+.faq-list {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding: 0;
+}
+
+h3, p {
+    color: #666;
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+/* Privacy Policy Styles */
+.privacy-policy-info {
+    color: #666;
+    font-size: 18px;
+    margin: 5px 0;
+}
+</style>
+<br />
+<div class="container1">
+
+        <div class="contact-section">
+            <h2>Contact Information</h2>
+            <p class="contact-info">Email: <a href="mailto:contact@example.com">contact@example.com</a></p>
+            <p class="contact-info">Phone: (123) 456-7890</p>
+            <p class="contact-info">Address: 123 Main Street, City, State, Zip Code</p>
+            <p class="contact-info">Fax: (123) 456-7891 (if applicable)</p>
+        </div>
+
+        <div class="hours-section">
+            <h2>Operating Hours</h2>
+            <p class="hours-info">Monday - Friday: 9:00 AM - 5:00 PM</p>
+            <p class="hours-info">Saturday: 10:00 AM - 2:00 PM</p>
+            <p class="hours-info">Sunday: Closed</p>
+            <p class="hours-info">Special Hours (e.g., holidays): <a href="#">See Special Hours</a></p>
+        </div>
+
+        <div class="faqs-section">
+            <h2>FAQs</h2>
+            <ul class="faq-list">
+                    <h3>How do I place an order?</h3>
+                    <p>To place an order, visit our <a href="#">Order Page</a> for step-by-step instructions.</p>
+					<br />
+                    <h3>What is your return policy?</h3>
+                    <p>Our return policy can be found on our <a href="#">Returns and Refunds Page</a>.</p>
+					 <br />
+                    <h3>How can I contact customer support?</h3>
+                    <p>You can reach our customer support team by emailing <a href="mailto:support@example.com">support@example.com</a> or calling (123) 456-7890.</p>
+            </ul>
+        </div>
+
+        <div class="privacy-policy-section">
+            <h2>Privacy Policy</h2>
+			<p class="privacy-policy-info">For information on how we handle your personal data, please read our <a href="@Url.Action("Index", "Privacy")">Privacy Policy</a>.</p>
+        </div>
+    </div>
