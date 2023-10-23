@@ -1,0 +1,171 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+}
+<style>
+.basic-subscription-container {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+background-color: #f7f7f7; /* Add a background color for better visual separation */
+padding: 20px;
+}
+
+.basic-feature {
+display: flex;
+flex-direction: row;
+align-items: center;
+margin: 10px;
+text-align: center;
+border: 1px solid #ccc;
+background-color: #fff;
+border-radius: 5px;
+box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+transition: transform 0.2s, box-shadow 0.2s;
+max-width: 900px;
+}
+
+.basic-feature:hover {
+transform: scale(1.05); /* Scale the box on hover to make it slightly larger */
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Increase the shadow on hover for a lift effect */
+}
+
+.basic-subscription-img {
+max-width: 200px;
+max-height: 200px;
+margin: 20px;
+}
+
+.basic-feature-text {
+padding: 20px;
+text-align: center;
+}
+.basic-subscription-details {
+text-align: center;
+margin: 20px;
+margin-top: 50px;
+}
+
+    /* Buy Now Container Styles */
+    .buy-now-container {
+        text-align: center;
+        margin: 20px;
+    }
+
+    /* Buy Now Button Styles (previously defined) */
+
+    /* Buy Now Description Styles */
+    .buy-now-description {
+        font-size: 16px;
+        color: #777;
+        margin-top: 10px;
+    }
+
+/* CSS */
+.button-71 {
+  background-color: #0078d0;
+  border: 0;
+  border-radius: 56px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: system-ui,-apple-system,system-ui,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  outline: 0;
+  padding: 16px 21px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-71:before {
+  background-color: initial;
+  background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+  border-radius: 125px;
+  content: "";
+  height: 50%;
+  left: 4%;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  transition: all .3s;
+  width: 92%;
+}
+
+.button-71:hover {
+  box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+  transform: scale(1.05);
+}
+
+@@media (min-width: 768px) {
+  .button-71 {
+    padding: 16px 48px;
+  }
+}
+</style>
+<br />
+<br />
+<div class="basic-subscription-details">
+    <h1>Essential Features for Small Businesses</h1>
+    <p>Ideal for startups and small companies. Create offers, manage orders, track inventory, and generate invoices.</p>
+</div>
+<div class="basic-subscription-container">
+    <div class="basic-subscription-container">
+        <div class="basic-feature">
+            <img class="basic-subscription-img" src="~/content/basic/salesBasic.png" alt="Sales">
+            <div class="basic-feature-text">
+                <h2>Basic Sales</h2>
+                <p>Our Sales module empowers your business to create, manage, and optimize offers for your products and services. Seamlessly track orders and generate professional invoices to streamline your sales process and enhance customer satisfaction.</p>
+            </div>
+        </div>
+        <div class="basic-feature">
+            <div class="basic-feature-text">
+                <h2>Basic Inventory</h2>
+                <p>Efficiently manage your inventory and stock levels with our Inventory module. Stay organized with real-time tracking, keep your products well-stocked, and ensure smoother operations to provide top-notch customer service.</p>
+            </div>
+            <img class="basic-subscription-img" src="~/content/basic/inventoryBasic.png" alt="Inventory">
+        </div>
+        <div class="basic-feature">
+            <img class="basic-subscription-img" src="~/content/basic/financialmanagement.png" alt="Basic Financial Management">
+            <div class="basic-feature-text">
+                <h2>Basic Financial Management</h2>
+                <p>Take control of your finances with ease using our Basic Financial Management module. Manage expenses, monitor income, and generate insightful financial reports for informed decision-making. Ensure your financial health and plan for a prosperous future.</p>
+            </div>
+        </div>
+        <div class="basic-feature">
+            <div class="basic-feature-text">
+                <h2>Create Offers</h2>
+                <p>Create compelling offers and promotions to attract customers and boost sales. Our intuitive tools make it easy to design and customize offers that fit your business needs.</p>
+            </div>
+            <img class="basic-subscription-img" src="~/content/basic/offers.png" alt="Create Offers">
+        </div>
+        <div class="basic-feature">
+            <img class="basic-subscription-img" src="~/content/basic/orders.png" alt="Manage Orders">
+            <div class="basic-feature-text">
+                <h2>Manage Orders</h2>
+                <p>Efficiently manage incoming orders, process them, and provide real-time order tracking for your customers. Enhance order fulfillment and customer satisfaction.</p>
+            </div>
+        </div>
+        <div class="basic-feature">
+            <div class="basic-feature-text">
+                <h2>Generate Invoices</h2>
+                <p>Create professional invoices, send them to your customers, and ensure timely payment. Simplify your billing process and maintain financial transparency.</p>
+            </div>
+            <img class="basic-subscription-img" src="~/content/basic/invoices.png" alt="Generate Invoices">
+        </div>
+    </div>
+</div>
+<div class="subscription-container-pay">
+    <div class="buy-now-container">
+        <button class="button-71">Buy Now</button>
+        <p class="buy-now-description">Get started with these essential features for your small business.</p>
+    </div>
+</div>

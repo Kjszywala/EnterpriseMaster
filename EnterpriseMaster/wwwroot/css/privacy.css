@@ -1,0 +1,43 @@
+﻿.headerPrivacy {
+    margin-top: 67px;
+    color: #fff;
+    text-align: center;
+}
+
+.containerPrivacy {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+p {
+    color: #666;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.privacyDiv {
+    position: sticky;
+    top: 0;
+    background-color: #f7f7f7;
+    background-size: 100%; /* Adjust the percentage to control the image size */
+    padding: 20px;
+    z-index: 100;
+}
