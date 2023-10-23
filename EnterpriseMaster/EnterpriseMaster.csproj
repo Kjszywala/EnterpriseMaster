@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\icon\EnterpriseMaster.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\icon\EnterpriseMaster2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
