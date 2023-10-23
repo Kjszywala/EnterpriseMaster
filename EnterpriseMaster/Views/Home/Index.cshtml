@@ -80,75 +80,79 @@
     <h2 style="color:#696969;">Subscritions</h2>
     <br />
     <div class="plan-container">
-
         <div class="subscription-plan">
-            <div class="feature-image-container">
-                <img src="~/content/subs/Built-in-Artificial-Icon.png" alt="Feature 1 Image" class="feature-image2">
-            </div>
-            <div class="plan-details-container" style="min-height: 300px;">
-                <h3 class="plan-name">Basic Plan</h3>
-                <hr />
-                <ul class="plan-features">
-                    <li>Essential features for small businesses</li>
-                    <li>Modules: Sales, Inventory, Basic Financial Management</li>
-                    <li>Create offers, manage orders, track inventory, and generate invoices</li>
-                    <li>Ideal for startups and small companies</li>
-                </ul>
-            </div>
-            <div class="plan-description-container">
-                <p class="plan-description">Perfect for small businesses</p>
-            </div>
-            <div class="plan-price-container">
-                <hr />
-                <p class="plan-price">$99/month</p>
-            </div>
+            <a href="@Url.Action("Index", "BasicSubscription")" style="text-decoration:none;">
+                <div class="feature-image-container">
+                    <img src="~/content/subs/Built-in-Artificial-Icon.png" alt="Feature 1 Image" class="feature-image2">
+                </div>
+                <div class="plan-details-container" style="min-height: 300px;">
+                    <h3 class="plan-name">Basic Plan</h3>
+                    <hr />
+                    <ul class="plan-features">
+                        <li>Essential features for small businesses</li>
+                        <li>Modules: Sales, Inventory, Basic Financial Management</li>
+                        <li>Create offers, manage orders, track inventory, and generate invoices</li>
+                        <li>Ideal for startups and small companies</li>
+                    </ul>
+                </div>
+                <div class="plan-description-container">
+                    <p class="plan-description">Perfect for small businesses</p>
+                </div>
+                <div class="plan-price-container">
+                    <hr />
+                    <p class="plan-price">$99/month</p>
+                </div>
+            </a>
+        </div>
+        <div class="subscription-plan">
+            <a href="@Url.Action("Index", "ProfessionalSubscription")" style="text-decoration:none;">
+                <div class="feature-image-container">
+                    <img src="~/content/subs/Connect-Enterprise-Icon.png" alt="Feature 1 Image" class="feature-image2">
+                </div>
+                <div class="plan-details-container" style="min-height: 300px;">
+                    <h3 class="plan-name">Pro Plan</h3>
+                    <hr />
+                    <ul class="plan-features">
+                        <li>Extends Basic Plan with CRM and advanced Financial Management</li>
+                        <li>Manage customer data, inquiries, and complaints</li>
+                        <li>Plan sales activities and create customer profiles</li>
+                        <li>Advanced accounting, reporting, and cost analysis</li>
+                    </ul>
+                </div>
+                <div class="plan-description-container">
+                    <p class="plan-description">For growing businesses</p>
+                </div>
+                <div class="plan-price-container">
+                    <hr />
+                    <p class="plan-price">$199/month</p>
+                </div>
+            </a>
         </div>
 
         <div class="subscription-plan">
-            <div class="feature-image-container">
-                <img src="~/content/subs/Connect-Enterprise-Icon.png" alt="Feature 1 Image" class="feature-image2">
-            </div>
-            <div class="plan-details-container" style="min-height: 300px;">
-                <h3 class="plan-name">Pro Plan</h3>
-                <hr />
-                <ul class="plan-features">
-                    <li>Extends Basic Plan with CRM and advanced Financial Management</li>
-                    <li>Manage customer data, inquiries, and complaints</li>
-                    <li>Plan sales activities and create customer profiles</li>
-                    <li>Advanced accounting, reporting, and cost analysis</li>
-                </ul>
-            </div>
-            <div class="plan-description-container">
-                <p class="plan-description">For growing businesses</p>
-            </div>
-            <div class="plan-price-container">
-                <hr />
-                <p class="plan-price">$199/month</p>
-            </div>
-        </div>
-
-        <div class="subscription-plan">
-            <div class="feature-image-container" >
-                <img src="~/content/subs/Human-First-Icon.png" alt="Feature 1 Image" class="feature-image2">
-            </div>
-            <div class="plan-details-container" style="min-height: 285px;">
-                <h3 class="plan-name">Enterprise Plan</h3>
-                <hr />
-                <ul class="plan-features">
-                    <li>Comprehensive ERP for large enterprises</li>
-                    <li>Includes Production Management, HR, Project Management, and Analytics & Reporting</li>
-                    <li>Optimize production, plan and monitor progress</li>
-                    <li>Cover recruitment, salaries, employee evaluations, and reporting</li>
-                    <li>Data analysis, report generation, and visual charts for informed decisions</li>
-                </ul>
-            </div>
-            <div class="plan-description-container">
-                <p class="plan-description">Comprehensive ERP for large enterprises</p>
-            </div>
-            <div class="plan-price">
-                <hr />
-                <p>Contact Us</p>
-            </div>
+            <a href="@Url.Action("Index", "EnterpriseSubscription")" style="text-decoration:none;">
+                <div class="feature-image-container" >
+                    <img src="~/content/subs/Human-First-Icon.png" alt="Feature 1 Image" class="feature-image2">
+                </div>
+                <div class="plan-details-container" style="min-height: 285px;">
+                    <h3 class="plan-name">Enterprise Plan</h3>
+                    <hr />
+                    <ul class="plan-features">
+                        <li>Comprehensive ERP for large enterprises</li>
+                        <li>Includes Production Management, HR, Project Management, and Analytics & Reporting</li>
+                        <li>Optimize production, plan and monitor progress</li>
+                        <li>Cover recruitment, salaries, employee evaluations, and reporting</li>
+                        <li>Data analysis, report generation, and visual charts for informed decisions</li>
+                    </ul>
+                </div>
+                <div class="plan-description-container">
+                    <p class="plan-description">Comprehensive ERP for large enterprises</p>
+                </div>
+                <div class="plan-price">
+                    <hr style="color:#7012b3; margin-top:23px;" />
+                    <p>Contact Us</p>
+                </div>
+            </a>
         </div>
     </div>
 </section>
