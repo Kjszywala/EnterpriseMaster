@@ -23,11 +23,28 @@
 }
 /* Add styles for left navigation links */
 .left-nav-link {
-    color: black;
     text-decoration: none;
     display: block;
     margin-bottom: 10px;
     margin: 15px;
+    color: #333; /* Default link color */
+    padding: 10px 15px;
+    transition: color 0.3s; /* Smooth transition effect on hover */
+}
+
+/* Hover effect */
+.left-nav-link:hover {
+    color: #007BFF; /* Change link color on hover */
+    background-color: #ededed;
+    cursor: pointer;
+    border-radius: 10px;
+}
+    /* Active link style */
+.left-nav-link.active {
+    color: #007BFF; /* Change link color for the active link */
+    background-color: #ededed;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
 @@media (max-width: 730px) {
@@ -47,7 +64,7 @@
     .containerHelpCenter {
         margin-left: -50px;
         margin-left: 0;
-        width: 95%;
+        width: 92%;
     }
 }
 </style>
@@ -67,7 +84,7 @@
             <p>If you have a specific issue or request, you can create a support case by filling out the form below. Our team will get back to you as soon as possible.</p>
 
             <div class="case-form">
-                <form action="submit_case.php" method="post">
+                <form action="" method="post">
                     <label for="name">Your Name:</label>
                     <input type="text" id="name" name="name" required>
 
@@ -78,7 +95,7 @@
                     <input type="text" id="subject" name="subject" required>
 
                     <label for="message">Message:</label>
-                    <textarea id="message" name="message" rows="4" required></textarea>
+                    <textarea id="message" name="message" style="resize: none;" rows="4" required></textarea>
 
                     <button type="submit">Submit Case</button>
                 </form>
@@ -86,10 +103,44 @@
         </div>
     </div>
     <div class="openCases containerHelpCenter" style="display:none;">
-        <h1>open cases</h1>
+        <h1>Open Issue Cases</h1>
+        <table>
+            <tr>
+                <th>Case ID</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>Issue with login</td>
+                <td>Open</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>Payment problem</td>
+                <td>Open</td>
+            </tr>
+        </table>
     </div>
     <div class="solvedCases containerHelpCenter" style="display:none;">
-        <h1>solved cases</h1>
+        <h1>Solved Issue Cases</h1>
+        <table>
+            <tr>
+                <th>Case ID</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>Product delivery delay</td>
+                <td>Solved</td>
+            </tr>
+            <tr>
+                <td>004</td>
+                <td>Software bug</td>
+                <td>Solved</td>
+            </tr>
+        </table>
     </div>
 </div>
 <script>
@@ -112,4 +163,19 @@
         document.querySelector('.containerHelpCenter').style.display = 'block';
         document.querySelector('.solvedCases').style.display = 'none';
     }
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('.left-nav-link');
+
+    // Add a click event listener to each link
+    navLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            // Remove 'active' class from all links
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Add 'active' class to the clicked link
+            this.classList.add('active');
+        });
+    });
 </script>
