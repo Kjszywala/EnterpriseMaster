@@ -1,0 +1,29 @@
+﻿.refundDiv {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.refundContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    margin: 30px auto;
+    text-align: left;
+}
+
+    .refundContainer h1 {
+        color: #333;
+    }
+
+    .refundContainer p {
+        margin-top: 20px;
+    }
