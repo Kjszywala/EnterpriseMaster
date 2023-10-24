@@ -1,0 +1,33 @@
+﻿.termsDiv {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.containerTerms {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    margin: 30px auto;
+    text-align: left;
+}
+
+    .containerTerms h1 {
+        color: #333;
+    }
+
+.terms-content {
+    margin-top: 20px;
+}
+
+    .terms-content p {
+        margin-bottom: 15px;
+    }
