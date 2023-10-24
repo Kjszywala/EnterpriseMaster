@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 </head>
-<style>
-
-</style>
 <body class="mainbody">
     <div class="navbar" style="background-color: rgba(255, 255, 255, 0.8);">
         <label for="togglericon" class="toggler" checked></label>
@@ -22,22 +19,22 @@
             <img src="~/icon/EnterpriseMaster.png" style="width: 150px; height:150px;" title="core" alt="" />
         </div>
         <div class="nav">
+           
             <a href="@Url.Action("Index", "Home")">Home</a>
 
             <div class="dropdown" >
                 <label for="toggle-1" id="dropdown-label">Services</label>
                 <input type="checkbox" id="toggle-1" />
-                <ul id="dropdown-content">
+                <ul id="dropdown-content" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border-radius: 5px;">
                     <li><a class="amain" href="@Url.Action("Index", "BasicSubscription")">Basic Plan</a></li>
                     <li><a class="amain" href="@Url.Action("Index", "ProfessionalSubscription")">Professional Plan</a></li>
                     <li><a class="amain" href="@Url.Action("Index", "EnterpriseSubscription")">Enterprise Plan</a></li>
                 </ul>
             </div>
-
             <div class="dropdown">
                 <label for="toggle-2" id="dropdown-label">Support</label>
                 <input type="checkbox" id="toggle-2" />
-                <ul id="dropdown-content">
+                <ul id="dropdown-content" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border-radius: 5px;">
                     <li><a class="amain" href="@Url.Action("Index", "FAQ")">FAQs</a></li>
                     <li><a class="amain" href="@Url.Action("Index", "Terms")">Terms and Conditions</a></li>
                     <li><a class="amain" href="@Url.Action("Index", "HelpCenter")">Help Center</a></li>
@@ -74,5 +71,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+   
 </body>
 </html>
