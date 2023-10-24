@@ -16,9 +16,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     padding: 20px;
     width: 80%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 30px auto;
     text-align: left;
+    height: 565px;
 }
 
     .containerHelpCenter h1 {

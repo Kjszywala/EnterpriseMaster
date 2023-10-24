@@ -5,8 +5,59 @@
     Layout = "_Layout";
 }
 <link href="~/css/helpcenter.css" rel="stylesheet" type="text/css">
-<div class="helpCenterDiv">
-    <div class="containerHelpCenter">
+<style>
+    .containerHelpCenterLeft {
+    background-color: #fff;
+    color: #fff;
+    width: 20%;
+    margin: 30px auto;
+    max-width: 300px;
+    justify-content: right;
+    align-items: end;
+    height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    height: 565px;
+}
+/* Add styles for left navigation links */
+.left-nav-link {
+    color: black;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+    margin: 15px;
+}
+
+@@media (max-width: 730px) {
+    .helpCenterDiv {
+        display: block;
+        height: 900px;
+    }
+
+    .containerHelpCenterLeft {
+        height: auto;
+        margin-top: 50px;
+        margin-left: 0;
+        max-width: 660px;
+        width: 100%;
+    }
+
+    .containerHelpCenter {
+        margin-left: -50px;
+        margin-left: 0;
+        width: 95%;
+    }
+}
+</style>
+<div class="helpCenterDiv" style="min-height:90vh">
+    <div class="containerHelpCenterLeft">
+        <a class="left-nav-link" onclick="showCreateCase()">Create Case</a>
+        <a class="left-nav-link" onclick="showOpenCases()">In Progress</a>
+        <a class="left-nav-link" onclick="showSolvedCases()">Solved Cases</a>
+    </div>
+    <div class="containerHelpCenter" style="float: right;">
         <h1>Help Center</h1>
         <br />
         <div class="help-content">
@@ -34,4 +85,31 @@
             </div>
         </div>
     </div>
+    <div class="openCases containerHelpCenter" style="display:none;">
+        <h1>open cases</h1>
+    </div>
+    <div class="solvedCases containerHelpCenter" style="display:none;">
+        <h1>solved cases</h1>
+    </div>
 </div>
+<script>
+    function showOpenCases() {
+        // Show the "Open Cases" div and hide the "Solved Cases" div
+        document.querySelector('.openCases').style.display = 'block';
+        document.querySelector('.solvedCases').style.display = 'none';
+        document.querySelector('.containerHelpCenter').style.display = 'none';
+    }
+
+    function showSolvedCases() {
+        // Show the "Solved Cases" div and hide the "Open Cases" div
+        document.querySelector('.openCases').style.display = 'none';
+        document.querySelector('.containerHelpCenter').style.display = 'none';
+        document.querySelector('.solvedCases').style.display = 'block';
+    }
+    function showCreateCase() {
+        // Show the "Solved Cases" div and hide the "Open Cases" div
+        document.querySelector('.openCases').style.display = 'none';
+        document.querySelector('.containerHelpCenter').style.display = 'block';
+        document.querySelector('.solvedCases').style.display = 'none';
+    }
+</script>
