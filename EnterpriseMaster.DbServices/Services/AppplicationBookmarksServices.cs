@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IApplicationBookmarksServices
     {
         public AppplicationBookmarksServices()
-            : base("/api/v1.0/ApplicationBookmarks")
+            : base("/api/v1.0/ApplicationBookmarks/")
         {
         }
     }

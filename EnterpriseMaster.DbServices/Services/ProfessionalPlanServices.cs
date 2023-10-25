@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IProfessionalPlanServices
     {
         public ProfessionalPlanServices()
-            : base("/api/v1.0/ProfessionalPlanPages")
+            : base("/api/v1.0/ProfessionalPlanPages/")
         {
         }
     }

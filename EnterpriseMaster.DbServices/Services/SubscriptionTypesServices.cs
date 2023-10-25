@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         ISubscriptionTypesServices
     {
         public SubscriptionTypesServices()
-            : base("/api/v1.0/SubscriptionTypes")
+            : base("/api/v1.0/SubscriptionTypes/")
         {
         }
     }

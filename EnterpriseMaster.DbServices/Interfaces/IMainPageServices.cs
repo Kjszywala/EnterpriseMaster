@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.DbServices.Interfaces
 {
-    internal interface IMainPageServices : IBaseServices<MainPages>
+    public interface IMainPageServices : IBaseServices<MainPages>
     {
     }
 }

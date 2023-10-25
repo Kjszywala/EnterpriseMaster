@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IApplicationFeaturesServices
     {
         public ApplicationFeaturesServices() 
-            : base("/api/v1.0/ApplicationFeatures")
+            : base("/api/v1.0/ApplicationFeatures/")
         {
         }
     }

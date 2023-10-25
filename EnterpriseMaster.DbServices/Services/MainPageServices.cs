@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IMainPageServices
     {
         public MainPageServices()
-            : base("/api/v1.0/MainPages")
+            : base("/api/v1.0/MainPages/")
         {
         }
     }

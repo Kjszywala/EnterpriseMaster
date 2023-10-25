@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IPaymentMethodsServices
     {
         public PaymentMethodsServices()
-            : base("/api/v1.0/PaymentMethods")
+            : base("/api/v1.0/PaymentMethods/")
         {
         }
     }

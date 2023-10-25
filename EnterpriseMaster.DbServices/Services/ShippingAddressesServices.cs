@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IShippingAddressesServices
     {
         public ShippingAddressesServices()
-            : base("/api/v1.0/ShippingAddresses")
+            : base("/api/v1.0/ShippingAddresses/")
         {
         }
     }

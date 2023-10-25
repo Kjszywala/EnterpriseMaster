@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IErrorLogsServices
     {
         public ErrorLogsServices()
-            : base("/api/v1.0/ErrorLogs")
+            : base("/api/v1.0/ErrorLogs/")
         {
         }
     }

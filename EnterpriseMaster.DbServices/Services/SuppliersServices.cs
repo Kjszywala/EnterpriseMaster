@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         ISuppliersServices
     {
         public SuppliersServices()
-            : base("/api/v1.0/Suppliers")
+            : base("/api/v1.0/Suppliers/")
         {
         }
     }

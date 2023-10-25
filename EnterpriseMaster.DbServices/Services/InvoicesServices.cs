@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IInvoicesServices
     {
         public InvoicesServices()
-            : base("/api/v1.0/Invoices")
+            : base("/api/v1.0/Invoices/")
         {
         }
     }

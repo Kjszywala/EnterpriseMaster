@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IBillingAddressesServices
     {
         public BillingAddressesServices()
-            : base("/api/v1.0/BillingAddresses")
+            : base("/api/v1.0/BillingAddresses/")
         {
         }
     }

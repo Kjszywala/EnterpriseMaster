@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IFxRatesServices
     {
         public FxRatesServices()
-            : base("/api/v1.0/FxRates")
+            : base("/api/v1.0/FxRates/")
         {
         }
     }

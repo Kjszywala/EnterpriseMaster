@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IQuantityTypesServices
     {
         public QuantityTypesServices()
-            : base("/api/v1.0/QuantityTypes")
+            : base("/api/v1.0/QuantityTypes/")
         {
         }
     }

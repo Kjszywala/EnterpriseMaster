@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IAboutPageServices
     {
         public AboutPageServices()
-            : base("/api/v1.0/AboutPages")
+            : base("/api/v1.0/AboutPages/")
         {
         }
     }

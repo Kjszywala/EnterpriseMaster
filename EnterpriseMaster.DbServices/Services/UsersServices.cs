@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IUsersServices
     {
         public UsersServices()
-            : base("/api/v1.0/Users")
+            : base("/api/v1.0/Users/")
         {
         }
     }

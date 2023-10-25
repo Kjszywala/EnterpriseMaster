@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         ISubscriptionOrdersServices
     {
         public SubscriptionOrdersServices()
-            : base("/api/v1.0/SubscriptionOrders")
+            : base("/api/v1.0/SubscriptionOrders/")
         {
         }
     }
