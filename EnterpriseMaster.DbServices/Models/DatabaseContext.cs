@@ -40,6 +40,11 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UsersAdresses> UsersAdresses { get; set; }
         public virtual DbSet<WhatsNew> WhatsNew { get; set; }
+        public virtual DbSet<AboutPage> AboutPage { get; set; }
+        public virtual DbSet<BasicPlanPage> BasicPlanPage { get; set; }
+        public virtual DbSet<EnterprisePlan> EnterprisePlan { get; set; }
+        public virtual DbSet<MainPages> MainPages { get; set; }
+        public virtual DbSet<ProfessionalPlanPage> ProfessionalPlanPage { get; set; }
 
         #endregion
     }
