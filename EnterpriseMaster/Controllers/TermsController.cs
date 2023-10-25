@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.Controllers
 {
-    public class TermsController : Controller
+    public class TermsController : BaseController
     {
         public IActionResult Index()
         {

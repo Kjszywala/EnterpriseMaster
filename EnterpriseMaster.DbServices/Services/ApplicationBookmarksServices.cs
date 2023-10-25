@@ -3,11 +3,11 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    public class AppplicationBookmarksServices :
+    public class ApplicationBookmarksServices :
         BaseServices<ApplicationBookmarks>,
         IApplicationBookmarksServices
     {
-        public AppplicationBookmarksServices()
+        public ApplicationBookmarksServices()
             : base("/api/v1.0/ApplicationBookmarks/")
         {
         }

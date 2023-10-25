@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.Controllers
 {
-    public class RefundController : Controller
+    public class RefundController : BaseController
     {
         public IActionResult Index()
         {

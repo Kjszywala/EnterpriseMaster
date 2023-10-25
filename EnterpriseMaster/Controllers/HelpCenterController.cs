@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.Controllers
 {
-    public class HelpCenterController : Controller
+    public class HelpCenterController : BaseController
     {
         public IActionResult Index()
         {

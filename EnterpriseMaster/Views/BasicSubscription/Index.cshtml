@@ -1,4 +1,5 @@
-﻿@*
+﻿@model EnterpriseMaster.DbServices.Models.Database.BasicPlanPage
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -14,7 +15,10 @@
 <div class="basic-subscription-container">
     <div class="basic-subscription-container">
         <div class="basic-feature">
-            <img class="basic-subscription-img" src="~/content/basic/salesBasic.png" alt="Sales">
+            @if (Model.BasicSales != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.BasicSales)" alt="Sales">
+            }
             <div class="basic-feature-text">
                 <h2>Basic Sales</h2>
                 <p>Our Sales module empowers your business to create, manage, and optimize offers for your products and services. Seamlessly track orders and generate professional invoices to streamline your sales process and enhance customer satisfaction.</p>
@@ -25,10 +29,16 @@
                 <h2>Basic Inventory</h2>
                 <p>Efficiently manage your inventory and stock levels with our Inventory module. Stay organized with real-time tracking, keep your products well-stocked, and ensure smoother operations to provide top-notch customer service.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/basic/inventoryBasic.png" alt="Inventory">
+            @if (Model.BasicInventory != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.BasicInventory)" alt="Inventory">
+            }
         </div>
         <div class="basic-feature">
-            <img class="basic-subscription-img" src="~/content/basic/financialmanagement.png" alt="Basic Financial Management">
+            @if (Model.BasicFinancialManagement != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.BasicFinancialManagement)" alt="Basic Financial Management">
+            }
             <div class="basic-feature-text">
                 <h2>Basic Financial Management</h2>
                 <p>Take control of your finances with ease using our Basic Financial Management module. Manage expenses, monitor income, and generate insightful financial reports for informed decision-making. Ensure your financial health and plan for a prosperous future.</p>
@@ -39,10 +49,16 @@
                 <h2>Create Offers</h2>
                 <p>Create compelling offers and promotions to attract customers and boost sales. Our intuitive tools make it easy to design and customize offers that fit your business needs.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/basic/offers.png" alt="Create Offers">
+            @if (Model.CreateOffers != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.CreateOffers)" alt="Create Offers">
+            }
         </div>
         <div class="basic-feature">
-            <img class="basic-subscription-img" src="~/content/basic/orders.png" alt="Manage Orders">
+            @if (Model.ManageOrders != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.ManageOrders)" alt="Manage Orders">
+            }
             <div class="basic-feature-text">
                 <h2>Manage Orders</h2>
                 <p>Efficiently manage incoming orders, process them, and provide real-time order tracking for your customers. Enhance order fulfillment and customer satisfaction.</p>
@@ -53,7 +69,10 @@
                 <h2>Generate Invoices</h2>
                 <p>Create professional invoices, send them to your customers, and ensure timely payment. Simplify your billing process and maintain financial transparency.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/basic/invoices.png" alt="Generate Invoices">
+            @if (Model.GenerateInvoices != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.GenerateInvoices)" alt="Generate Invoices">
+            }
         </div>
     </div>
 </div>

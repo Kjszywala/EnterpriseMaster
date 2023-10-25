@@ -1,4 +1,5 @@
-﻿@*
+﻿@model EnterpriseMaster.DbServices.Models.Database.AboutPage
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -10,7 +11,10 @@
 </div>
 <div class="responsive-container-block bigContainer">
     <div class="responsive-container-block Container">
-        <img class="mainImg" src="~/content/about/1.jpg">
+        @if (Model.OurMission != null)
+        {
+            <img class="mainImg" src="data:image;base64,@Convert.ToBase64String(Model.OurMission)">
+        }
         <div class="allText aboveText">
             <p class="text-blk headingText">
                 Our Mission
@@ -24,7 +28,10 @@
         </div>
     </div>
     <div class="responsive-container-block Container bottomContainer">
-        <img class="mainImg" src="~/content/about/2.jpg">
+        @if (Model.OurVision != null)
+        {
+            <img class="mainImg" src="data:image;base64,@Convert.ToBase64String(Model.OurVision)">
+        }
         <div class="allText bottomText">
             <p class="text-blk headingText">
                 Our Vision
@@ -38,7 +45,10 @@
         </div>
     </div>
     <div class="responsive-container-block Container">
-        <img class="mainImg" src="~/content/about/hands.jpg">
+        @if (Model.AboutUs != null)
+        {
+            <img class="mainImg" src="data:image;base64,@Convert.ToBase64String(Model.AboutUs)">
+        }
         <div class="allText aboveText">
             <p class="text-blk headingText">
                 About Us

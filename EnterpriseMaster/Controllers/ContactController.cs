@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.Controllers
 {
-    public class ContactController : Controller
+    public class ContactController : BaseController
     {
         public IActionResult Index()
         {

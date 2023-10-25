@@ -1,4 +1,5 @@
-﻿@*
+﻿@model EnterpriseMaster.DbServices.Models.Database.ProfessionalPlanPage
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -15,7 +16,10 @@
     <div class="basic-subscription-container">
        
         <div class="basic-feature">
-            <img class="basic-subscription-img" src="~/content/professional/financialmanagement.png" alt="Basic Financial Management">
+            @if (Model.ProfessionalPlan != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.ProfessionalPlan)" alt="Basic Financial Management">
+            }
             <div class="basic-feature-text">
                 <h2>Professional Plan</h2>
                 <p>Upgrade to the Professional Plan to get access to all the features from the Basic Plan. Additionally, you can enjoy advanced features such as CRM, advanced Financial Management, enhanced inventory management, powerful marketing tools, and comprehensive reporting and analytics.</p>
@@ -27,7 +31,10 @@
                 <h2>Manage Customer Data</h2>
                 <p>Effortlessly manage customer data, inquiries, and complaints. Provide top-notch customer support and keep track of customer interactions with ease.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/professional/customerdata.png" alt="Basic Financial Management">
+            @if (Model.ManageCustomerData != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.ManageCustomerData)" alt="Basic Financial Management">
+            }
         </div>
 
         <!-- Spacing -->
@@ -35,7 +42,10 @@
 
         <!-- Professional Feature 2 -->
         <div class="basic-feature professional-feature">
-            <img class="basic-subscription-img" src="~/content/professional/salesactivities.png" alt="Basic Financial Management">
+            @if (Model.PlanSalesActivities != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.PlanSalesActivities)" alt="Basic Financial Management">
+            }
             <div class="basic-feature-text">
                 <h2>Plan Sales Activities</h2>
                 <p>Create comprehensive sales strategies, plan activities, and build detailed customer profiles. Boost sales and improve customer satisfaction through effective planning.</p>
@@ -51,7 +61,10 @@
                 <h2>Advanced Accounting</h2>
                 <p>Take control of your finances with advanced accounting features. Perform in-depth cost analysis, generate complex financial reports, and gain valuable insights into your business's financial health.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/professional/accounting.png" alt="Basic Financial Management">
+            @if (Model.AdvancedAccounting != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.AdvancedAccounting)" alt="Basic Financial Management">
+            }
         </div>
     </div>
 </div>

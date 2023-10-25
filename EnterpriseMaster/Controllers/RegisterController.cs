@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.Controllers
 {
-    public class RegisterController : Controller
+    public class RegisterController : BaseController
     {
         public IActionResult Index()
         {

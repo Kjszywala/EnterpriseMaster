@@ -2,8 +2,8 @@
 
 namespace EnterpriseMaster.Controllers
 {
-	public class PrivacyController : Controller
-	{
+	public class PrivacyController : BaseController
+    {
 		public IActionResult Index()
 		{
 			return View();

@@ -1,4 +1,5 @@
-﻿@*
+﻿@model EnterpriseMaster.DbServices.Models.Database.EnterprisePlan
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -14,7 +15,10 @@
 <div class="basic-subscription-container">
     <div class="basic-subscription-container">
         <div class="basic-feature">
-            <img class="basic-subscription-img" src="~/content/enterprise/financialmanagement.png" alt="Basic Financial Management">
+            @if (Model.EnterprisePlanImage != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.EnterprisePlanImage)" alt="Basic Financial Management">
+            }
             <div class="basic-feature-text">
                 <h2>Enterprise Plan</h2>
                 <p>Upgrade to the Enterprise Plan to unlock a world of possibilities. You'll get access to all the features from the Basic Plan, including essential tools for small businesses. Additionally, you can harness the power of advanced features available in the Professional Plan, such as CRM, advanced Financial Management, enhanced inventory management, powerful marketing tools, and comprehensive reporting and analytics.</p>
@@ -26,14 +30,20 @@
                 <h2>Production Management</h2>
                 <p>Optimize production processes, plan, and monitor progress efficiently. Our Production Management module ensures streamlined production operations and enhanced productivity.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/enterprise/productionmanagement.png" alt="Basic Financial Management">
+            @if (Model.ProductionManagement != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.ProductionManagement)" alt="Basic Financial Management">
+            }
         </div>
 
         <!-- Spacing -->
         <div style="height: 20px;"></div>
 
         <div class="basic-feature enterprise-feature">
-            <img class="basic-subscription-img" src="~/content/enterprise/hr.png" alt="Basic Financial Management">
+            @if (Model.HumanResources != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.HumanResources)" alt="Basic Financial Management">
+            }
             <div class="basic-feature-text">
                 <h2>Human Resources (HR)</h2>
                 <p>Cover all aspects of HR management, including recruitment, salaries, employee evaluations, and reporting. Simplify HR processes and ensure the well-being of your workforce.</p>
@@ -48,7 +58,10 @@
                 <h2>Analytics & Reporting</h2>
                 <p>Access comprehensive data analysis, report generation, and visual charts to make informed decisions. Our Analytics & Reporting tools provide insights into your business's performance and trends.</p>
             </div>
-            <img class="basic-subscription-img" src="~/content/enterprise/analyticsreporting.png" alt="Basic Financial Management">
+            @if (Model.AnalyticsReporting != null)
+            {
+                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.AnalyticsReporting)" alt="Basic Financial Management">
+            }
         </div>
 
     </div>

@@ -1,32 +1,39 @@
-﻿using EnterpriseMaster.Models;
+﻿using EnterpriseMaster.DbServices.Interfaces;
+using EnterpriseMaster.DbServices.Models.Database;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace EnterpriseMaster.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
+        private IErrorLogsServices errorLogsServices;
+        private IMainPageServices mainPageService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            IErrorLogsServices _errorLogsServices,
+            IMainPageServices _mainPageService
+            )
         {
-            _logger = logger;
+            errorLogsServices = _errorLogsServices;
+            mainPageService = _mainPageService;
         }
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            try
+            {
+                var mainPageModel = mainPageService.GetAllAsync().Result.FirstOrDefault();
+                if (mainPageModel == null)
+                {
+                    return RedirectToAction("Error");
+                }
+                return View(mainPageModel);
+            }
+            catch (Exception e)
+            {
+                errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                return RedirectToAction("Error");
+            }
         }
     }
 }
