@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EnterpriseMaster.DbServices.Models.Database;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EnterpriseMaster.Controllers
 {
@@ -11,7 +12,7 @@ namespace EnterpriseMaster.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register()
+        public async Task<IActionResult> Register(Users user)
         {
 
             return RedirectToAction("Index", "Home");

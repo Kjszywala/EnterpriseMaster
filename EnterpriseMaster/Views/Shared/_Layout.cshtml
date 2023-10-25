@@ -10,6 +10,23 @@
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 </head>
+<style>
+    /* Styles for the overlaying alert */
+    .overlay-alert {
+        position: fixed;
+        top: 12%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: gray;
+        color: white;
+        padding: 16px;
+        border-radius: 5px;
+        min-width: 200px;
+        max-height: 200px;
+        z-index: 1000; /* Set a high z-index to make it appear on top */
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+</style>
 <body class="mainbody">
     <div class="navbar" style="background-color: rgba(255, 255, 255, 0.8);">
         <label for="togglericon" class="toggler" checked></label>
@@ -49,6 +66,12 @@
         </div>
     </div>
     <div class="mainRenderBody">
+        @if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div class="overlay-alert" id="overlayAlert">
+                @ViewBag.Message
+            </div>
+        }
         @RenderBody()
     </div>
     <footer class="border-top bg-dark text-light mainfooter">
@@ -70,6 +93,17 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Check if the alert exists in the DOM
+        var overlayAlert = document.getElementById("overlayAlert");
+
+        if (overlayAlert) {
+            // Automatically hide the alert after 4 seconds (4000 milliseconds)
+            setTimeout(function () {
+                overlayAlert.style.display = "none";
+            }, 4000);
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
    
 </body>

@@ -52,8 +52,23 @@ body, h1, h2, h3, p {
     --navbar-font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
-.navbar {
+/* Styles for the overlaying alert */
+.overlay-alert {
     position: fixed;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: gray;
+    color: white;
+    padding: 16px;
+    border-radius: 5px;
+    min-width: 200px;
+    max-height: 200px;
+    z-index: 1000; /* Set a high z-index to make it appear on top */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.navbar {
     top: 0;
     left: 0;
     width: 100%;
@@ -91,7 +106,6 @@ body, h1, h2, h3, p {
 
 .nav {
     position: fixed;
-    top: 40px;
     left: 0px;
     right: 0px;
     visibility: hidden;
