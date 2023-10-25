@@ -17,16 +17,16 @@ namespace EnterpriseMaster.Controllers
             errorLogsServices = _errorLogsService;
             enterprisePlanServices = _enterprisePlanServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             try
             {
-                var enterprisePlanModel = enterprisePlanServices.GetAllAsync().Result.FirstOrDefault();
+                var enterprisePlanModel = (await enterprisePlanServices.GetAllAsync()).FirstOrDefault();
                 return View(enterprisePlanModel);
             }
             catch (Exception e)
             {
-                errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
                 return RedirectToAction("Error");
             }
         }

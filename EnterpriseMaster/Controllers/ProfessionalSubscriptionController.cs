@@ -18,16 +18,16 @@ namespace EnterpriseMaster.Controllers
             professionalPlanServices = _professionalPlanServices;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             try
             {
-                var professionalPlanModel = professionalPlanServices.GetAllAsync().Result.FirstOrDefault();
+                var professionalPlanModel = (await professionalPlanServices.GetAllAsync()).FirstOrDefault();
                 return View(professionalPlanModel);
             }
             catch (Exception e)
             {
-                errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
                 return RedirectToAction("Error");
             }
         }

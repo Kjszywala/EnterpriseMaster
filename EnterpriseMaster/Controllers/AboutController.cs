@@ -18,16 +18,16 @@ namespace EnterpriseMaster.Controllers
             errorLogsServices = _errorLogsServices;
             aboutPageServices = _aboutPageServices;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             try
             {
-                var aboutPageModel = aboutPageServices.GetAllAsync().Result.FirstOrDefault();
+                var aboutPageModel = (await aboutPageServices.GetAllAsync()).FirstOrDefault();
                 return View(aboutPageModel);
             }
             catch (Exception e)
             {
-                errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
                 return RedirectToAction("Error");
             }
         }

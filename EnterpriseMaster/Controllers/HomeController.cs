@@ -18,11 +18,11 @@ namespace EnterpriseMaster.Controllers
             mainPageService = _mainPageService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             try
             {
-                var mainPageModel = mainPageService.GetAllAsync().Result.FirstOrDefault();
+                var mainPageModel = (await mainPageService.GetAllAsync()).FirstOrDefault();
                 if (mainPageModel == null)
                 {
                     return RedirectToAction("Error");
@@ -31,7 +31,7 @@ namespace EnterpriseMaster.Controllers
             }
             catch (Exception e)
             {
-                errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
                 return RedirectToAction("Error");
             }
         }

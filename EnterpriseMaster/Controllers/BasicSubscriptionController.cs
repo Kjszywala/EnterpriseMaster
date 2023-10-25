@@ -19,16 +19,16 @@ namespace EnterpriseMaster.Controllers
 
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             try
             {
-                var basicPlanModel = basicPlanService.GetAllAsync().Result.FirstOrDefault();
+                var basicPlanModel = (await basicPlanService.GetAllAsync()).FirstOrDefault();
                 return View(basicPlanModel);
             }
             catch (Exception e)
             {
-                errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
                 return RedirectToAction("Error");
             }
         }

@@ -8,5 +8,13 @@ namespace EnterpriseMaster.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register()
+        {
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
