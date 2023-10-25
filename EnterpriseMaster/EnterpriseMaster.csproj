@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EnterpriseMaster.BusinessLogic\EnterpriseMaster.BusinessLogic.csproj" />
     <ProjectReference Include="..\EnterpriseMaster.DbServices\EnterpriseMaster.DbServices.csproj" />
   </ItemGroup>
 
