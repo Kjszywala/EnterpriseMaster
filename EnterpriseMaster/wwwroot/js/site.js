@@ -36,11 +36,3 @@ window.addEventListener("click", (event) => {
         modal.style.display = "none";
     }
 });
-// Check if the alert exists in the DOM
-var overlayAlert = document.getElementById("overlayAlert");
-
-if (overlayAlert) {
-    setTimeout(function () {
-        overlayAlert.style.display = "none";
-    }, 3000);
-}

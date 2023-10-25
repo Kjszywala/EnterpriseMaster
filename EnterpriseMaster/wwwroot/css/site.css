@@ -68,6 +68,83 @@ body, h1, h2, h3, p {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
+
+/* Styles for the overlaying alert */
+.overlay-alert {
+    position: fixed;
+    top: 12%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    background-color: darkred;
+    color: white;
+    padding: 16px;
+    border-radius: 5px;
+    min-width: 200px;
+    max-height: 200px;
+    z-index: 1000; /* Set a high z-index to make it appear on top */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.alert {
+    position: fixed;
+    top: 9%;
+    left: 80%;
+    width: 200px;
+    max-height: 200px;
+    padding: 10px;
+    margin: 10px;
+    line-height: 1.8;
+    border-radius: 5px;
+    cursor: hand;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: 400;
+    z-index: 1000; /* Set a high z-index to make it appear on top */
+}
+
+.alertCheckbox {
+    display: none;
+}
+
+:checked + .alert {
+    display: none;
+}
+
+.alertText {
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+}
+
+.alertClose {
+    float: right;
+    padding-top: 5px;
+    font-size: 10px;
+}
+
+.clear {
+    clear: both;
+}
+
+.success {
+    background-color: #EFE;
+    border: 1px solid #DED;
+    color: #9A9;
+}
+
+.warning {
+    background-color: #FDF7DF;
+    border: 1px solid #FEEC6F;
+    color: #C9971C;
+}
+
+.error {
+    background-color: #FEE;
+    border: 1px solid #EDD;
+    color: #A66;
+}
+
 .navbar {
     top: 0;
     left: 0;
