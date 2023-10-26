@@ -55,17 +55,17 @@ namespace EnterpriseMaster.Controllers
                 var httpContext = httpContextAccessor.HttpContext;
                 httpContext.Session.SetString("IsLoggedIn", "true");
                 httpContext.Session.SetString("email", user.Email);
-                TempData["Success"] = "You are logged in.";
+                TempData["Success"] = "Logged in successfully.";
                 return RedirectToAction("Index", "Home");
             }
-
-            return View();
+            ViewBag.Danger = "Incorrect password!";
+            return View("Index");
         }
 
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            TempData["Warning"] = "You are logged out.";
+            TempData["Success"] = "Logged out successfully.";
             return RedirectToAction("Index", "Home");
         }
 

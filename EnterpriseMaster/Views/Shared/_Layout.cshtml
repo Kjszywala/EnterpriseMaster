@@ -11,6 +11,23 @@
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 </head>
+<style>
+@@media (max-width: 768px){
+    .nav{
+        position:relative;
+        display: block;
+        margin-top:10px;
+    }
+
+    .text{
+        margin-top: 100px;
+    }
+
+    h2{
+        font-size: 15px;
+    }
+}
+</style>
 <body class="mainbody">
     <div class="navbar" style="background-color: rgba(255, 255, 255, 0.8);">
         <label for="togglericon" class="toggler" checked></label>
@@ -23,25 +40,23 @@
            
             <a href="@Url.Action("Index", "Home")">Home</a>
 
-            <div class="dropdown" >
-                <label for="toggle-1" id="dropdown-label">Services</label>
-                <input type="checkbox" id="toggle-1" />
-                <ul id="dropdown-content" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border-radius: 5px;">
-                    <li><a class="amain" href="@Url.Action("Index", "BasicSubscription")">Basic Plan</a></li>
-                    <li><a class="amain" href="@Url.Action("Index", "ProfessionalSubscription")">Professional Plan</a></li>
-                    <li><a class="amain" href="@Url.Action("Index", "EnterpriseSubscription")">Enterprise Plan</a></li>
-                </ul>
+            <div class="user-dropdown">
+                <button class="dropbtn">Services&#9660;</button>
+                <div class="dropdown-content1">
+                    <a class="amain" href="@Url.Action("Index", "BasicSubscription")">Basic Plan</a>
+                    <a class="amain" href="@Url.Action("Index", "ProfessionalSubscription")">Professional Plan</a>
+                    <a class="amain" href="@Url.Action("Index", "EnterpriseSubscription")">Enterprise Plan</a>
+                </div>
             </div>
-            <div class="dropdown">
-                <label for="toggle-2" id="dropdown-label">Support</label>
-                <input type="checkbox" id="toggle-2" />
-                <ul id="dropdown-content" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border-radius: 5px;">
-                    <li><a class="amain" href="@Url.Action("Index", "FAQ")">FAQs</a></li>
-                    <li><a class="amain" href="@Url.Action("Index", "Terms")">Terms and Conditions</a></li>
-                    <li><a class="amain" href="@Url.Action("Index", "HelpCenter")">Help Center</a></li>
-                    <li><a class="amain" href="@Url.Action("Index", "Refund")">Returns And Refunds</a></li>
-                    <li><a class="amain" href="@Url.Action("Index", "Privacy")">Privacy Policy</a></li>
-                </ul>
+            <div class="user-dropdown">
+                <button class="dropbtn">Support&#9660;</button>
+                <div class="dropdown-content1">
+                    <a class="amain" href="@Url.Action("Index", "FAQ")">FAQs</a>
+                    <a class="amain" href="@Url.Action("Index", "Terms")">Terms and Conditions</a>
+                    <a class="amain" href="@Url.Action("Index", "HelpCenter")">Help Center</a>
+                    <a class="amain" href="@Url.Action("Index", "Refund")">Returns And Refunds</a>
+                    <a class="amain" href="@Url.Action("Index", "Privacy")">Privacy Policy</a>
+                </div>
             </div>
             <a href="@Url.Action("Index", "Contact")">Contact</a>
             <a href="@Url.Action("Index", "About")">About</a>
@@ -55,9 +70,17 @@
             }
             else
             {
-                <a href="#">Profile</a>
+                @*<a href="#">Profile</a>
                 <a href="#">Settings</a>
-                <a href="@Url.Action("Logout", "Login")">Logout</a>
+                <a href="@Url.Action("Logout", "Login")">Logout</a>*@
+                <div class="user-dropdown">
+                    <button class="dropbtn">My Account&#9660;</button>
+                    <div class="dropdown-content1">
+                        <a href="#">Profile</a>
+                        <a href="#">Settings</a>
+                        <a href="@Url.Action("Logout", "Account")">Logout</a>
+                    </div>
+                </div>
             }
         </div>
     </div>
