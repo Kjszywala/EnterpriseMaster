@@ -17,5 +17,6 @@
         public bool? Newsletter { get; set; }
         public int? UserAddressId { get; set; }
         public UsersAdresses? UserAddress { get; set; }
+        public List<SupportCases>? SupportCases { get; set; }
     }
 }
