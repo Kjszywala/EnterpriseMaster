@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net" Version="0.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EnterpriseMaster.DbServices\EnterpriseMaster.DbServices.csproj" />
+  </ItemGroup>
+
 </Project>

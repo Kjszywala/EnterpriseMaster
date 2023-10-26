@@ -1,3 +1,5 @@
+using EnterpriseMaster.BusinessLogic.AuthenticationLogic;
+using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
 
@@ -12,7 +14,14 @@ namespace EnterpriseMaster
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Add injection here
+            // Add session
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(60);
+                options.Cookie.HttpOnly = true;
+            });
+
+            // Add db injection here
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();
             builder.Services.AddScoped<IApplicationBookmarksServices, ApplicationBookmarksServices>();
             builder.Services.AddScoped<IApplicationFeaturesServices, ApplicationFeaturesServices>();
@@ -43,6 +52,10 @@ namespace EnterpriseMaster
             builder.Services.AddScoped<IUsersAdressesServices, UsersAdressesServices>();
             builder.Services.AddScoped<IUsersServices, UsersServices>();
             builder.Services.AddScoped<IWhatsNewsServices, WhatsNewsServices>();
+
+            // Add logic injection here
+            builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
+
 
             var app = builder.Build();
 
