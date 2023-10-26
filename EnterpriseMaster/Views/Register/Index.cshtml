@@ -9,11 +9,12 @@
     <div class="register-container" style="margin-top: 50px;">
         <h1>Register</h1>
         <br />
-        <form action="" method="post">
-            <label for="username">First Name</label>
-            <input type="text" id="username" name="username" required>
-            <label for="username">Second Name</label>
-            <input type="text" id="username" name="username" required>
+        @using (Html.BeginForm("Register", "Register", FormMethod.Post, new { @id = "register" }))
+        {
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" name="firstname" required>
+            <label for="secondname">Second Name</label>
+            <input type="text" id="secondname" name="secondname" required>
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
             <label for="password">Password</label>
@@ -21,6 +22,6 @@
             <label for="confirm-password">Confirm Password</label>
             <input type="password" id="confirm-password" name="confirm-password" required>
             <input type="submit" value="Register">
-        </form>
+        }
     </div>
 </div>

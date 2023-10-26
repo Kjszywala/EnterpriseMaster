@@ -27,7 +27,6 @@ namespace EnterpriseMaster.Controllers
                 {
                     return RedirectToAction("Error");
                 }
-                ViewBag.Danger = "hello";
                 return View(mainPageModel);
             }
             catch (Exception e)
