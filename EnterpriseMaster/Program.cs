@@ -17,9 +17,11 @@ namespace EnterpriseMaster
             // Add session
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(60);
+                options.IdleTimeout = TimeSpan.FromSeconds(60*5);
                 options.Cookie.HttpOnly = true;
             });
+            // Session injection
+            builder.Services.AddHttpContextAccessor();
 
             // Add db injection here
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();
@@ -69,7 +71,7 @@ namespace EnterpriseMaster
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();

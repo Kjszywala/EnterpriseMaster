@@ -1,6 +1,10 @@
 ﻿using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace EnterpriseMaster.BusinessLogic.AuthenticationLogic
@@ -11,11 +15,10 @@ namespace EnterpriseMaster.BusinessLogic.AuthenticationLogic
 
         public Task<bool> AuthenticateAsync(Users user, List<Users> usersList)
         {
-            var emailExist = usersList.Where(x => x.Email == user.Email).FirstOrDefault();
+            var userExist = usersList.Where(x => x.Email == user.Email).FirstOrDefault();
 
-            if (emailExist != null)
+            if (userExist != null && BCrypt.Net.BCrypt.Verify(user.Password, userExist.Password))
             {
-                // To do
                 return Task.FromResult(true);
             }
 

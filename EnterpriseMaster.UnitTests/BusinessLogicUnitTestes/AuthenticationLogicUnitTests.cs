@@ -61,42 +61,27 @@ namespace EnterpriseMaster.UnitTests.BusinessLogicUnitTestes
         }
 
         [Test]
-        public async Task AuthenticateAsync_EmailExists_ReturnsTrue()
-        {
-            // Arrange
-            var user = new Users { Email = "existing@example.com" };
-            var usersList = new List<Users> { new Users { Email = "existing@example.com" } };
-
-            // Act
-            bool result = await authenticationLogic.AuthenticateAsync(user, usersList);
-
-            // Assert
-            Assert.IsTrue(result);
-        }
-
-        [Test]
-        public async Task AuthenticateAsync_EmailDoesNotExist_ReturnsFalse()
-        {
-            // Arrange
-            var user = new Users { Email = "new@example.com" };
-            var usersList = new List<Users> { new Users { Email = "existing@example.com" } };
-
-            // Act
-            bool result = await authenticationLogic.AuthenticateAsync(user, usersList);
-
-            // Assert
-            Assert.IsFalse(result);
-        }
-
-        [Test]
         public async Task EmailAlreadyExist_EmailExists_ReturnsTrue()
         {
             // Arrange
-            var email = "existing@example.com";
-            var usersList = new List<Users> { new Users { Email = "existing@example.com" } };
+            var user = new Users
+            {
+                Email = "user@example.com",
+                Password = "hashed_password" // Replace with the actual hashed password
+            };
+
+            var usersList = new List<Users>
+            {
+                new Users
+                {
+                    Email = "user@example.com",
+                    Password = BCrypt.Net.BCrypt.HashPassword("hashed_password") // Replace with the actual hashed password
+                },
+            // Add more user data for testing
+            };
 
             // Act
-            bool result = await authenticationLogic.EmailAlreadyExist(email, usersList);
+            bool result = await authenticationLogic.EmailAlreadyExist(user.Email, usersList);
 
             // Assert
             Assert.IsTrue(result);
@@ -140,6 +125,59 @@ namespace EnterpriseMaster.UnitTests.BusinessLogicUnitTestes
 
             // Assert
             Assert.IsFalse(result);
+        }
+
+        [Test]
+        public async Task AuthenticateAsync_ValidUser_ReturnsTrue()
+        {
+            // Arrange
+            var user = new Users
+            {
+                Email = "user@example.com",
+                Password = "hashed_password" // Replace with the actual hashed password
+            };
+
+            var usersList = new List<Users>
+            {
+                new Users
+                {
+                    Email = "user@example.com",
+                    Password = BCrypt.Net.BCrypt.HashPassword("hashed_password") // Replace with the actual hashed password
+                },
+            // Add more user data for testing
+            };
+
+            // Act
+            var result = await authenticationLogic.AuthenticateAsync(user, usersList);
+
+            // Assert
+            Assert.IsTrue(result, "Expected authentication to be successful.");
+        }
+
+        [Test]
+        public async Task AuthenticateAsync_InvalidUser_ReturnsFalse()
+        {
+            // Arrange
+            var user = new Users
+            {
+                Email = "user@example.com",
+                Password = "incorrect_password"
+            };
+
+            var usersList = new List<Users>
+            {
+                new Users
+                {
+                    Email = "user@example.com",
+                    Password = BCrypt.Net.BCrypt.HashPassword("hashed_password")
+                }
+            };
+
+            // Act
+            var result = await authenticationLogic.AuthenticateAsync(user, usersList);
+
+            // Assert
+            Assert.IsFalse(result, "Expected authentication to be unsuccessful.");
         }
 
         #endregion

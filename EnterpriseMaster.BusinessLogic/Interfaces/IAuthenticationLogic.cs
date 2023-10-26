@@ -1,4 +1,5 @@
 ﻿using EnterpriseMaster.DbServices.Models.Database;
+using Microsoft.AspNetCore.Http;
 
 namespace EnterpriseMaster.BusinessLogic.Interfaces
 {

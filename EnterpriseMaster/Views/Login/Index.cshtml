@@ -9,12 +9,13 @@
     <div class="login-container">
         <h1>Login</h1>
         <br />
-        <form action="" method="post">
-            <label for="username">E-mail</label>
-            <input type="text" id="username" name="username" required>
+        @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @id = "login" }))
+        {
+            <label for="email">E-mail</label>
+            <input type="text" id="email" name="email" required>
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
             <input type="submit" value="Login">
-        </form>
+        }
     </div>
 </div>

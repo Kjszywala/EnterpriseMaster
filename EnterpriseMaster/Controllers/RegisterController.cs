@@ -61,9 +61,10 @@ namespace EnterpriseMaster.Controllers
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
             user.Password = hashedPassword;
+            user.CreationDate = DateTime.Now;
+            user.ModificationDate = DateTime.Now;
 
             var IsRegistered = await usersServices.AddAsync(user);
-
             if(IsRegistered)
             {
                 TempData["Success"] = "Your registration is complete. You can now log in with your new account.";

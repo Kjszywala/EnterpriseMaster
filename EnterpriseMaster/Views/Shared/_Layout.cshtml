@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -44,8 +45,14 @@
             </div>
             <a href="@Url.Action("Index", "Contact")">Contact</a>
             <a href="@Url.Action("Index", "About")">About</a>
-            <a href="@Url.Action("Index", "Login")">Login</a>
-            <a href="@Url.Action("Index", "Register")">Register</a>
+            @{
+                var isLoggedIn = HttpContextAccessor.HttpContext.Session.GetString("email");
+            }
+            @if (string.IsNullOrEmpty(isLoggedIn))
+            {
+                <a href="@Url.Action("Index", "Login")">Login</a>
+                <a href="@Url.Action("Index", "Register")">Register</a>
+            }
         </div>
     </div>
     <div class="mainRenderBody">
