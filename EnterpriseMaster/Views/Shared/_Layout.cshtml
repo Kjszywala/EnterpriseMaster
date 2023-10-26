@@ -53,6 +53,12 @@
                 <a href="@Url.Action("Index", "Login")">Login</a>
                 <a href="@Url.Action("Index", "Register")">Register</a>
             }
+            else
+            {
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="@Url.Action("Logout", "Login")">Logout</a>
+            }
         </div>
     </div>
     <div class="mainRenderBody">

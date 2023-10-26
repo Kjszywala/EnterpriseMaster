@@ -62,6 +62,13 @@ namespace EnterpriseMaster.Controllers
             return View();
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            TempData["Warning"] = "You are logged out.";
+            return RedirectToAction("Index", "Home");
+        }
+
         #endregion
     }
 }
