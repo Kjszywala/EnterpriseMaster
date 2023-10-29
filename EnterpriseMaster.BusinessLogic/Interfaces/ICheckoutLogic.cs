@@ -18,6 +18,8 @@ namespace EnterpriseMaster.BusinessLogic.Interfaces
             List<SubscriptionTypes> subscriptions, 
             List<ApplicationFeatures> features, 
             List<PaymentMethods> paymentMethods, 
-            string value); 
+            string value,
+            string session
+            ); 
     }
 }

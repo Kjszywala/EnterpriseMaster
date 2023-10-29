@@ -8,6 +8,7 @@
         public string Password { get; set; }
         public string? CompanyName { get; set; }
         public string Email { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string? Position { get; set; }
         public string? BusinesArea { get; set; }
         public int? SubscriptionTypeId { get; set; }

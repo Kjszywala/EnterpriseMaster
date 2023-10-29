@@ -46,7 +46,7 @@
                     <ul style="">
                         @foreach (var item in Model.ApplicationFeatures)
                         {
-                            <li>@item.FeatureName</li>
+                            <li>@item.Description</li>
                         }
                     </ul>
                 </div>
@@ -192,8 +192,7 @@
                 Place your Order
                 <i class="icon icon-arrow-right-circle"></i>
             </a>
-            <a href="#" class="backBtn">Go Back to Shop</a>
-
+            <a href="@Url.Action("Index", "Home")" class="backBtn">Go Back to Shop</a>
         </div>
+    </div>
 </section>
-  </div>

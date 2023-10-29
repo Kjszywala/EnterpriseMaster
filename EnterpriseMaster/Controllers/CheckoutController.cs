@@ -41,15 +41,22 @@ namespace EnterpriseMaster.Controllers
         {
             try
             {
+                var session = HttpContext.Session.GetString("email");
+                if (string.IsNullOrEmpty(session))
+                {
+                    TempData["Warning"] = "You need to login to access this page!";
+                    return RedirectToAction("Index", "Login");
+                };
                 var subscriptions = subscriptionTypesServices.GetAllAsync().Result;
                 var features = featuresServices.GetAllAsync().Result;
                 var paymentMethods = paymentMethodsServices.GetAllAsync().Result;
 
                 var checkoutModel = checkoutLogic.GetCheckoutModelBasedOnString(
-                    subscriptions,
-                    features,
-                    paymentMethods,
-                    type
+                        subscriptions,
+                        features,
+                        paymentMethods,
+                        type,
+                        session
                     );
 
                 return View(checkoutModel);

@@ -33,6 +33,11 @@ namespace EnterpriseMaster.Controllers
 
         public IActionResult Index()
         {
+
+            if (TempData["Warning"] != null)
+            {
+                ViewBag.Warning = TempData["Warning"];
+            }
             return View();
         }
 
@@ -58,6 +63,7 @@ namespace EnterpriseMaster.Controllers
                 TempData["Success"] = "Logged in successfully.";
                 return RedirectToAction("Index", "Home");
             }
+
             ViewBag.Danger = "Incorrect password!";
             return View("Index");
         }
