@@ -1,4 +1,6 @@
-﻿namespace EnterpriseMaster.Helpers.Models
+﻿using EnterpriseMaster.DbServices.Models.Database;
+
+namespace EnterpriseMaster.DbServices.Helpers
 {
     public class CheckoutModel
     {
@@ -8,8 +10,8 @@
         public decimal SubscriptionPrice { get; set; }
         public decimal SubscriptionVat { get; set; }
         public decimal SubscriptionPlusVat { get; set; }
-        public decimal SubscriptionDelivery { get; set; }
         public decimal SubscriptionTotal { get; set; }
         public byte[] PaymentMethodImage { get; set; }
+        public List<ApplicationFeatures>? ApplicationFeatures { get; set; }
     }
 }

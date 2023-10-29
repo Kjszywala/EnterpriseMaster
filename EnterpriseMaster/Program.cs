@@ -57,7 +57,7 @@ namespace EnterpriseMaster
 
             // Add logic injection here
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
-
+            builder.Services.AddScoped<ICheckoutLogic, CheckoutLogic>();
 
             var app = builder.Build();
 

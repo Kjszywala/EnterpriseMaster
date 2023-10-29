@@ -1,4 +1,5 @@
-﻿@*
+﻿@model EnterpriseMaster.DbServices.Helpers.CheckoutModel
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -32,26 +33,23 @@
         <div class="details__item">
 
             <div class="item__image">
-                <img class="iphone" src="https://www.apple.com/v/iphone/compare/k/images/overview/compare_iphoneXSmax_silver_large.jpg" alt="">
+                <img class="iphone" src="data:image;base64,@Convert.ToBase64String(Model.SubscriptionImage)" style="height:100px; width:auto;" alt="">
             </div>
             <div class="item__details">
                 <div class="item__title">
-                    Iphone X
+                    @Model.SubscriptionName
                 </div>
                 <div class="item__price">
-                    649,99 £
+                   $ @Model.SubscriptionPrice
                 </div>
                 <div class="item__description">
                     <ul style="">
-                        <li>Super fast and power efficient</li>
-                        <li>A lot of fast memory</li>
-                        <li>High resolution camera</li>
-                        <li>Smart tools for health and traveling and more</li>
-                        <li>Share your games and achievements with your friends via Group Play</li>
+                        @foreach (var item in Model.ApplicationFeatures)
+                        {
+                            <li>@item.FeatureName</li>
+                        }
                     </ul>
-
                 </div>
-
             </div>
         </div>
 
@@ -63,18 +61,20 @@
             <div class="payment__title">
                 Payment Method
             </div>
-            <div class="payment__types">
-                <div class="payment__type payment__type--cc active">
-                    <i class="icon icon-credit-card"></i>Credit Card
-                </div>
-                <div class="payment__type payment__type--paypal">
-                    <i class="icon icon-paypal"></i>Paypal
-                </div>
-                <div class="payment__type payment__type--paypal">
-                    <i class="icon icon-wallet"></i>SEPA
-                </div>
-                <div class="payment__type payment__type--paypal">
-                    <i class="icon icon-note"></i>Invoice
+            <div class="divpayments">
+                <div class="payment__types">
+                    <div class="payment__type payment__type--cc active">
+                        <i class="icon icon-credit-card"></i>Credit Card
+                    </div>
+                    <div class="payment__type payment__type--paypal">
+                        <i class="icon icon-paypal"></i>Paypal
+                    </div>
+                    <div class="payment__type payment__type--paypal">
+                        <i class="icon icon-wallet"></i>SEPA
+                    </div>
+                    <div class="payment__type payment__type--paypal">
+                        <i class="icon icon-note"></i>Invoice
+                    </div>
                 </div>
             </div>
 

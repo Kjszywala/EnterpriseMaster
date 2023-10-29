@@ -8,7 +8,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public string? Description { get; set; }
 		[Column(TypeName = "decimal(18, 2)")]
 		public decimal Price { get; set; }
-        public int? FeatureId { get; set; }
         public byte[]? Image { get; set; }
         public List<ApplicationFeatures>? ApplicationFeatures { get; set; }
         public List<Users>? Users { get; set; }
