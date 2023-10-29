@@ -21,7 +21,11 @@
     text-align: left;
     height: 565px;
 }
-
+    .left-nav-link {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border-radius: 7px;
+        border-radius: 7px;
+    }
     .containerHelpCenter h1 {
         color: #333;
     }
@@ -63,3 +67,103 @@
         border-radius: 4px;
         cursor: pointer;
     }
+.containerHelpCenterLeft {
+    background-color: #fff;
+    color: #fff;
+    width: 20%;
+    margin: 30px auto;
+    max-width: 300px;
+    justify-content: right;
+    align-items: end;
+    height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    height: 565px;
+}
+/* Add styles for left navigation links */
+.left-nav-link {
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+    margin: 15px;
+    color: #333; /* Default link color */
+    padding: 10px 15px;
+    transition: color 0.3s; /* Smooth transition effect on hover */
+}
+
+    /* Hover effect */
+    .left-nav-link:hover {
+        color: #007BFF; /* Change link color on hover */
+        background-color: #ededed;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    /* Active link style */
+    .left-nav-link.active {
+        color: #007BFF; /* Change link color for the active link */
+        background-color: #ededed;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+@media (max-width: 730px) {
+    .helpCenterDiv {
+        display: block;
+        height: 900px;
+    }
+
+    .containerHelpCenterLeft {
+        height: auto;
+        margin-top: 50px;
+        margin-left: 0;
+        max-width: 660px;
+        width: 95%;
+    }
+
+    .containerHelpCenter {
+        margin-left: -50px;
+        margin-left: 0;
+        width: 92%;
+    }
+}
+
+/* Table styles */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+    /* Table header row styles */
+    .styled-table thead {
+        background-color: #333;
+        color: #fff;
+    }
+
+    /* Table header cell styles */
+    .styled-table th {
+        padding: 10px;
+    }
+
+    /* Table body row styles */
+    .styled-table tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Table body cell styles */
+    .styled-table td {
+        padding: 10px;
+    }
+
+/* Hide table borders for the last row in each container */
+.containerHelpCenter:last-child .styled-table tbody tr:last-child {
+    border: none;
+}
+
+/* Show the container when it's set to display:block */
+.containerHelpCenter.show {
+    display: block;
+}

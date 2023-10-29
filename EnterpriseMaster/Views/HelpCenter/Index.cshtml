@@ -5,69 +5,7 @@
     Layout = "_Layout";
 }
 <link href="~/css/helpcenter.css" rel="stylesheet" type="text/css">
-<style>
-    .containerHelpCenterLeft {
-    background-color: #fff;
-    color: #fff;
-    width: 20%;
-    margin: 30px auto;
-    max-width: 300px;
-    justify-content: right;
-    align-items: end;
-    height: 90vh;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    text-align: center;
-    height: 565px;
-}
-/* Add styles for left navigation links */
-.left-nav-link {
-    text-decoration: none;
-    display: block;
-    margin-bottom: 10px;
-    margin: 15px;
-    color: #333; /* Default link color */
-    padding: 10px 15px;
-    transition: color 0.3s; /* Smooth transition effect on hover */
-}
 
-/* Hover effect */
-.left-nav-link:hover {
-    color: #007BFF; /* Change link color on hover */
-    background-color: #ededed;
-    cursor: pointer;
-    border-radius: 10px;
-}
-    /* Active link style */
-.left-nav-link.active {
-    color: #007BFF; /* Change link color for the active link */
-    background-color: #ededed;
-    cursor: pointer;
-    border-radius: 10px;
-}
-
-@@media (max-width: 730px) {
-    .helpCenterDiv {
-        display: block;
-        height: 900px;
-    }
-
-    .containerHelpCenterLeft {
-        height: auto;
-        margin-top: 50px;
-        margin-left: 0;
-        max-width: 660px;
-        width: 95%;
-    }
-
-    .containerHelpCenter {
-        margin-left: -50px;
-        margin-left: 0;
-        width: 92%;
-    }
-}
-</style>
 <div class="helpCenterDiv" style="min-height:90vh">
     <div class="containerHelpCenterLeft">
         <a class="left-nav-link" onclick="showCreateCase()">Create Case</a>
@@ -104,43 +42,55 @@
     </div>
     <div class="openCases containerHelpCenter" style="display:none;">
         <h1>Open Issue Cases</h1>
-        <table>
-            <tr>
-                <th>Case ID</th>
-                <th>Description</th>
-                <th>Status</th>
-            </tr>
-            <tr>
-                <td>001</td>
-                <td>Issue with login</td>
-                <td>Open</td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>Payment problem</td>
-                <td>Open</td>
-            </tr>
-        </table>
+         <div class="table-container">
+            <table class="styled-table" id="reservation-table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>Issue with login</td>
+                        <td>Open</td>
+                    </tr>
+                    <tr>
+                        <td>002</td>
+                        <td>Payment problem</td>
+                        <td>Open</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="solvedCases containerHelpCenter" style="display:none;">
         <h1>Solved Issue Cases</h1>
-        <table>
-            <tr>
-                <th>Case ID</th>
-                <th>Description</th>
-                <th>Status</th>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>Product delivery delay</td>
-                <td>Solved</td>
-            </tr>
-            <tr>
-                <td>004</td>
-                <td>Software bug</td>
-                <td>Solved</td>
-            </tr>
-        </table>
+        <div class="table-container">
+            <table class="styled-table" id="reservation-table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>003</td>
+                        <td>Product delivery delay</td>
+                        <td>Solved</td>
+                    </tr>
+                    <tr>
+                        <td>004</td>
+                        <td>Software bug</td>
+                        <td>Solved</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script>
