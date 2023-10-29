@@ -105,3 +105,34 @@
         padding: 16px 48px;
     }
 }
+/* Styles for the modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: transparent;
+    margin: 7% auto;
+    padding: 20px;
+    width: 50%;
+    text-align: center;
+    max-height: 500px;
+}
+
+.close {
+    color: #000;
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: #4488dd;
+    border-radius: 100px;
+    width: 30px;
+}
