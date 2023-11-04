@@ -357,6 +357,8 @@ body, h1, h2, h3, p {
     justify-content: center;
 }
 
+
+
 @media (min-width: 768px) {
     .navbar #togglericon:checked ~ div.nav,
     .navbar #togglericon ~ div.nav {
