@@ -1,0 +1,9 @@
+﻿@model EnterpriseMaster.ViewModels.ProfileViewModel
+<div class="user__name">
+    Full Name: @Model.FirstName @Model.SecondName
+    <br> Date of Birth: @Model.DateOfBirth?.ToString("dd/MM/yyyy")
+</div>
+<div class="user__address">
+    E-mail Address: @Model.Email
+    <br>Country: @Model.Country
+</div>

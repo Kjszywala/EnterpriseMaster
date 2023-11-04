@@ -6,8 +6,45 @@
     Layout = "_Layout";
 }
 <link href="~/css/checkout.css" rel="stylesheet" type="text/css">
+<style>
+        /* Modal styles */
+        .modal12 {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            text-align: center;
+        }
 
-<header>
+        .modal-content12 {
+            background-color: #fff;
+            border-radius: 8px;
+            width: 300px;
+            margin: 150px auto;
+            padding: 20px;
+        }
+
+        /* Loading animation styles */
+        .loader12 {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<header style="margin-top:56px;">
     <div class="container">
         <div class="navigation">
 
@@ -90,7 +127,7 @@
                                     <div class="title">
                                         Credit Card Number
                                     </div>
-                                    <input type="text" class="input txt text-validated" value="4542 9931 9292 2293" />
+                                    <input type="text" class="input txt text-validated" value="4542 9931 9292 2293" required/>
                                 </div>
                             </div>
                             <div class="row121">
@@ -98,7 +135,7 @@
                                     <div class="title">
                                         Expiry Date
                                     </div>
-                                    <select class="input ddl">
+                                    <select class="input ddl" required>
                                         <option selected>01</option>
                                         <option>02</option>
                                         <option>03</option>
@@ -112,7 +149,7 @@
                                         <option>11</option>
                                         <option>12</option>
                                     </select>
-                                    <select class="input ddl">
+                                    <select class="input ddl" required>
                                         <option>01</option>
                                         <option>02</option>
                                         <option>03</option>
@@ -151,7 +188,7 @@
                                         CVV Code
                                         <span class="numberCircle">?</span>
                                     </div>
-                                    <input type="text" class="input txt" />
+                                    <input type="text" class="input txt" required />
                                 </div>
                             </div>
                             <div class="row121">
@@ -159,7 +196,7 @@
                                     <div class="title">
                                         Name on Card
                                     </div>
-                                    <input type="text" class="input txt" />
+                                    <input type="text" class="input txt" required />
                                 </div>
                             </div>
 
@@ -171,28 +208,79 @@
                         <i class="icon icon-plane"></i> Shiping Information
                     </div>
                     <div class="details__user">
-                        <div class="user__name">
-                            Full Name: John Doe
-                            <br> Date of Birth: 13/03/1980
-                        </div>
-                        <div class="user__address">
-                            E-mail Address: 22 Street, Address
-                            <br>Country: Poland
-                        </div>
+                        @await Component.InvokeAsync("CheckoutUserInformationComponent")
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
+    <div id="paymentModal" class="modal12">
+        <div class="modal-content12">
+            <h2 id="paymentStatus">Processing Payment</h2>
+            <div class="loader12"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="actions">
 
-            <a href="#" class="btn action__submit">
+            <button class="btn action__submit" onclick="showPaymentModal()">
                 Place your Order
                 <i class="icon icon-arrow-right-circle"></i>
-            </a>
+            </button>
             <a href="@Url.Action("Index", "Home")" class="backBtn">Go Back to Shop</a>
         </div>
     </div>
 </section>
+<script>
+    var subscriptionName = '@Model.SubscriptionName';
+    function showPaymentModal() {
+        var modal = document.getElementById("paymentModal");
+        var paymentStatus = document.getElementById("paymentStatus");
+        modal.style.display = "block";
+
+        setTimeout(function () {
+            paymentStatus.innerText = "Payment Successful!";
+            setTimeout(function () {
+                modal.style.display = "none";
+                sendBuyRequest();
+            }, 2000); // Display "Payment Successful" for 1 second
+        }, 3000); // Show "Processing Payment" for 3 seconds
+    }
+    function sendBuyRequest() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "@Url.Action("Buy", "Checkout")", true);
+
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Request was successful, you can handle the response here if needed
+                }
+                else {
+                    // Handle error responses
+                }
+            }
+        };
+
+        var requestData = JSON.stringify({ type: '@Model.SubscriptionName' }); // Pass the subscription name
+
+        xhr.send(requestData);
+        //fetch('/Downloads/BuyAsync?type=' + subscriptionName, {
+        //    method: 'POST',
+        //    headers: {
+        //        'Content-Type': 'application/json',
+        //    },
+        //    body: JSON.stringify({ type: subscriptionName }), // Replace 'yourTypeHere' with the actual type you want to send
+        //})
+        //    .then(response => {
+        //        if (response.ok) {
+        //            // Request was successful, you can handle the response here if needed
+        //        }
+        //    })
+        //    .catch(error => {
+        //        console.error('Error:', error);
+        //    });
+    }
+</script>

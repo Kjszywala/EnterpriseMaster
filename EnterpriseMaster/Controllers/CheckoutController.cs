@@ -100,6 +100,20 @@ namespace EnterpriseMaster.Controllers
             }
         }
 
-        #endregion
+        [HttpPost]
+        public async Task<IActionResult> BuyAsync(string type)
+        {
+            try 
+            {
+
+                return RedirectToAction("Index", "Downloads");
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                return RedirectToAction("Error");
+            }
+        }
+         #endregion
     }
 }

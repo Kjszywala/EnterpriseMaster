@@ -1,0 +1,177 @@
+﻿/* Add your custom CSS styles here */
+.mainProfileDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.container32 {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 100px;
+    width: 80%;
+    flex-direction: row;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px;
+}
+
+.col-md-6 {
+    flex: 0 0 calc(50% - 20px);
+    margin: 10px;
+}
+
+.section {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    min-height: 560px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group label {
+    display: block;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.form-control[type="file"] {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+    .form-control[type="file"] + label,
+    .form-control[type="checkbox"] + label {
+        display: block;
+        margin-top: 5px;
+        font-weight: bold;
+    }
+
+/* Rounded profile picture */
+.profile-picture {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.cta-button {
+    background-color: #7012b3;
+    border: 0;
+    border-radius: 56px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: system-ui,-apple-system,system-ui,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    outline: 0;
+    padding: 16px 21px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin: 10px;
+}
+
+    .cta-button:before {
+        background-color: initial;
+        background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+        border-radius: 125px;
+        content: "";
+        height: 50%;
+        left: 4%;
+        opacity: .5;
+        position: absolute;
+        top: 0;
+        transition: all .3s;
+        width: 92%;
+    }
+
+    .cta-button:hover {
+        box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+        transform: scale(1.05);
+    }
+
+@media (min-width: 768px) {
+    .cta-button {
+        padding: 16px 48px;
+    }
+}
+
+/* Rounded profile picture */
+.profile-picture {
+    border-radius: 50%;
+    width: 150px; /* Adjust the width and height to your desired size */
+    height: 150px;
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    background-color: yellow;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.profilePictureDiv {
+    width: 100%; /* Adjust the width and height to your desired size */
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.buttonSaveChanges {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+/* Add these custom CSS styles to improve the appearance of form groups */
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        font-weight: bold;
+        color: #211638; /* You can change the color to your preference */
+    }
+
+    .form-group p {
+        margin: 0;
+        font-size: 16px;
+        color: #333; /* Text color */
+        margin-left: 5px;
+    }

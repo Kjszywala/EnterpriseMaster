@@ -12,6 +12,7 @@ namespace EnterpriseMaster.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         private IAuthenticationLogic authenticationLogic;
         private IUsersServices usersServices;
+        private IErrorLogsServices errorLogsServices;
         #endregion
 
         #region Constructor
@@ -19,12 +20,14 @@ namespace EnterpriseMaster.Controllers
         public LoginController(
             IHttpContextAccessor _httpContextAccessor,
             IAuthenticationLogic _authenticationLogic,
-            IUsersServices _usersServices
+            IUsersServices _usersServices,
+            IErrorLogsServices _errorLogService
             )
         {
             httpContextAccessor = _httpContextAccessor;
             authenticationLogic = _authenticationLogic;
             usersServices = _usersServices;
+            errorLogsServices = _errorLogService;
         }
 
         #endregion
@@ -43,37 +46,53 @@ namespace EnterpriseMaster.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(Users user)
+        public async Task<IActionResult> LoginAsync(Users user)
         {
-            var usersList = usersServices.GetAllAsync().Result;
-            var loggingInUser = usersList.Where(item=>item.Email == user.Email).FirstOrDefault();
-
-            if (loggingInUser == null)
+            try
             {
-                ViewBag.Danger = "User does not exist!";
+                var usersList = usersServices.GetAllAsync().Result;
+                var loggingInUser = usersList.Where(item => item.Email == user.Email).FirstOrDefault();
+
+                if (loggingInUser == null)
+                {
+                    ViewBag.Danger = "User does not exist!";
+                    return View("Index");
+                }
+
+                // Access HttpContext through the _httpContextAccessor
+                if (authenticationLogic.AuthenticateAsync(user, usersList).Result)
+                {
+                    var httpContext = httpContextAccessor.HttpContext;
+                    httpContext.Session.SetString("IsLoggedIn", "true");
+                    httpContext.Session.SetString("email", user.Email);
+                    httpContext.Session.SetString("id", loggingInUser.Id.ToString());
+                    TempData["Success"] = "Logged in successfully.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.Danger = "Incorrect password!";
                 return View("Index");
             }
-
-            // Access HttpContext through the _httpContextAccessor
-            if (authenticationLogic.AuthenticateAsync(user, usersList).Result)
+            catch (Exception e)
             {
-                var httpContext = httpContextAccessor.HttpContext;
-                httpContext.Session.SetString("IsLoggedIn", "true");
-                httpContext.Session.SetString("email", user.Email);
-                httpContext.Session.SetString("id", loggingInUser.Id.ToString());
-                TempData["Success"] = "Logged in successfully.";
-                return RedirectToAction("Index", "Home");
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                return RedirectToAction("Error");
             }
-
-            ViewBag.Danger = "Incorrect password!";
-            return View("Index");
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> LogoutAsync()
         {
-            HttpContext.Session.Clear();
-            TempData["Success"] = "Logged out successfully.";
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                HttpContext.Session.Clear();
+                TempData["Success"] = "Logged out successfully.";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                return RedirectToAction("Error");
+            }
         }
 
         #endregion
