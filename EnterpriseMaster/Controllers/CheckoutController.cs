@@ -101,11 +101,15 @@ namespace EnterpriseMaster.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BuyAsync(string type)
+        public async Task<IActionResult> BuyAsync([FromBody] string type)
         {
             try 
             {
-
+                var userId = HttpContext.Session.GetString("id");
+                var currentUser = usersServices.GetAsync(Int32.Parse(userId)).Result;
+                var subscriptionType = subscriptionTypesServices.GetAllAsync().Result.Where(item => item.SubscriptionName == type).FirstOrDefault();
+                currentUser.SubscriptionTypeId = subscriptionType.Id;
+                await usersServices.EditAsync(currentUser.Id, currentUser);
                 return RedirectToAction("Index", "Downloads");
             }
             catch (Exception e)

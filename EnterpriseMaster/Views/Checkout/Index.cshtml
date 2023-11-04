@@ -264,23 +264,8 @@
             }
         };
 
-        var requestData = JSON.stringify({ type: '@Model.SubscriptionName' }); // Pass the subscription name
+        var requestData = JSON.stringify(subscriptionName); // Pass the subscription name
 
         xhr.send(requestData);
-        //fetch('/Downloads/BuyAsync?type=' + subscriptionName, {
-        //    method: 'POST',
-        //    headers: {
-        //        'Content-Type': 'application/json',
-        //    },
-        //    body: JSON.stringify({ type: subscriptionName }), // Replace 'yourTypeHere' with the actual type you want to send
-        //})
-        //    .then(response => {
-        //        if (response.ok) {
-        //            // Request was successful, you can handle the response here if needed
-        //        }
-        //    })
-        //    .catch(error => {
-        //        console.error('Error:', error);
-        //    });
     }
 </script>
