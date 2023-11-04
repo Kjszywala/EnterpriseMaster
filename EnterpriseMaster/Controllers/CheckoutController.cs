@@ -109,8 +109,17 @@ namespace EnterpriseMaster.Controllers
                 var currentUser = usersServices.GetAsync(Int32.Parse(userId)).Result;
                 var subscriptionType = subscriptionTypesServices.GetAllAsync().Result.Where(item => item.SubscriptionName == type).FirstOrDefault();
                 currentUser.SubscriptionTypeId = subscriptionType.Id;
-                await usersServices.EditAsync(currentUser.Id, currentUser);
-                return RedirectToAction("Index", "Downloads");
+
+                if (await usersServices.EditAsync(currentUser.Id, currentUser))
+                {
+                    TempData["Success"] = "Congratulations! You can now download software in the Downloads section.";
+                }
+                else
+                {
+                    TempData["Danger"] = "Something went wrong. Please try again.";
+                }
+
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception e)
             {

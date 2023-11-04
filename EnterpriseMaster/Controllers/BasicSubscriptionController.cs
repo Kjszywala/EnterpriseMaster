@@ -23,6 +23,10 @@ namespace EnterpriseMaster.Controllers
         {
             try
             {
+                if (TempData["Warning"] != null)
+                {
+                    ViewBag.Warning = TempData["Warning"];
+                }
                 var basicPlanModel = (await basicPlanService.GetAllAsync()).FirstOrDefault();
                 return View(basicPlanModel);
             }

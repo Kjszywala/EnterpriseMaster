@@ -1,0 +1,67 @@
+﻿/* Apply styles to the container */
+.container54 {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    margin-top: 100px;
+    max-height: 80vh;
+}
+
+/* Style the heading */
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Style the content box */
+.content-box54 {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+    /* Style the introductory text */
+    .content-box54 p {
+        font-size: 16px;
+        color: #666;
+        margin: 0;
+    }
+
+/* Style the download options */
+.download-options54 {
+    margin-top: 20px;
+}
+
+/* Style the download link */
+.download-link54 {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the download button */
+.download-button54 {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+    /* Hover effect for links and buttons */
+    .download-link54:hover, .download-button54:hover {
+        background-color: #0056b3;
+    }

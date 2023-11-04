@@ -2,4 +2,22 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    Layout = "_Layout";
+    ViewData["Title"] = "Downloads";
 }
+<link href="~/css/downloads.css" rel="stylesheet" type="text/css">
+<div class="downloadDiv">
+    <div class="container54">
+        <h1>Downloads</h1>
+
+        <div class="content-box54">
+            <p>Welcome to our downloads page. Here you can download our desktop app software.</p>
+            <p>Our desktop app software is a powerful tool designed to help you with your daily tasks. It offers a wide range of features and functionalities to make your life easier.</p>
+            <p>Download it today and experience the convenience of our software.</p>
+        </div>
+
+        <div class="download-options54">
+            <a href="@Url.Action("Download", "Downloads")" class="download-link54">Download Desktop App</a>
+        </div>
+    </div>
+</div>

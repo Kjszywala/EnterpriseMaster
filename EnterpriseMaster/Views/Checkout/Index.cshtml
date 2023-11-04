@@ -257,9 +257,11 @@
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     // Request was successful, you can handle the response here if needed
+                    window.location.href = "@Url.Action("Index", "Downloads")";
                 }
                 else {
                     // Handle error responses
+                    window.location.href = "@Url.Action("Index", "Home")";
                 }
             }
         };
