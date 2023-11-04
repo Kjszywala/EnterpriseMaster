@@ -106,7 +106,8 @@ namespace EnterpriseMaster.WebApi.Controllers
                 return NotFound();
             }
 
-            _context.SupportCases.Remove(supportCases);
+            supportCases.IsActive = false;
+            await PutSupportCases(id, supportCases);
             await _context.SaveChangesAsync();
 
             return NoContent();

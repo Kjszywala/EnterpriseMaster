@@ -54,6 +54,8 @@ namespace EnterpriseMaster
             builder.Services.AddScoped<IUsersAdressesServices, UsersAdressesServices>();
             builder.Services.AddScoped<IUsersServices, UsersServices>();
             builder.Services.AddScoped<IWhatsNewsServices, WhatsNewsServices>();
+            builder.Services.AddScoped<ISupportCaseServices, SupportCaseServices>();
+            builder.Services.AddScoped<ICaseStatusServices, CaseStatusServices>();
 
             // Add logic injection here
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

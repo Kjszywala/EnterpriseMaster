@@ -1,4 +1,4 @@
-﻿
+﻿@model EnterpriseMaster.ViewModels.SupportViewModel
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -6,7 +6,54 @@
     Layout = "_Layout";
 }
 <link href="~/css/helpcenter.css" rel="stylesheet" type="text/css">
+<style>
+    /* CSS */
+    .button-18 {
+        align-items: center;
+        background-color: #0A66C2;
+        border: 0;
+        border-radius: 100px;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: -apple-system, system-ui, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        justify-content: center;
+        line-height: 20px;
+        max-width: 480px;
+        min-height: 40px;
+        min-width: 0px;
+        overflow: hidden;
+        padding: 0px;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: center;
+        touch-action: manipulation;
+        transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+        user-select: none;
+        -webkit-user-select: none;
+        vertical-align: middle;
+    }
 
+    .button-18:hover,
+    .button-18:focus {
+        background-color: #16437E;
+        color: #ffffff;
+    }
+
+    .button-18:active {
+        background: #09223b;
+        color: rgb(255, 255, 255, .7);
+    }
+
+    .button-18:disabled {
+        cursor: not-allowed;
+        background: rgba(0, 0, 0, .08);
+        color: rgba(0, 0, 0, .3);
+    }
+</style>
 <div class="helpCenterDiv" style="min-height:90vh">
     <div class="containerHelpCenterLeft">
         <a class="left-nav-link" onclick="showCreateCase()">Create Case</a>
@@ -23,21 +70,20 @@
             <p>If you have a specific issue or request, you can create a support case by filling out the form below. Our team will get back to you as soon as possible.</p>
 
             <div class="case-form">
-                <form action="" method="post">
-                    <label for="name">Your Name:</label>
-                    <input type="text" id="name" name="name" required>
+                @using (Html.BeginForm("AddCase", "HelpCenter", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        <label asp-for="SupportCases.Title">Title:</label>
+                        <input asp-for="SupportCases.Title" class="form-control" required>
+                    </div>
 
-                    <label for="email">Your Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <div class="form-group">
+                        <label asp-for="SupportCases.Description">Description:</label>
+                        <textarea asp-for="SupportCases.Description" class="form-control" style="resize: none;" rows="4" required></textarea>
+                    </div>
 
-                    <label for="subject">Subject:</label>
-                    <input type="text" id="subject" name="subject" required>
-
-                    <label for="message">Message:</label>
-                    <textarea id="message" name="message" style="resize: none;" rows="4" required></textarea>
-
-                    <button type="submit">Submit Case</button>
-                </form>
+                    <button type="submit" class="btn btn-primary">Submit Case</button>
+                }
             </div>
         </div>
     </div>
@@ -50,19 +96,19 @@
                         <th>Case ID</th>
                         <th>Description</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>001</td>
-                        <td>Issue with login</td>
-                        <td>Open</td>
-                    </tr>
-                    <tr>
-                        <td>002</td>
-                        <td>Payment problem</td>
-                        <td>Open</td>
-                    </tr>
+                    @foreach(var item in Model.SupportCasesList)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Description</td>
+                            <td>@item.CaseStatus.Status</td>
+                            <td><button class="button-18" onclick="location.href='@Url.Action("RemoveCase", "HelpCenter", new { id = item.Id })'">Close</button></td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -79,16 +125,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>003</td>
-                        <td>Product delivery delay</td>
-                        <td>Solved</td>
-                    </tr>
-                    <tr>
-                        <td>004</td>
-                        <td>Software bug</td>
-                        <td>Solved</td>
-                    </tr>
+                    @foreach (var item in Model.HistoryCasesList)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Description</td>
+                            <td>@item.CaseStatus.Status</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
