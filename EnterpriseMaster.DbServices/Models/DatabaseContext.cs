@@ -18,6 +18,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<ApplicationFeatures> ApplicationFeatures { get; set; }
         public virtual DbSet<BillingAddresses> BillingAddresses { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
+        public virtual DbSet<CaseStatus> CaseStatus { get; set; }
         public virtual DbSet<CustomerInformation> CustomerInformation { get; set; }
         public virtual DbSet<EmployeeAddresses> EmployeeAddresses { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
@@ -37,6 +38,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<SubscriptionTypes> SubscriptionTypes { get; set; }
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<SuppliersAddresses> SuppliersAddresses { get; set; }
+        public virtual DbSet<SupportCases> SupportCases { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UsersAdresses> UsersAdresses { get; set; }
         public virtual DbSet<WhatsNew> WhatsNew { get; set; }
