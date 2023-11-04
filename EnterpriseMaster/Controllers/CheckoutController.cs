@@ -14,6 +14,8 @@ namespace EnterpriseMaster.Controllers
         private IErrorLogsServices errorLogsServices;
         private IPaymentMethodsServices paymentMethodsServices;
         private ICheckoutLogic checkoutLogic;
+        private IUsersServices usersServices;
+        private IUsersAdressesServices usersAdressesServices;
         #endregion
 
         #region Constructor
@@ -23,14 +25,18 @@ namespace EnterpriseMaster.Controllers
             IErrorLogsServices _errorLogsServices,
             IApplicationFeaturesServices _applicationFeaturesServices,
             IPaymentMethodsServices _paymentMethodsServices,
-            ICheckoutLogic _checkoutLogic
-            )
+            ICheckoutLogic _checkoutLogic,
+            IUsersServices _usersServices,
+            IUsersAdressesServices _usersAdressesServices)
         {
             subscriptionTypesServices = _subscriptionTypesServices;
             errorLogsServices = _errorLogsServices;
             featuresServices = _applicationFeaturesServices;
             paymentMethodsServices = _paymentMethodsServices;
             checkoutLogic = _checkoutLogic;
+            usersServices = _usersServices;
+            usersAdressesServices = _usersAdressesServices;
+
         }
 
         #endregion
@@ -47,19 +53,44 @@ namespace EnterpriseMaster.Controllers
                     TempData["Warning"] = "You need to login to access this page!";
                     return RedirectToAction("Index", "Login");
                 };
-                var subscriptions = subscriptionTypesServices.GetAllAsync().Result;
-                var features = featuresServices.GetAllAsync().Result;
-                var paymentMethods = paymentMethodsServices.GetAllAsync().Result;
+                var user = usersServices.GetAllAsync().Result.Where(x => x.Email == session).FirstOrDefault();
 
-                var checkoutModel = checkoutLogic.GetCheckoutModelBasedOnString(
-                        subscriptions,
-                        features,
-                        paymentMethods,
-                        type,
-                        session
-                    );
+                if(user.UserAddressId != null)
+                {
+                    var userAddress = usersAdressesServices.GetAsync(user.UserAddressId.Value).Result;
 
-                return View(checkoutModel);
+                    var areDetailsComplete =
+                        userAddress.City != null &&
+                        userAddress.Country != null &&
+                        userAddress.IsActive != false &&
+                        userAddress.PostCode != null;
+
+                    if (areDetailsComplete)
+                    {
+                        TempData["Warning"] = "Access to this page requires more user details. Please complete your profile to proceed.";
+                        return RedirectToAction("Index", "Profile");
+
+                    }
+
+                    var subscriptions = subscriptionTypesServices.GetAllAsync().Result;
+                    var features = featuresServices.GetAllAsync().Result;
+                    var paymentMethods = paymentMethodsServices.GetAllAsync().Result;
+
+                    var checkoutModel = checkoutLogic.GetCheckoutModelBasedOnString(
+                            subscriptions,
+                            features,
+                            paymentMethods,
+                            type,
+                            session
+                        );
+
+                    return View(checkoutModel);
+                }
+                else
+                {
+                    TempData["Warning"] = "Access to this page requires more user details. Please complete your profile to proceed.";
+                    return RedirectToAction("Index", "Profile");
+                }
             }
             catch (Exception e)
             {

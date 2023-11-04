@@ -60,6 +60,7 @@ namespace EnterpriseMaster.Controllers
                 var httpContext = httpContextAccessor.HttpContext;
                 httpContext.Session.SetString("IsLoggedIn", "true");
                 httpContext.Session.SetString("email", user.Email);
+                httpContext.Session.SetString("id", loggingInUser.Id.ToString());
                 TempData["Success"] = "Logged in successfully.";
                 return RedirectToAction("Index", "Home");
             }
