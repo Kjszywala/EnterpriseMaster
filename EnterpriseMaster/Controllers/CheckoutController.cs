@@ -47,13 +47,14 @@ namespace EnterpriseMaster.Controllers
         {
             try
             {
+                var userId = HttpContext.Session.GetString("id");
                 var session = HttpContext.Session.GetString("email");
-                if (string.IsNullOrEmpty(session))
+                if (string.IsNullOrEmpty(userId))
                 {
                     TempData["Warning"] = "You need to login to access this page!";
                     return RedirectToAction("Index", "Login");
                 };
-                var user = usersServices.GetAllAsync().Result.Where(x => x.Email == session).FirstOrDefault();
+                var user = usersServices.GetAsync(Int32.Parse(userId)).Result;
 
                 if(user.UserAddressId != null)
                 {
@@ -65,7 +66,7 @@ namespace EnterpriseMaster.Controllers
                         userAddress.IsActive != false &&
                         userAddress.PostCode != null;
 
-                    if (areDetailsComplete)
+                    if (!areDetailsComplete)
                     {
                         TempData["Warning"] = "Access to this page requires more user details. Please complete your profile to proceed.";
                         return RedirectToAction("Index", "Profile");

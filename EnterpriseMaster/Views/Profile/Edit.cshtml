@@ -1,0 +1,118 @@
+﻿@model EnterpriseMaster.ViewModels.ProfileViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Edit Profile";
+}
+<link href="~/css/profile-edit.css" rel="stylesheet" type="text/css">
+<div class="container23">
+    <div style="margin-top:50px;">
+        <h1 style="margin-left: 100px;">Profile Settings</h1>
+    </div>
+    @using (Html.BeginForm("SaveChanges", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="section">
+                    <div class="profilePictureDiv">
+                        @if (Model.ProfileImage != null)
+                        {
+                            <img src="data:image;base64,@Convert.ToBase64String(Model.ProfileImage)" alt="Profile Picture" class="profile-picture" />
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ProfileImage"></label>
+                        <input asp-for="ProfileImage" type="file" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SecondName"></label>
+                        <input asp-for="SecondName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" type="password" class="form-control"/>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="section">
+                    <div class="form-group">
+                        <label asp-for="CompanyName"></label>
+                        <input asp-for="CompanyName" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateOfBirth"></label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Position"></label>
+                        <input asp-for="Position" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BusinessArea"></label>
+                        <input asp-for="BusinessArea" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SubscriptionType"></label>
+                        <label class="form-control">
+                            @(Model.SubscriptionType != null ? Model.SubscriptionType : "None")
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="section">
+                    <div class="form-group">
+                        <label asp-for="NewsLetter"></label>
+                        <input asp-for="NewsLetter" type="checkbox" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HouseNumber"></label>
+                        <input asp-for="HouseNumber" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StreetAddress"></label>
+                        <input asp-for="StreetAddress" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="City"></label>
+                        <input asp-for="City" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="section">
+                    <div class="form-group">
+                        <label asp-for="State"></label>
+                        <input asp-for="State" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PostalCode"></label>
+                        <input asp-for="PostalCode" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Country"></label>
+                        <input asp-for="Country" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="buttonSaveChanges">
+            <button type="submit" class="cta-button">Save Changes</button>
+        </div>
+    }
+</div>

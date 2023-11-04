@@ -7,14 +7,22 @@
     ViewData["Title"] = "Profile";
 }
 <style>
-
-    /* Add this CSS to your stylesheet or in a <style> tag within your HTML file */
-
-    .container23 {
+    /* Add your custom CSS styles here */
+    .mainProfileDiv{
+        display:flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+    .container32 {
         background-color: #f7f7f7;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        margin:100px;
+        width: 80%;
+        flex-direction: row;
+        justify-content: center;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     }
 
     h1 {
@@ -25,12 +33,12 @@
     .row {
         display: flex;
         flex-wrap: wrap;
-        margin: -10px; /* Add negative margin to compensate for padding on form groups */
+        margin: -10px;
     }
 
     .col-md-6 {
-        flex: 0 0 calc(50% - 20px); /* Two columns, subtract padding */
-        margin: 10px; /* Add padding back here to separate columns */
+        flex: 0 0 calc(50% - 20px);
+        margin: 10px;
     }
 
     .section {
@@ -39,10 +47,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        margin: 30px;
-        flex-direction: row;
-        justify-content: center;
-        min-width:300px;
+        min-height: 560px;
     }
 
     .form-group {
@@ -50,19 +55,17 @@
     }
 
     .form-control {
-        width: 95%;
+        width: 100%;
         padding: 10px;
         font-size: 16px;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
 
-    /* Style the checkbox label */
     .form-group label {
         display: block;
     }
 
-    /* Style the "Save" button */
     .btn-primary {
         background-color: #007bff;
         color: #fff;
@@ -72,7 +75,6 @@
         font-size: 16px;
     }
 
-    /* Adjust the file input's appearance */
     .form-control[type="file"] {
         background-color: transparent;
         border: 1px solid #ccc;
@@ -80,38 +82,21 @@
         border-radius: 5px;
     }
 
-        /* Style the labels for the SubscriptionType and ProfileImage */
         .form-control[type="file"] + label,
         .form-control[type="checkbox"] + label {
             display: block;
             margin-top: 5px;
             font-weight: bold;
         }
+
     /* Rounded profile picture */
     .profile-picture {
         border-radius: 50%;
-        width: 150px; /* Adjust the width and height to your desired size */
+        width: 150px;
         height: 150px;
-        object-fit: cover; /* Maintain aspect ratio and cover the container */
-        background-color: yellow;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        object-fit: cover;
     }
-
-    .profilePictureDiv{
-        width: 100%; /* Adjust the width and height to your desired size */
-        height: 150px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
-
-    .buttonSaveChanges{
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
-    
-.cta-button {
+    .cta-button {
     background-color: #7012b3;
     border: 0;
     border-radius: 56px;
@@ -132,7 +117,8 @@
     touch-action: manipulation;
     margin: 10px;
 }
-.cts-button:before {
+
+.cta-button:before {
     background-color: initial;
     background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
     border-radius: 125px;
@@ -145,112 +131,159 @@
     transition: all .3s;
     width: 92%;
 }
-    .cta-button:hover {
-        box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
-        transform: scale(1.05);
-    }
+
+.cta-button:hover {
+    box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+    transform: scale(1.05);
+}
+
 @@media (min-width: 768px) {
     .cta-button {
         padding: 16px 48px;
     }
 }
+
+    /* Rounded profile picture */
+    .profile-picture {
+        border-radius: 50%;
+        width: 150px; /* Adjust the width and height to your desired size */
+        height: 150px;
+        object-fit: cover; /* Maintain aspect ratio and cover the container */
+        background-color: yellow;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    .profilePictureDiv {
+        width: 100%; /* Adjust the width and height to your desired size */
+        height: 150px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .buttonSaveChanges {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+    /* Add these custom CSS styles to improve the appearance of form groups */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            color: #211638; /* You can change the color to your preference */
+        }
+
+        .form-group p {
+            margin: 0;
+            font-size: 16px;
+            color: #333; /* Text color */
+            margin-left:5px;
+        }
 </style>
-<div class="container23">
-    <div style="margin-top:50px;">
-        <h1 style="margin-left: 100px;">Profile Settings</h1>
-    </div>
-    <form asp-action="UpdateProfile" asp-controller="Profile" method="post">
+<div class="mainProfileDiv">
+    <div class="container32">
+        <h1>Profile Information</h1>
         <div class="row">
             <div class="col-md-6">
                 <div class="section">
                     <div class="profilePictureDiv">
-                        <img src="" alt="Profile Picture" class="profile-picture" />
+                        @if (Model.ProfileImage != null)
+                        {
+                            <img src="data:image;base64,@Convert.ToBase64String(Model.ProfileImage)" alt="Profile Picture" class="profile-picture" />
+                        }
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="FirstName"></label>
-                        <input asp-for="FirstName" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.FirstName)</strong></label>
+                        <p>@Model.FirstName</p>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="SecondName"></label>
-                        <input asp-for="SecondName" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.SecondName)</strong></label>
+                        <p>@Model.SecondName</p>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="Password"></label>
-                        <input asp-for="Password" type="password" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.Password)</strong></label>
+                        <p>*****</p> <!-- Displaying password as asterisks for security -->
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="CompanyName"></label>
-                        <input asp-for="CompanyName" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.CompanyName)</strong></label>
+                        <p>@Model.CompanyName</p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="section">
+
                     <div class="form-group">
-                        <label asp-for="Email"></label>
-                        <input asp-for="Email" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.Email)</strong></label>
+                        <p>@Model.Email</p>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="DateOfBirth"></label>
-                        <input asp-for="DateOfBirth" type="date" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.DateOfBirth)</strong></label>
+                        <p>@Model.DateOfBirth?.ToString("dd/MM/yyyy")</p>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="Position"></label>
-                        <input asp-for="Position" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="BusinessArea"></label>
-                        <input asp-for="BusinessArea" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="SubscriptionType"></label>
-                        <label class="form-control">
-                            @(Model.SubscriptionType != null ? Model.SubscriptionType : "None")
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ProfileImage"></label>
-                        <input asp-for="ProfileImage" type="file" class="form-control" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="section">
-                    <div class="form-group">
-                        <label asp-for="NewsLetter"></label>
-                        <input asp-for="NewsLetter" type="checkbox" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="StreetAddress"></label>
-                        <input asp-for="StreetAddress" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="City"></label>
-                        <input asp-for="City" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.Position)</strong></label>
+                        <p>@Model.Position</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="section">
+
                     <div class="form-group">
-                        <label asp-for="State"></label>
-                        <input asp-for="State" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.BusinessArea)</strong></label>
+                        <p>@Model.BusinessArea</p>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="PostalCode"></label>
-                        <input asp-for="PostalCode" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.SubscriptionType)</strong></label>
+                        <p>@(Model.SubscriptionType != null ? Model.SubscriptionType : "None")</p>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="Country"></label>
-                        <input asp-for="Country" class="form-control" />
+                        <label><strong>@Html.DisplayNameFor(model => model.NewsLetter)</strong></label>
+                        <p>@(Model.NewsLetter ? "Yes" : "No")</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>@Html.DisplayNameFor(model => model.HouseNumber)</strong></label>
+                        <p>@Model.HouseNumber</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>@Html.DisplayNameFor(model => model.StreetAddress)</strong></label>
+                        <p>@Model.StreetAddress</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>@Html.DisplayNameFor(model => model.City)</strong></label>
+                        <p>@Model.City</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>@Html.DisplayNameFor(model => model.State)</strong></label>
+                        <p>@Model.State</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>@Html.DisplayNameFor(model => model.PostalCode)</strong></label>
+                        <p>@Model.PostalCode</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label><strong>@Html.DisplayNameFor(model => model.Country)</strong></label>
+                        <p>@Model.Country</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="buttonSaveChanges">
-            <button type="submit" class="cta-button">Save Changes</button>
+            <button class="cta-button" onclick="location.href='@Url.Action("Edit", "Profile")'">Edit Profile</button>
         </div>
-    </form>
+    </div>
 </div>

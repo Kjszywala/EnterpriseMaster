@@ -14,8 +14,8 @@
         public int? SubscriptionTypeId { get; set; }
         public SubscriptionTypes? SubscriptionType { get; set; }
         public byte[]? Image { get; set; }
-        public bool IsEmployee { get; set; } = false;
-        public bool Newsletter { get; set; } = false;
+        public bool IsEmployee { get; set; }
+        public bool Newsletter { get; set; }
         public int? UserAddressId { get; set; }
         public UsersAdresses? UserAddress { get; set; }
         public List<SupportCases>? SupportCases { get; set; }

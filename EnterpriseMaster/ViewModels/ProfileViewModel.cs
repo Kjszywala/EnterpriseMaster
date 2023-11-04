@@ -26,6 +26,8 @@ namespace EnterpriseMaster.ViewModels
         public byte[]? ProfileImage { get; set; }
         [Display(Name = "Subscribe To News Letter:")]
         public bool NewsLetter { get; set; } = false;
+        [Display(Name = "House Number:")]
+        public string HouseNumber { get; set; }
         [Display(Name = "Street:")]
         public string? StreetAddress { get; set; }
         [Display(Name = "City:")]
