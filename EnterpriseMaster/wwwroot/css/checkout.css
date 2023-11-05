@@ -406,7 +406,7 @@ input[type="text"] {
             opacity: 0;
         }
 
-    @@-webkit-keyframes spinAround {
+    @-webkit-keyframes spinAround {
         from {
             -webkit-transform: rotate(0);
             transform: rotate(0);
@@ -418,7 +418,7 @@ input[type="text"] {
         }
     }
 
-    @@keyframes spinAround {
+    @keyframes spinAround {
         from {
             -webkit-transform: rotate(0);
             transform: rotate(0);

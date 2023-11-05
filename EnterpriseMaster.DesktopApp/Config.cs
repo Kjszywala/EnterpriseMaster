@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EnterpriseMaster.DesktopApp
+﻿namespace EnterpriseMaster.DesktopApp
 {
-    internal class Config
+    public class Config
     {
+        public static bool IsLoggedIn = false;
+        public static int UserId;
+        public static string UserName;
+        public static string Email;
     }
 }

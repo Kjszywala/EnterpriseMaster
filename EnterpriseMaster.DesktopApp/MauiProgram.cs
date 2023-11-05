@@ -2,7 +2,7 @@
 using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
-using EnterpriseMaster.DesktopApp.Data.MainLayout;
+using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 using Microsoft.Extensions.Logging;
 
 namespace EnterpriseMaster.DesktopApp

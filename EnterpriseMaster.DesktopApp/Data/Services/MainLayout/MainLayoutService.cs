@@ -1,4 +1,5 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
+using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
 {
@@ -25,7 +26,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
 
         #region Methods
 
-
+        public async Task<MainPages> GetMainPagesModel()
+        {
+            return (await mainPageServices.GetAllAsync()).FirstOrDefault();
+        }
 
         #endregion
     }
