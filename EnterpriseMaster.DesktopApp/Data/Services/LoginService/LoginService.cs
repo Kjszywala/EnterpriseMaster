@@ -38,7 +38,12 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                     Password = password
                 };
                 var isAuthenticated = await authenticationLogic.AuthenticateAsync(user, users);
-
+                if(isAuthenticated)
+                {
+                    Config.Email = email;
+                    Config.UserId = users.Where(item => item.Email == user.Email).FirstOrDefault().Id;
+                    Config.SubscriptionId = users.Where(item => item.Email == user.Email).FirstOrDefault().SubscriptionTypeId;
+                }
                 return isAuthenticated;
             }
             catch (Exception e)
@@ -46,6 +51,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                 await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
                 return false;
             }
+        }
+
+        public void Logout()
+        {
+            Config.IsLoggedIn = false;
         }
 
         #endregion

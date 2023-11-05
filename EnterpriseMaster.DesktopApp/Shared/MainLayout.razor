@@ -131,21 +131,6 @@ else
                     <li><a class="link_name" href="#">Chart</a></li>
                 </ul>
             </li>
-            @*<li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-plug'></i>
-                        <span class="link_name">Plugins</span>
-                    </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Plugins</a></li>
-                    <li><a href="#">UI Face</a></li>
-                    <li><a href="#">Pigments</a></li>
-                    <li><a href="#">Box Icons</a></li>
-                </ul>
-            </li>*@
             <li>
                 <a href="#">
                     <i class='bx bx-compass'></i>
@@ -193,7 +178,7 @@ else
         </div>
     </section>
 }
-
+<Preload />
 @code {
     private string email;
     private string password;
@@ -202,6 +187,8 @@ else
 
     private List<ArrowInfo> arrows = new List<ArrowInfo>();
     private MainPages? mainPagesModel { get; set; } = new MainPages();
+
+    [Inject] protected PreloadService preloadService { get; set; }
 
     private class ArrowInfo
     {
@@ -221,7 +208,10 @@ else
 
     private async Task LoginClicked()
     {
+        preloadService.Show();
         Config.IsLoggedIn = await loginService.AuthenticateAsync(email, password);
+        await Task.Delay(3000);
+        preloadService.Hide();
     }
 
     protected override async Task OnInitializedAsync()
