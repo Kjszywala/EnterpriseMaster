@@ -54,4 +54,9 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\EnterpriseMaster.BusinessLogic\EnterpriseMaster.BusinessLogic.csproj" />
+      <ProjectReference Include="..\EnterpriseMaster.DbServices\EnterpriseMaster.DbServices.csproj" />
+    </ItemGroup>
+
 </Project>

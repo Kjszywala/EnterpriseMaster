@@ -67,7 +67,7 @@ margin-bottom: 20px;
     touch-action: manipulation;
     margin: 10px;
 }
-.cts-button:before {
+.cta-button:before {
     background-color: initial;
     background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
     border-radius: 125px;

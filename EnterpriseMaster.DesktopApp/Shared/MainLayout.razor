@@ -1,97 +1,179 @@
 ﻿@using BlazorBootstrap
 @inherits LayoutComponentBase
-
-<style>
-    /* Sidebar container styles */
-    .sidebar1 {
-        width: 60px; /* Initial width when not hovered */
-        background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-        height: 100%;
-        position: fixed;
-        left: 0;
-        top: 0;
-        overflow-x: hidden;
-        transition: 0.3s;
-        z-index: 2;
-    }
-
-    /* Sidebar content styles */
-    .sidebar-content {
-        padding-top: 20px;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-    }
-
-    /* Sidebar item styles */
-
-    .sidebar-item:hover{
-        background-color: #6c757d;
-        border-radius: 10px;
-        border-color: #e9ecef #e9ecef #dee2e6;
-        isolation: isolate
-    }
-    .sidebar-item {
-        padding: 10px;
-        display: flex;
-        text-align: left;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    /* Icon styles */
-    .sidebar-item i {
-        font-size: 20px;
-    }
-
-    /* Text styles (hide by default) */
-    .sidebar-item span {
-        display: none;
-    }
-    
-    /* Expand the sidebar on hover */
-    .sidebar1:hover {
-        width: 250px; /* Expanded width */
-    }
-
-    /* Show text when sidebar is expanded */
-    .sidebar1:hover .sidebar-item span {
-        display: block;
-        margin-left:10px;
-        margin-top: 2px;
-    }
-
-    /* Sidebar2 styles */
-    .sidebar2 {
-        width: calc(100% - 60px); /* Adjust the width based on your sidebar1 width */
-        margin-left: 60px; /* Set to the same width as sidebar1 */
-        transition: 0.3s;
-        position: relative; /* Add relative positioning */
-    }
-
-    .page {
-        display: flex;
-    }
-    .topbar{
-        background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-    }
-</style>
-<div class="page">
-    <div class="sidebar1" id="sidebar1">
-        <div class="sidebar-content">
-            <NavMenu />
-        </div>
-         
+<link href="css/global.css" rel="stylesheet" />
+<div class="sidebar @sidebarClass">
+    <div class="logo-details">
+        <i class='bx bxl-analyse'></i>
+        <span class="logo_name">EnterpriseM</span>
     </div>
-    <div class="sidebar2">
-        <main>
-            <div class="top-row px-4 topbar">
-                <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    <ul class="nav-links">
+        <li>
+            <a href="#">
+                <i class='bx bx-grid-alt'></i>
+                <span class="link_name">Dashboard</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">Category</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="iocn-link">
+                <a href="#">
+                    <i class='bx bx-collection'></i>
+                    <span class="link_name">Category</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
             </div>
-
-            <article class="content px-4">
-                @Body
-            </article>
-        </main>
-    </div>
+            <ul class="sub-menu">
+                <li><a class="link_name" href="#">Category</a></li>
+                <li><a href="#">HTML & CSS</a></li>
+                <li><a href="#">JavaScript</a></li>
+                <li><a href="#">PHP & MySQL</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="iocn-link">
+                <a href="#">
+                    <i class='bx bx-book-alt'></i>
+                    <span class="link_name">Posts</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a class="link_name" href="#">Posts</a></li>
+                <li><a href="#">Web Design</a></li>
+                <li><a href="#">Login Form</a></li>
+                <li><a href="#">Card Design</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bx-pie-chart-alt-2'></i>
+                <span class="link_name">Analytics</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">Analytics</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bx-line-chart'></i>
+                <span class="link_name">Chart</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">Chart</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="iocn-link">
+                <a href="#">
+                    <i class='bx bx-plug'></i>
+                    <span class="link_name">Plugins</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a class="link_name" href="#">Plugins</a></li>
+                <li><a href="#">UI Face</a></li>
+                <li><a href="#">Pigments</a></li>
+                <li><a href="#">Box Icons</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bx-compass'></i>
+                <span class="link_name">Explore</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">Explore</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bx-history'></i>
+                <span class="link_name">History</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">History</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">
+                <i class='bx bx-cog'></i>
+                <span class="link_name">Setting</span>
+            </a>
+            <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">Setting</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="profile-details">
+                <div class="profile-content">
+                    <!--<img src="image/profile.jpg" alt="profileImg">-->
+                </div>
+                <div class="name-job">
+                    <div class="profile_name">Kamil Szywala</div>
+                    <div class="job">Web Developer</div>
+                </div>
+                <i class='bx bx-log-out'></i>
+            </div>
+        </li>
+    </ul>
 </div>
+<section class="home-section">
+    <div class="home-content">
+        <i class='bx bx-menu' @onclick="ToggleSidebar"></i>
+    </div>
+</section>
+<div class="one"></div>
+
+@foreach (var arrow in arrows)
+{
+    <div class="arrow" @onclick="() => ToggleArrow(arrow)">@arrow.Text</div>
+    @if (arrow.IsMenuVisible)
+    {
+        <ul class="sub-menu">
+            <li><a class="link_name" href="#">Category</a></li>
+            <li><a href="#">HTML & CSS</a></li>
+            <li><a href="#">JavaScript</a></li>
+            <li><a href="#">PHP & MySQL</a></li>
+        </ul>
+    }
+}
+
+@code{
+    private bool isSidebarClosed = true; // Initialize the sidebar as closed
+    private List<ArrowInfo> arrows = new List<ArrowInfo>();
+
+    private string sidebarClass => isSidebarClosed ? "close" : "";
+
+    private class ArrowInfo
+    {
+        public string Text { get; set; }
+        public bool IsMenuVisible { get; set; }
+    }
+
+    private void ToggleSidebar()
+    {
+        isSidebarClosed = !isSidebarClosed;
+    }
+
+    private void ToggleArrow(ArrowInfo arrow)
+    {
+        arrow.IsMenuVisible = !arrow.IsMenuVisible;
+    }
+
+    protected override void OnInitialized()
+    {
+        // Initialize your arrows list here
+        arrows.Add(new ArrowInfo { Text = "Dashboard", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Category", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Posts", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Analytics", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Chart", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Plugins", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Explore", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "History", IsMenuVisible = false });
+        arrows.Add(new ArrowInfo { Text = "Setting", IsMenuVisible = false });
+    }
+}
