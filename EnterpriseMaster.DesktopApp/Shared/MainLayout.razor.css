@@ -44,13 +44,16 @@
             font-weight: 600;
             transition: 0.3s ease;
             transition-delay: 0.1s;
+            height: 140px;
         }
-
-    .sidebar.close .logo-details .logo_name {
-        transition-delay: 0s;
-        opacity: 0;
-        pointer-events: none;
-    }
+.basic-subscription-imgage{
+    height: 150px;
+}
+.sidebar.close .logo-details .logo_name {
+    transition-delay: 0s;
+    opacity: 0;
+    pointer-events: none;
+}
 
     .sidebar .nav-links {
         height: 100%;
@@ -295,7 +298,9 @@
         display: none;
     }
 }
+.loggedLogo{
 
+}
 /*login styles*/
 .divLogin {
     display: flex;

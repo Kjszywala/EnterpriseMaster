@@ -15,11 +15,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
         #region Ctor
 
         public MainLayoutService(
-            IMainPageServices mainPageServices,
-            IErrorLogsServices errorLogsServices)
+            IMainPageServices _mainPageServices,
+            IErrorLogsServices _errorLogsServices)
         {
-            this.mainPageServices = mainPageServices;
-            this.errorLogsServices = errorLogsServices;
+            mainPageServices = _mainPageServices;
+            errorLogsServices = _errorLogsServices;
         }
 
         #endregion
@@ -28,7 +28,15 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
 
         public async Task<MainPages> GetMainPagesModel()
         {
-            return (await mainPageServices.GetAllAsync()).FirstOrDefault();
+            try
+            {
+                return (await mainPageServices.GetAllAsync()).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                return null;
+            }
         }
 
         #endregion

@@ -1,8 +1,10 @@
 ﻿@using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 @using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 @inherits LayoutComponentBase
 @inject MainLayoutService mainLayoutService;
+@inject LoginService loginService
 <link href="css/global.css" rel="stylesheet" />
 @if(Config.IsLoggedIn != true)
 {
@@ -14,10 +16,13 @@
 
                 <div class="content1">
                     <div class="loginLogo">
-
                         @if (mainPagesModel.Logo != null)
                         {
                             <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(mainPagesModel.Logo)" alt="Sales">
+                        }
+                        else
+                        {
+                            <p>Loading...</p>
                         }
                     </div>
 
@@ -25,13 +30,13 @@
 
                         <div class="inputBox">
 
-                            <input type="text" required> <i>Username</i>
+                            <input type="text" @bind="email" required> <i>Username</i>
 
                         </div>
 
                         <div class="inputBox">
 
-                            <input type="password" required> <i>Password</i>
+                            <input type="password" @bind="password" required> <i>Password</i>
 
                         </div>
 
@@ -42,7 +47,7 @@
 
                         <div class="inputBoxButton">
 
-                            <button class="button-71" type="submit" value="Login">Login</button>
+                            <button class="button-71" type="submit" value="Login" @onclick="LoginClicked">Login</button>
 
                         </div>
 
@@ -60,12 +65,13 @@ else
 {
     <div class="sidebar @sidebarClass">
         <div class="logo-details">
-            <i class='bx bxl-c-plus-plus'></i>
-            @if (mainPagesModel.Logo != null)
-            {
-                <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(mainPagesModel.Logo)" alt="Sales">
-            }
-            <span class="logo_name">EnterpriseM</span>
+            <i style="color:#7012b3;">EM</i>
+            <span class="logo_name">
+                @if (mainPagesModel.Logo != null)
+                {
+                    <img class="basic-subscription-imgage" src="data:image;base64,@Convert.ToBase64String(mainPagesModel.Logo)" alt="Sales">
+                }
+            </span>
         </div>
         <ul class="nav-links">
             <li>
@@ -188,12 +194,14 @@ else
     </section>
 }
 
-@code{
-    private bool isSidebarClosed = true; // Initialize the sidebar as closed
-    private List<ArrowInfo> arrows = new List<ArrowInfo>();
-    private MainPages mainPagesModel { get; set; } = new MainPages();
-
+@code {
+    private string email;
+    private string password;
+    private bool isSidebarClosed = true;
     private string sidebarClass => isSidebarClosed ? "close" : "";
+
+    private List<ArrowInfo> arrows = new List<ArrowInfo>();
+    private MainPages? mainPagesModel { get; set; } = new MainPages();
 
     private class ArrowInfo
     {
@@ -211,7 +219,12 @@ else
         arrow.IsMenuVisible = !arrow.IsMenuVisible;
     }
 
-    protected override async void OnInitialized()
+    private async Task LoginClicked()
+    {
+        Config.IsLoggedIn = await loginService.AuthenticateAsync(email, password);
+    }
+
+    protected override async Task OnInitializedAsync()
     {
         mainPagesModel = await mainLayoutService.GetMainPagesModel();
         // Initialize your arrows list here
