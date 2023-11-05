@@ -10,19 +10,32 @@
                     <h3>Tasks List For Today</h3>
                 </div>
                 <hr class="dashboardHr" style="color:black;"/>
-               <Grid TItem="Tasks" class="table table-hover table-bordered table-striped" DataProvider="TasksDataProvider" AllowFiltering="true" Responsive="true">
-                    <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id">
+               <Grid TItem="Tasks"
+                      AllowFiltering="true"
+                      AllowPaging="true"
+                      AllowSorting="true"
+                      Class="table table-hover table-bordered table-striped"
+                      DataProvider="TasksDataProvider"
+                      FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                      HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                      PageSize="5"
+                      PageSizeSelectorVisible="true"
+                      PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                      PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                      ItemsPerPageText="Items per page"
+                      Responsive="true">
+                    <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id" FilterTextboxWidth="80">
                         @context.Id
                     </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Name" FilterOperator="FilterOperator.Contains">
+                    <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
                         @context.Description
                     </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="Status" PropertyName="Designation" FilterOperator="FilterOperator.Contains">
+                    <GridColumn TItem="Tasks" HeaderText="CreationDate" PropertyName="CreationDate" SortKeySelector="item => item.CreationDate" FilterTextboxWidth="40">
                         @context.CreationDate
                     </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="Actions" PropertyName="IsActive" Filterable="false" TextAlignment="Alignment.Center">
-                        <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small">Complete</Button>
-                        <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small">Remove</Button>
+                    <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center" >
+                        <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;">Complete</Button>
+                        <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;">Remove</Button>
                     </GridColumn>
                 </Grid>
             </div>
@@ -31,7 +44,7 @@
     <div class="dashboardBox2">
         <div class="dashbordContent">
             <div class="dashboardTitle">
-                <h3>Task List For Today</h3>
+                <h3>Completed Tasks</h3>
             </div>
             <hr class="dashboardHr" style="color:black;" />
            
@@ -40,7 +53,7 @@
     <div class="dashboardBox3">
         <div class="dashbordContent">
             <div class="dashboardTitle">
-                <h3>Task List For Today</h3>
+                <h3>Reminder</h3>
             </div>
             <hr class="dashboardHr" style="color:black;" />
             3
@@ -49,7 +62,7 @@
     <div class="dashboardBox4">
         <div class="dashbordContent">
             <div class="dashboardTitle">
-                <h3>Task List For Today</h3>
+                <h3>What's new</h3>
             </div>
             <hr class="dashboardHr" style="color:black;" />
             4

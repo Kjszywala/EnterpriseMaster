@@ -13,13 +13,12 @@
 @media (max-width: 767px) {
     .dashboardGrid {
         grid-template-columns: 1fr;
+        height: 100%;
     }
 }
 .dashboardBox1, .dashboardBox2, .dashboardBox3, .dashboardBox4 {
     justify-content: center;
     align-items: center;
-    font-weight: bold;
-    color: #fff;
     min-height: 0; /* Allow divs to shrink vertically as needed */
     border-radius: 7px;
     min-height: 300px;
@@ -30,18 +29,19 @@
 }
 
     .dashboardBox1:nth-child(1) {
+        background-color: #ece9f0;
     }
 
     .dashboardBox2:nth-child(2) {
-        background-color: #33ff57; /* Green */
+        background-color: #ece9f0;
     }
 
     .dashboardBox3:nth-child(3) {
-        background-color: #5733ff; /* Blue-Purple */
+        background-color: #ece9f0;
     }
 
     .dashboardBox4:nth-child(4) {
-        background-color: #ff33b1; /* Pink */
+        background-color: #ece9f0;
     }
     .dashboardBox1:hover {
         transform: scale(1.01);
@@ -77,41 +77,4 @@
 .dashboardTitle {
     color: #323036;
     text-align:center;
-}
-/*Table style*/
-/* Additional styles for the table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-th, td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-/* Style for buttons */
-.complete-button, .delete-button {
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    background-color: #4CAF50; /* Green for complete button */
-    color: white;
-}
-
-.delete-button {
-    background-color: #f44336; /* Red for delete button */
-}
-
-/* Style for checked tasks */
-td label input[type="checkbox"]:checked + .complete-button {
-    background-color: #ccc;
-    cursor: not-allowed;
 }
