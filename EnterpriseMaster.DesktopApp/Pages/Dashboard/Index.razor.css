@@ -1,0 +1,117 @@
+﻿.dashboardGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px; /* Adjust the gap as needed */
+    width: 100%; /* Set the total width of the grid to 100% of the container */
+    height: 90vh; /* Set the total height of the grid to 100% of the viewport height */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+
+}
+/* Media query for smaller screens (e.g., mobile devices) */
+@media (max-width: 767px) {
+    .dashboardGrid {
+        grid-template-columns: 1fr;
+    }
+}
+.dashboardBox1, .dashboardBox2, .dashboardBox3, .dashboardBox4 {
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #fff;
+    min-height: 0; /* Allow divs to shrink vertically as needed */
+    border-radius: 7px;
+    min-height: 300px;
+    /*box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;*/
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    transition: transform 0.3s;
+    overflow-y: auto;
+}
+
+    .dashboardBox1:nth-child(1) {
+    }
+
+    .dashboardBox2:nth-child(2) {
+        background-color: #33ff57; /* Green */
+    }
+
+    .dashboardBox3:nth-child(3) {
+        background-color: #5733ff; /* Blue-Purple */
+    }
+
+    .dashboardBox4:nth-child(4) {
+        background-color: #ff33b1; /* Pink */
+    }
+    .dashboardBox1:hover {
+        transform: scale(1.01);
+    }
+
+    .dashboardBox2:hover {
+        transform: scale(1.01);
+    }
+
+    .dashboardBox3:hover {
+        transform: scale(1.01);
+    }
+
+    .dashboardBox4:hover {
+        transform: scale(1.01);
+    }
+    .dashboardBox1 > * {
+        padding: 10px;
+        height: 300px;
+    }
+    .dashboardBox2 > * {
+        padding: 10px;
+        height: 300px;
+    }
+    .dashboardBox3 > * {
+        padding: 10px;
+        height: 300px;
+    }
+    .dashboardBox4 > * {
+        padding: 10px;
+        height: 300px;
+    }
+.dashboardTitle {
+    color: #323036;
+    text-align:center;
+}
+/*Table style*/
+/* Additional styles for the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Style for buttons */
+.complete-button, .delete-button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Green for complete button */
+    color: white;
+}
+
+.delete-button {
+    background-color: #f44336; /* Red for delete button */
+}
+
+/* Style for checked tasks */
+td label input[type="checkbox"]:checked + .complete-button {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

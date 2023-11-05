@@ -71,8 +71,8 @@ else
         </div>
         <ul class="nav-links">
             <li>
-                <a href="dashbord">
-                    <i class='bx bx-grid-alt'></i>
+                <a href="/">
+                    <i><iconify-icon icon="material-symbols:dashboard-outline" rotate="180deg"></iconify-icon></i>
                     <span class="link_name">Dashboard</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -110,8 +110,8 @@ else
                 </ul>
             </li>*@
             <li>
-                <a href="#">
-                    <i class='bx bx-pie-chart-alt-2'></i>
+                <a href="/orders">
+                    <i><iconify-icon icon="material-symbols:draft-orders-outline"></iconify-icon></i>
                     <span class="link_name">Orders</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -119,8 +119,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-line-chart'></i>
+                <a href="/finance">
+                    <i><iconify-icon icon="streamline:shopping-jewelry-diamond-2-diamond-money-payment-finance-wealth"></iconify-icon></i>
                     <span class="link_name">Finance</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -128,8 +128,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-compass'></i>
+                <a href="/offers">
+                    <i><iconify-icon icon="mdi:offer"></iconify-icon></i>
                     <span class="link_name">Create Offers</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -137,8 +137,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-history'></i>
+                <a href="/inventory">
+                    <i><iconify-icon icon="fluent-mdl2:product-variant"></iconify-icon></i>
                     <span class="link_name">Inventory</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -146,8 +146,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/invoices">
+                    <i><iconify-icon icon="iconamoon:invoice"></iconify-icon></i>
                     <span class="link_name">Invoices</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -155,8 +155,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/sales">
+                    <i><iconify-icon icon="icon-park-outline:sales-report"></iconify-icon></i>
                     <span class="link_name">Sales</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -164,8 +164,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/analytics">
+                    <i><iconify-icon icon="grommet-icons:analytics"></iconify-icon></i>
                     <span class="link_name">Analytics</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -173,8 +173,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/hr">
+                    <i><iconify-icon icon="grommet-icons:resources"></iconify-icon></i>
                     <span class="link_name">Human Resources</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -182,8 +182,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/production">
+                    <i><iconify-icon icon="streamline:money-graph-bar-increase-up-product-performance-increase-arrow-graph-business-chart"></iconify-icon></i>
                     <span class="link_name">Production</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -191,8 +191,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/accounting">
+                    <i><iconify-icon icon="material-symbols:account-tree-outline"></iconify-icon></i>
                     <span class="link_name">Accounting</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -200,8 +200,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/customerdata">
+                    <i><iconify-icon icon="carbon:user-data"></iconify-icon></i>
                     <span class="link_name">Customer Data</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -209,8 +209,8 @@ else
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
+                <a href="/salesactivities">
+                    <i><iconify-icon icon="mdi:sale-outline"></iconify-icon></i>
                     <span class="link_name">Sales Activities</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -234,6 +234,9 @@ else
     <section class="home-section">
         <div class="home-content">
             <i class='bx bx-menu' @onclick="ToggleSidebar"></i>
+        </div>
+        <div style="margin: 10px;">
+            @Body
         </div>
     </section>
 }

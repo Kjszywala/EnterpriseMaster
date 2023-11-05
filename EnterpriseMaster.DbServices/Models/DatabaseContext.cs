@@ -47,6 +47,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<EnterprisePlan> EnterprisePlan { get; set; }
         public virtual DbSet<MainPages> MainPages { get; set; }
         public virtual DbSet<ProfessionalPlanPage> ProfessionalPlanPage { get; set; }
+        public virtual DbSet<Tasks> Tasks { get; set; }
 
         #endregion
     }

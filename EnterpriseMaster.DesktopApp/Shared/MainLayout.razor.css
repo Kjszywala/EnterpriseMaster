@@ -275,11 +275,13 @@
     height: 60px;
     display: flex;
     align-items: center;
+    background-color: #11101d;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
     .home-section .home-content .bx-menu,
     .home-section .home-content .text {
-        color: #11101d;
+        color: white;
         font-size: 35px;
     }
 

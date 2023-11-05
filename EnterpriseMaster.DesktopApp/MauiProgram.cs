@@ -63,6 +63,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IWhatsNewsServices, WhatsNewsServices>();
             builder.Services.AddScoped<ISupportCaseServices, SupportCaseServices>();
             builder.Services.AddScoped<ICaseStatusServices, CaseStatusServices>();
+            builder.Services.AddScoped<ITasksServices, TasksServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

@@ -1,0 +1,83 @@
+﻿@page "/"
+@using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
+
+<div class="dashboardGrid">
+    <div class="dashboardBox1">
+        <div class="dashbordContent">
+            <div class="task-list">
+                <div class="dashboardTitle">
+                    <h3>Tasks List For Today</h3>
+                </div>
+                <hr class="dashboardHr" style="color:black;"/>
+               <Grid TItem="Tasks" class="table table-hover table-bordered table-striped" DataProvider="TasksDataProvider" AllowFiltering="true" Responsive="true">
+                    <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id">
+                        @context.Id
+                    </GridColumn>
+                    <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Name" FilterOperator="FilterOperator.Contains">
+                        @context.Description
+                    </GridColumn>
+                    <GridColumn TItem="Tasks" HeaderText="Status" PropertyName="Designation" FilterOperator="FilterOperator.Contains">
+                        @context.CreationDate
+                    </GridColumn>
+                    <GridColumn TItem="Tasks" HeaderText="Actions" PropertyName="IsActive" Filterable="false" TextAlignment="Alignment.Center">
+                        <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small">Complete</Button>
+                        <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small">Remove</Button>
+                    </GridColumn>
+                </Grid>
+            </div>
+        </div>
+    </div>
+    <div class="dashboardBox2">
+        <div class="dashbordContent">
+            <div class="dashboardTitle">
+                <h3>Task List For Today</h3>
+            </div>
+            <hr class="dashboardHr" style="color:black;" />
+           
+        </div>
+    </div>
+    <div class="dashboardBox3">
+        <div class="dashbordContent">
+            <div class="dashboardTitle">
+                <h3>Task List For Today</h3>
+            </div>
+            <hr class="dashboardHr" style="color:black;" />
+            3
+        </div>
+    </div>
+    <div class="dashboardBox4">
+        <div class="dashbordContent">
+            <div class="dashboardTitle">
+                <h3>Task List For Today</h3>
+            </div>
+            <hr class="dashboardHr" style="color:black;" />
+            4
+        </div>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<Tasks> tasks;
+
+    protected override void OnInitialized()
+    {
+        tasks = new List<Tasks>
+        {
+            new Tasks { Id = 107,   Description = "AI Engineer", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 103,   Description = "Senior DevOps Engineer", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 106, Description = "Data Engineer", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 104,   Description = "Associate Architect", CreationDate = DateTime.Now, IsActive = false },
+            new Tasks { Id = 105,   Description = "Senior Data Engineer", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 102,   Description = "Architect", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 101,  Description = "Architect", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 108, Description = "Data Analyst", CreationDate = DateTime.Now, IsActive = true },
+            new Tasks { Id = 109,  Description = "App Maker", CreationDate = DateTime.Now, IsActive = true },
+        };
+    }
+
+    private async Task<GridDataProviderResult<Tasks>> TasksDataProvider(GridDataProviderRequest<Tasks> request)
+    {
+        return await Task.FromResult(request.ApplyTo(tasks));
+    }
+}
