@@ -1,6 +1,6 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 
-namespace EnterpriseMaster.DesktopApp.Data.MainLayout
+namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
 {
     public class MainLayoutService
     {
@@ -14,7 +14,7 @@ namespace EnterpriseMaster.DesktopApp.Data.MainLayout
         #region Ctor
 
         public MainLayoutService(
-            IMainPageServices mainPageServices, 
+            IMainPageServices mainPageServices,
             IErrorLogsServices errorLogsServices)
         {
             this.mainPageServices = mainPageServices;
