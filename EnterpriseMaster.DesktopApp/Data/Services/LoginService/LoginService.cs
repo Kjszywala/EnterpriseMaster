@@ -49,7 +49,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
             catch (Exception e)
             {
                 await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
-                return false;
+                throw new Exception(e.Message, e);
             }
         }
 

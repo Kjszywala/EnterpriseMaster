@@ -70,6 +70,17 @@
     </div>
 </div>
 
+<Modal @ref="modal" Title="@title">
+    <BodyTemplate>
+        Modal body text goes here.
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Primary">Complete</Button>
+        <Button Color="ButtonColor.Primary">Close</Button>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Remove</Button>
+    </FooterTemplate>
+</Modal>
+
 @code {
     private IEnumerable<Tasks> tasks;
 
@@ -92,5 +103,19 @@
     private async Task<GridDataProviderResult<Tasks>> TasksDataProvider(GridDataProviderRequest<Tasks> request)
     {
         return await Task.FromResult(request.ApplyTo(tasks));
+    }
+
+    //Modal window
+    private Modal modal;
+    private string title = "Test Case";
+
+    private async Task OnShowModalClick()
+    {
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
     }
 }

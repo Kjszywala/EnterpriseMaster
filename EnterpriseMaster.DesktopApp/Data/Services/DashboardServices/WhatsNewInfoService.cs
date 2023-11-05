@@ -1,36 +1,36 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
 
-namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
+namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 {
-    public class MainLayoutService
+    public class WhatsNewInfoService
     {
         #region Variables
 
-        private IMainPageServices mainPageServices;
         private IErrorLogsServices errorLogsServices;
+        private IWhatsNewsServices whatsNewsServices;
 
         #endregion
 
         #region Ctor
 
-        public MainLayoutService(
-            IMainPageServices _mainPageServices,
-            IErrorLogsServices _errorLogsServices)
+        public WhatsNewInfoService(
+            IErrorLogsServices _errorLogsServices, 
+            IWhatsNewsServices _whatsNewsServices)
         {
-            mainPageServices = _mainPageServices;
             errorLogsServices = _errorLogsServices;
+            whatsNewsServices = _whatsNewsServices;
         }
 
         #endregion
 
         #region Methods
 
-        public async Task<MainPages> GetMainPagesModel()
+        public async Task<List<WhatsNew>> GetAllActiveNews()
         {
             try
             {
-                return (await mainPageServices.GetAllAsync()).FirstOrDefault();
+                return (await whatsNewsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }
             catch (Exception e)
             {
@@ -40,5 +40,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
         }
 
         #endregion
+
     }
 }
