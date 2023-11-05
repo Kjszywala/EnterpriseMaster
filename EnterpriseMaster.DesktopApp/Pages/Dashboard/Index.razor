@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 
 <div class="dashboardGrid">
     <div class="dashboardBox1">
@@ -14,6 +15,7 @@
                       AllowFiltering="true"
                       AllowPaging="true"
                       AllowSorting="true"
+                      AllowRowClick="true"
                       Class="table table-hover table-bordered table-striped"
                       DataProvider="TasksDataProvider"
                       FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
@@ -23,7 +25,8 @@
                       PageSizeSelectorItems="@(new int[] { 5,10,20 })"
                       PaginationItemsTextFormat="{0} - {1} of {2} pages"
                       ItemsPerPageText="Items per page"
-                      Responsive="true">
+                      Responsive="true"
+                      OnRowClick="OnShowModalClick">
                     <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id" FilterTextboxWidth="80">
                         @context.Id
                     </GridColumn>
@@ -70,14 +73,32 @@
     </div>
 </div>
 
-<Modal @ref="modal" Title="@title">
+<Modal @ref="modal" Title="@modalModel.Title" IsVerticallyCentered="true">
     <BodyTemplate>
-        Modal body text goes here.
+        <div class="task-id">
+            <span><strong>ID:</strong></span>
+            <span>@modalModel.Id</span>
+        </div>
+        <div class="task-description">
+            <span><strong>Description:</strong></span>
+            <span>@modalModel.Description</span>
+        </div>
+        <div class="task-status">
+            <span><strong>Status:</strong></span>
+            <span>@modalModel.Status</span>
+        </div>
+        <div class="task-complete-by">
+            <span><strong>Complete By:</strong></span>
+            <span>@modalModel.CompleteBy.ToString("yyyy-MM-dd")</span>
+        </div>
+        <div class="task-creation-date">
+            <span><strong>Creation Date:</strong></span>
+            <span>@modalModel.CreationDate.ToString("yyyy-MM-dd")</span>
+        </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Primary">Complete</Button>
-        <Button Color="ButtonColor.Primary">Close</Button>
-        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Remove</Button>
+        <Button Color="ButtonColor.Success">Set As Complete</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Remove</Button>
     </FooterTemplate>
 </Modal>
 
@@ -107,10 +128,20 @@
 
     //Modal window
     private Modal modal;
+    private ModalModel modalModel = new ModalModel();
     private string title = "Test Case";
 
     private async Task OnShowModalClick()
     {
+        modalModel = new ModalModel()
+        {
+            Id = 1,
+            Title = "Example Task",
+            Description = "This is an example task.",
+            Status = "In Progress",
+            CompleteBy = DateTime.Now.Add(TimeSpan.FromDays(7)),
+            CreationDate = DateTime.Now.Add(TimeSpan.FromDays(-7))
+        };
         await modal?.ShowAsync();
     }
 
