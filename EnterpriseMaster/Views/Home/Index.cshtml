@@ -3,7 +3,21 @@
     ViewData["Title"] = "Home Page";
 }
 <link href="~/css/index.css" rel="stylesheet" type="text/css">
-
+<style>
+    .cta-button:before {
+        background-color: initial;
+        background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+        border-radius: 125px;
+        content: "";
+        height: 50%;
+        left: 4%;
+        opacity: .5;
+        position: absolute;
+        top: 0;
+        transition: all .3s;
+        width: 92%;
+    }
+</style>
 <section class="hero">
     <div class="slideshow-container">
         <div class="mainImageTextDiv">
@@ -186,6 +200,6 @@
         <input type="text" name="name" placeholder="Your Name" required class="contact-input">
         <input type="email" name="email" placeholder="Your Email" required class="contact-input">
         <textarea name="message" placeholder="Your Message" required class="contact-textarea"></textarea>
-        <button type="submit" class="contact-button">Submit</button>
+        <button type="submit" class="cta-button">Submit</button>
     </form>
 </section>

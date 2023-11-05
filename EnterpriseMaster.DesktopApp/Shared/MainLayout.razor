@@ -20,10 +20,6 @@
                         {
                             <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(mainPagesModel.Logo)" alt="Sales">
                         }
-                        else
-                        {
-                            <p>Loading...</p>
-                        }
                     </div>
 
                     <div class="form1">
@@ -75,12 +71,12 @@ else
         </div>
         <ul class="nav-links">
             <li>
-                <a href="#">
+                <a href="dashbord">
                     <i class='bx bx-grid-alt'></i>
                     <span class="link_name">Dashboard</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Category</a></li>
+                    <li><a class="link_name" href="#">Dashboard</a></li>
                 </ul>
             </li>
             @*<li>
@@ -116,6 +112,60 @@ else
             <li>
                 <a href="#">
                     <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="link_name">Orders</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Orders</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-line-chart'></i>
+                    <span class="link_name">Finance</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Finance</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-compass'></i>
+                    <span class="link_name">Create Offers</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Create Offers</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-history'></i>
+                    <span class="link_name">Inventory</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Inventory</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Invoices</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Invoices</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Sales</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Sales</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
                     <span class="link_name">Analytics</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -124,38 +174,47 @@ else
             </li>
             <li>
                 <a href="#">
-                    <i class='bx bx-line-chart'></i>
-                    <span class="link_name">Chart</span>
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Human Resources</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Chart</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-compass'></i>
-                    <span class="link_name">Explore</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Explore</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-history'></i>
-                    <span class="link_name">History</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">History</a></li>
+                    <li><a class="link_name" href="#">Human Resources</a></li>
                 </ul>
             </li>
             <li>
                 <a href="#">
                     <i class='bx bx-cog'></i>
-                    <span class="link_name">Setting</span>
+                    <span class="link_name">Production</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Setting</a></li>
+                    <li><a class="link_name" href="#">Production</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Accounting</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Accounting</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Customer Data</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Customer Data</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="link_name">Sales Activities</span>
+                </a>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Sales Activities</a></li>
                 </ul>
             </li>
             <li>
@@ -208,7 +267,7 @@ else
 
     private async Task LoginClicked()
     {
-        preloadService.Show();
+        preloadService.Show(SpinnerColor.Dark);
         Config.IsLoggedIn = await loginService.AuthenticateAsync(email, password);
         await Task.Delay(3000);
         preloadService.Hide();
@@ -216,6 +275,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        preloadService.Show(SpinnerColor.Dark);
         mainPagesModel = await mainLayoutService.GetMainPagesModel();
         // Initialize your arrows list here
         arrows.Add(new ArrowInfo { Text = "Dashboard", IsMenuVisible = false });
@@ -227,5 +287,6 @@ else
         arrows.Add(new ArrowInfo { Text = "Explore", IsMenuVisible = false });
         arrows.Add(new ArrowInfo { Text = "History", IsMenuVisible = false });
         arrows.Add(new ArrowInfo { Text = "Setting", IsMenuVisible = false });
+        preloadService.Hide();
     }
 }

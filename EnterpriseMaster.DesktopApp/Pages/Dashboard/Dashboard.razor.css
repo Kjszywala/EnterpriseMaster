@@ -1,0 +1,33 @@
+﻿.dashboardGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px; /* Adjust the gap as needed */
+    width: 400px; /* Set the total width of the grid */
+    height: 400px; /* Set the total height of the grid */
+}
+
+.dashboardBox1, .dashboardBox2, .dashboardBox3, .dashboardBox4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+    .dashboardBox1:nth-child(1) {
+        background-color: #ff5733; /* Red-Orange */
+    }
+
+    .dashboardBox2:nth-child(2) {
+        background-color: #33ff57; /* Green */
+    }
+
+    .dashboardBox3:nth-child(3) {
+        background-color: #5733ff; /* Blue-Purple */
+    }
+
+    .dashboardBox4:nth-child(4) {
+        background-color: #ff33b1; /* Pink */
+    }
