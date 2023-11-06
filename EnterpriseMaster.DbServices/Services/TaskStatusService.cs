@@ -2,9 +2,9 @@
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    internal class TaskStatusService :
+    public class TaskStatusService :
         BaseServices<Models.Database.TaskStatus>,
-        ITaskStatusService
+        Interfaces.TaskStatusService
     {
         public TaskStatusService() 
             : base("/api/v1.0/TaskStatus/")

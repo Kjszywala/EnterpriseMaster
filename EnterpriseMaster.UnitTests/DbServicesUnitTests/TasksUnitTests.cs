@@ -10,7 +10,7 @@ namespace EnterpriseMaster.UnitTests.DbServicesUnitTests
         UsersServices usersServices = new UsersServices();
 
         [Test]
-        public async Task CreateNewRowForApplicationFeaturesSales_TestAsync()
+        public async Task CreateMultipleTasks_TestAsync()
         {
             for (int i = 1; i <= 10; i++)
             {
