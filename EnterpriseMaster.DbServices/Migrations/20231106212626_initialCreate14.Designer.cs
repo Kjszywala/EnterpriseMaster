@@ -4,6 +4,7 @@ using EnterpriseMaster.DbServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriseMaster.DbServices.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231106212626_initialCreate14")]
+    partial class initialCreate14
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,38 +468,6 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.ToTable("CustomerInformation");
                 });
 
-            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.EmployeeAccesses", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Access")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserAccesses");
-                });
-
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.EmployeeAddresses", b =>
                 {
                     b.Property<int>("Id")
@@ -571,9 +542,6 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.Property<int?>("EmployeeAddressId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -615,8 +583,6 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("EmployeeAddressId");
-
-                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("UserId");
 
@@ -1547,6 +1513,38 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.UserAccesses", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Access")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserAccesses");
+                });
+
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Users", b =>
                 {
                     b.Property<int>("Id")
@@ -1752,17 +1750,11 @@ namespace EnterpriseMaster.DbServices.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("EmployeeAddressId");
 
-                    b.HasOne("EnterpriseMaster.DbServices.Models.Database.Employees", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-
                     b.HasOne("EnterpriseMaster.DbServices.Models.Database.Users", "User")
                         .WithMany("Employees")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Company");
-
-                    b.Navigation("Employee");
 
                     b.Navigation("EmployeeAddress");
 

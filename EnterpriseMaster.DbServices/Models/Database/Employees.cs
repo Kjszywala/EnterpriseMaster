@@ -18,5 +18,7 @@
         public int? UserId { get; set; }
         public Users? User { get; set; }
         public List<Tasks>? Tasks { get; set; }
+        public int? EmployeeId { get; set; }
+        public Employees? Employee { get; set; }
     }
 }

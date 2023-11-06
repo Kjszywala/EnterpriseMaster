@@ -2,6 +2,9 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
+@inject TaskServices taskServices
+@inject WhatsNewInfoService whatsNewServices
 
 <div class="dashboardGrid">
     <div class="dashboardBox1">
@@ -9,6 +12,7 @@
             <div class="task-list">
                 <div class="dashboardTitle">
                     <h3>Tasks List For Today</h3>
+                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
                 </div>
                 <hr class="dashboardHr" style="color:black;"/>
                <Grid TItem="Tasks"
@@ -36,9 +40,9 @@
                     <GridColumn TItem="Tasks" HeaderText="CreationDate" PropertyName="CreationDate" SortKeySelector="item => item.CreationDate" FilterTextboxWidth="40">
                         @context.CreationDate
                     </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center" >
-                        <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;">Complete</Button>
-                        <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;">Remove</Button>
+                    <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center">
+                        <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;"><span><iconify-icon icon="mdi:check-thick"></iconify-icon></span></Button>
+                        <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;"><span><iconify-icon icon="mdi:remove-bold"></iconify-icon></span></Button>
                     </GridColumn>
                 </Grid>
             </div>
@@ -72,12 +76,12 @@
                 <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
                     @context.Title
                 </GridColumn>
-                <GridColumn TItem="Tasks" HeaderText="Date Completed" PropertyName="Date Completed" SortKeySelector="item => item.CreationDate" FilterTextboxWidth="40">
+                <GridColumn TItem="Tasks" HeaderText="DateCompleted" PropertyName="ModificationDate" SortKeySelector="item => item.ModificationDate" FilterTextboxWidth="40">
                     @context.ModificationDate
                 </GridColumn>
                 <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center">
-                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;">Complete</Button>
-                    <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;">Remove</Button>
+                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="jam:refresh-reverse"></iconify-icon></span></Button>
+                    <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;" title="remove"><span><iconify-icon icon="mdi:remove-bold"></iconify-icon></span></Button>
                 </GridColumn>
             </Grid>
         </div>
@@ -86,6 +90,7 @@
         <div class="dashbordContent">
             <div class="dashboardTitle">
                 <h3>Reminder</h3>
+                <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
             </div>
             <hr class="dashboardHr" style="color:black;" />
             3
@@ -95,6 +100,7 @@
         <div class="dashbordContent">
             <div class="dashboardTitle">
                 <h3>What's new</h3>
+                <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
             </div>
             <hr class="dashboardHr" style="color:black;" />
             @for(int i = 0; i < 10; i++){
@@ -141,21 +147,12 @@
 
 @code {
     private IEnumerable<Tasks> tasks;
+    private IEnumerable<Tasks> tasksCompleted;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        tasks = new List<Tasks>
-        {
-            new Tasks { Id = 107,   Description = "AI Engineer", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 103,   Description = "Senior DevOps Engineer", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 106, Description = "Data Engineer", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 104,   Description = "Associate Architect", CreationDate = DateTime.Now, IsActive = false },
-            new Tasks { Id = 105,   Description = "Senior Data Engineer", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 102,   Description = "Architect", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 101,  Description = "Architect", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 108, Description = "Data Analyst", CreationDate = DateTime.Now, IsActive = true },
-            new Tasks { Id = 109,  Description = "App Maker", CreationDate = DateTime.Now, IsActive = true },
-        };
+        tasks = await taskServices.GetAllActiveTasks() ?? null;
+        tasksCompleted = await taskServices.GetAllCompletedTasks() ?? null;
     }
 
     private async Task<GridDataProviderResult<Tasks>> TasksDataProvider(GridDataProviderRequest<Tasks> request)
@@ -163,7 +160,50 @@
         return await Task.FromResult(request.ApplyTo(tasks));
     }
 
-    //Modal window
+    #region TasksMethods 
+
+    private Tasks task;
+
+    private async Task setCompleted(int id)
+    {
+        await taskServices.CompleteTask(id);
+        tasks = await taskServices.GetAllActiveTasks();
+        tasksCompleted = await taskServices.GetAllCompletedTasks();
+    }
+
+    private async Task addTask()
+    {
+        await taskServices.AddNewTask(task);
+        tasks = await taskServices.GetAllActiveTasks();
+        tasksCompleted = await taskServices.GetAllCompletedTasks();
+    }
+
+    private async Task reverseCompleted(int id)
+    {
+        await taskServices.AddNewTask(task);
+        tasks = await taskServices.GetAllActiveTasks();
+        tasksCompleted = await taskServices.GetAllCompletedTasks();
+    }
+
+    private async Task removeTask(int id)
+    {
+        await taskServices.RemoveTask(id);
+        tasks = await taskServices.GetAllActiveTasks();
+        tasksCompleted = await taskServices.GetAllCompletedTasks();
+    }
+
+    #endregion
+
+    #region News
+
+    #endregion
+
+    #region Remonder
+
+    #endregion
+
+    #region ModalTaskWindow
+
     private Modal modal;
     private ModalModel modalModel = new ModalModel();
     private string title = "Test Case";
@@ -186,4 +226,6 @@
     {
         await modal?.HideAsync();
     }
+
+    #endregion
 }

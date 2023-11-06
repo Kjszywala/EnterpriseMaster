@@ -76,7 +76,9 @@
     }
 .dashboardTitle {
     color: #323036;
-    text-align:center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /*Modal styles*/

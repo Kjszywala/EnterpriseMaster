@@ -41,8 +41,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                 if(isAuthenticated)
                 {
                     Config.Email = email;
-                    Config.UserId = users.Where(item => item.Email == user.Email).FirstOrDefault().Id;
+                    Config.UserId =  users.Where(item => item.Email == user.Email).FirstOrDefault().Id;
                     Config.SubscriptionId = users.Where(item => item.Email == user.Email).FirstOrDefault().SubscriptionTypeId;
+                    Config.Company = users.Where(item => item.Email == user.Email).FirstOrDefault().CompanyName;
                 }
                 return isAuthenticated;
             }

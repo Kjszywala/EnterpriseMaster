@@ -9,7 +9,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 
         IErrorLogsServices errorLogsServices;
         ITasksServices tasksServices;
-        IEmployeesServices employeesServices;
 
         #endregion
 
@@ -17,12 +16,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 
         public TaskServices(
             IErrorLogsServices _iErrorLogsServices, 
-            ITasksServices _iTasksServices, 
-            IEmployeesServices _iEmployeesServices)
+            ITasksServices _iTasksServices)
         {
             errorLogsServices = _iErrorLogsServices;
             tasksServices = _iTasksServices;
-            employeesServices = _iEmployeesServices;
         }
 
         #endregion
@@ -135,6 +132,28 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 throw new Exception(e.Message, e);
             }
         }
+
+        public async Task<bool> ReverseTask(int id)
+        {
+            try
+            {
+                var task = await tasksServices.GetAsync(id);
+                task.IsCompleted = false;
+                task.IsActive = true;
+                var response = await tasksServices.EditAsync(id, task);
+                if (response)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
         #endregion
     }
 }

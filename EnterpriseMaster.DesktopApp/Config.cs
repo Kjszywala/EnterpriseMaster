@@ -7,5 +7,6 @@
         public static int? SubscriptionId;
         public static string UserName;
         public static string Email;
+        public static string Company;
     }
 }
