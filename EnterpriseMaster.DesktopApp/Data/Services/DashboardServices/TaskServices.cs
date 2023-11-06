@@ -45,12 +45,13 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             }
         }
 
-        public async Task<List<Tasks>> GetAllNotActiveTasks()
+        public async Task<List<Tasks>> GetAllCompletedTasks()
         {
             try
             {
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.IsActive == false)
+                    .Where(item => item.IsCompleted == true)
                     .Where(item3 => item3.EmployeeId == Config.UserId)
                     .ToList();
             }
@@ -78,6 +79,62 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             }
         }
 
+        public async Task<bool> AddNewTask(Tasks task)
+        {
+            try
+            {
+                var response = await tasksServices.AddAsync(task);
+                if (response)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> RemoveTask(int id)
+        {
+            try
+            {
+                var response = await tasksServices.RemoveAsync(id);
+                if(response)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> CompleteTask(int id)
+        {
+            try
+            {
+                var task = await tasksServices.GetAsync(id);
+                task.IsCompleted = true;
+                task.IsActive = false;
+                var response = await tasksServices.EditAsync(id, task);
+                if (response)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
         #endregion
     }
 }

@@ -50,7 +50,36 @@
                 <h3>Completed Tasks</h3>
             </div>
             <hr class="dashboardHr" style="color:black;" />
-           
+            <Grid TItem="Tasks"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  Class="table table-hover table-bordered table-striped"
+                  DataProvider="TasksDataProvider"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true"
+                  OnRowClick="OnShowModalClick">
+                <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id" FilterTextboxWidth="80">
+                    @context.Id
+                </GridColumn>
+                <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
+                    @context.Title
+                </GridColumn>
+                <GridColumn TItem="Tasks" HeaderText="Date Completed" PropertyName="Date Completed" SortKeySelector="item => item.CreationDate" FilterTextboxWidth="40">
+                    @context.ModificationDate
+                </GridColumn>
+                <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center">
+                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;">Complete</Button>
+                    <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;">Remove</Button>
+                </GridColumn>
+            </Grid>
         </div>
     </div>
     <div class="dashboardBox3">
@@ -68,7 +97,15 @@
                 <h3>What's new</h3>
             </div>
             <hr class="dashboardHr" style="color:black;" />
-            4
+            @for(int i = 0; i < 10; i++){
+                <Card Color="CardColor.Dark" Class="mb-4" Style="width:100%;box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);">
+                    <CardHeader>Header</CardHeader>
+                    <CardBody>
+                        <CardTitle>Dark card title</CardTitle>
+                        <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
+                    </CardBody>
+                </Card>
+            }
         </div>
     </div>
 </div>

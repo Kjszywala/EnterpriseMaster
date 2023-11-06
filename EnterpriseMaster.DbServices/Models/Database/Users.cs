@@ -19,5 +19,6 @@
         public int? UserAddressId { get; set; }
         public UsersAdresses? UserAddress { get; set; }
         public List<SupportCases>? SupportCases { get; set; }
+        public List<Employees>? Employees { get; set; }
     }
 }
