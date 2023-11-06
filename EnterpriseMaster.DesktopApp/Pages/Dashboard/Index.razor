@@ -12,7 +12,7 @@
             <div class="task-list">
                 <div class="dashboardTitle">
                     <h3>Tasks List For Today</h3>
-                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
+                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" @onclick="OnShowModalAddTaskClick" title="Completed"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
                 </div>
                 <hr class="dashboardHr" style="color:black;"/>
                <Grid TItem="Tasks"
@@ -140,19 +140,62 @@
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Success">Set As Complete</Button>
+        <Button Color="ButtonColor.Success" @onclick="addTask">Set As Complete</Button>
         <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Remove</Button>
     </FooterTemplate>
 </Modal>
 
+<Modal @ref="modalAddTask" Title="@modalModel.Title" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="form-group">
+            <label for="task">Task:</label>
+            <input type="text" id="task" class="form-control" @bind="taskModel.Task" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" class="form-control" @bind="taskModel.Description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="completeBy">Complete By:</label>
+            <input type="date" id="completeBy" class="form-control" @bind="taskModel.CompleteBy">
+        </div>
+
+        <div class="form-group">
+            <label for="employeeId">Employee:</label>
+            <select id="employeeId" class="form-control" @bind="taskModel.EmployeeId">
+                @foreach (var employee in employees)
+                {
+                    <option value="@employee.Id">@employee.FirstName</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="taskStatusId">Task Status:</label>
+            <select id="taskStatusId" class="form-control" @bind="taskModel.TaskStatusId">
+                @foreach (var taskStatus in taskStatuses)
+                {
+                    <option value="@taskStatus.Id">@taskStatus.Status</option>
+                }
+            </select>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Success" @onclick="addTask">Add new task</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
 @code {
-    private IEnumerable<Tasks> tasks;
-    private IEnumerable<Tasks> tasksCompleted;
+    private List<Tasks> tasks = new List<Tasks>();
+    private List<Tasks> tasksCompleted = new List<Tasks>();
 
     protected async override Task OnInitializedAsync()
     {
-        tasks = await taskServices.GetAllActiveTasks() ?? null;
-        tasksCompleted = await taskServices.GetAllCompletedTasks() ?? null;
+        tasks = (await taskServices.GetAllActiveTasks()).ToList();
+        tasksCompleted = (await taskServices.GetAllCompletedTasks()).ToList();
     }
 
     private async Task<GridDataProviderResult<Tasks>> TasksDataProvider(GridDataProviderRequest<Tasks> request)
@@ -160,9 +203,9 @@
         return await Task.FromResult(request.ApplyTo(tasks));
     }
 
-    #region TasksMethods 
+    #region TasksMethods
 
-    private Tasks task;
+    private Tasks taskModel = new Tasks();
 
     private async Task setCompleted(int id)
     {
@@ -173,14 +216,16 @@
 
     private async Task addTask()
     {
-        await taskServices.AddNewTask(task);
+        taskModel.CreationDate = DateTime.Now;
+        taskModel.ModificationDate = DateTime.Now;
+        await taskServices.AddNewTask(taskModel);
         tasks = await taskServices.GetAllActiveTasks();
         tasksCompleted = await taskServices.GetAllCompletedTasks();
     }
 
     private async Task reverseCompleted(int id)
     {
-        await taskServices.AddNewTask(task);
+        await taskServices.AddNewTask(taskModel);
         tasks = await taskServices.GetAllActiveTasks();
         tasksCompleted = await taskServices.GetAllCompletedTasks();
     }
@@ -199,6 +244,36 @@
     #endregion
 
     #region Remonder
+
+    #endregion
+
+    #region ModalAddTask
+
+    private Modal modalAddTask;
+
+    private List<Employees> employees = new List<Employees>
+    {
+        new Employees { Id = 1, FirstName = "Employee 1" },
+        new Employees { Id = 2, FirstName = "Employee 2" },
+        // Add more employees
+    };
+
+    private List<EnterpriseMaster.DbServices.Models.Database.TaskStatus> taskStatuses = new List<EnterpriseMaster.DbServices.Models.Database.TaskStatus>
+    {
+        new EnterpriseMaster.DbServices.Models.Database.TaskStatus { Id = 1, Status = "Status 1" },
+        new EnterpriseMaster.DbServices.Models.Database.TaskStatus { Id = 2, Status = "Status 2" },
+        // Add more task statuses
+    };
+
+    private async Task OnShowModalAddTaskClick()
+    {
+        await modalAddTask?.ShowAsync();
+    }
+
+    private async Task OnHideModalAddTaskClick()
+    {
+        await modalAddTask?.HideAsync();
+    }
 
     #endregion
 
