@@ -1,0 +1,93 @@
+﻿@page "/accounting"
+@using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
+@inherits LayoutComponentBase
+<Tabs @ref="tabs" EnableFadeEffect="true">
+    <Tab IsActive="true" Name="accounts">
+        <TitleTemplate>
+            <Icon Name="IconName.CheckAll" /> Accounts
+        </TitleTemplate>
+        <Content>
+            <br />
+           <Grid TItem="Employees" class="table table-hover table-bordered table-striped" DataProvider="EmployeesDataProvider" AllowFiltering="true" Responsive="true">
+                <GridColumn TItem="Employees" HeaderText="Id" Filterable="false">
+                    @context.Id
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="First Name" PropertyName="FirstName">
+                    @context.FirstName
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="Position" PropertyName="Position">
+                    @context.Position
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="Hire Date" PropertyName="HireDate">
+                    @context.HireDate
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="Active" Filterable="false">
+                    @context.IsActive
+                </GridColumn>
+            </Grid>
+            <p class="mt-2">
+                <b>This is some placeholder content the Home tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
+                <Button Color="ButtonColor.Primary" @onclick="ShowFaqsAsync">Edit Tab</Button>
+            </p>
+        </Content>
+    </Tab>
+    <Tab Name="add">
+        <TitleTemplate>
+            <Icon Name="IconName.Fingerprint" /> Add Account
+        </TitleTemplate>
+        <Content>
+            <br />
+            <p class="mt-2">
+                <b>This is some placeholder content the Profile tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
+            </p>
+        </Content>
+    </Tab>
+    <Tab Name="edit">
+        <TitleTemplate>
+            <Icon Name="IconName.Person" /> Edit Account
+        </TitleTemplate>
+        <Content>
+            <br />
+            <p class="mt-2">
+                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
+            </p>
+        </Content>
+    </Tab>
+</Tabs>
+
+@code {
+    Tabs tabs;
+    private async Task ShowFaqsAsync() => await tabs.ShowTabByNameAsync("edit");
+    private async Task ShowAccountsAsync() => await tabs.ShowTabByNameAsync("accounts");
+    private async Task ShowAddAsync() => await tabs.ShowTabByNameAsync("add");
+
+    #region grid
+    private IEnumerable<Employees> employees;
+
+    private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)
+    {
+        if (employees is null) // pull employees only one time for client-side filtering, sorting, and paging
+            employees = GetEmployees(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(employees));
+    }
+
+    private IEnumerable<Employees> GetEmployees()
+    {
+        return new List<Employees>
+        {
+            new Employees { Id = 107, FirstName = "Alice", Position = "AI Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 103, FirstName = "Bob", Position = "Senior DevOps Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 106, FirstName = "John", Position = "Data Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 104, FirstName = "Pop", Position = "Associate Architect", HireDate = DateTime.Now, IsActive = false },
+            new Employees { Id = 105, FirstName = "Ronald", Position = "Senior Data Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 102, FirstName = "Line", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 101, FirstName = "Daniel", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 108, FirstName = "Zayne", Position = "Data Analyst", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 109, FirstName = "Isha", Position = "App Maker", HireDate = DateTime.Now, IsActive = true },
+        };
+    }
+    #endregion
+
+}

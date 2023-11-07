@@ -59,4 +59,8 @@
       <ProjectReference Include="..\EnterpriseMaster.DbServices\EnterpriseMaster.DbServices.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Data\Services\AccountingServices\" />
+    </ItemGroup>
+
 </Project>

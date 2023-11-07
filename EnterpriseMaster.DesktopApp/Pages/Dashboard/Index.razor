@@ -140,7 +140,7 @@
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Success" @onclick="addTask">Set As Complete</Button>
+        <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalModel.Id)">Set As Complete</Button>
         <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Remove</Button>
     </FooterTemplate>
 </Modal>
