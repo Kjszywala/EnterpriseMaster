@@ -1,7 +1,7 @@
 ﻿@page "/accounting"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
-@inherits LayoutComponentBase
+@inherits MainLayout
 <Tabs @ref="tabs" EnableFadeEffect="true">
     <Tab IsActive="true" Name="accounts">
         <TitleTemplate>
@@ -56,6 +56,7 @@
     </Tab>
 </Tabs>
 
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
     Tabs tabs;
     private async Task ShowFaqsAsync() => await tabs.ShowTabByNameAsync("edit");

@@ -241,6 +241,7 @@ else
     </section>
 }
 <Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
     private string email;
     private string password;
@@ -273,6 +274,14 @@ else
         preloadService.Show(SpinnerColor.Dark);
         Config.IsLoggedIn = await loginService.AuthenticateAsync(email, password);
         await Task.Delay(3000);
+        if(!Config.IsLoggedIn)
+        {
+            ShowMessage(ToastType.Danger, "Incorrect Details!", "Wrong login or password. Please try again");
+        }
+        else
+        {
+            ShowMessage(ToastType.Success, "Details Correct!", "Welcome in Enterprise Master! You have successfully logged in");
+        }
         preloadService.Hide();
     }
 
@@ -292,4 +301,25 @@ else
         arrows.Add(new ArrowInfo { Text = "Setting", IsMenuVisible = false });
         preloadService.Hide();
     }
+
+    #region Toast
+
+    public List<ToastMessage> messages = new List<ToastMessage>();
+
+    public void ShowMessage(ToastType toastType, string title, string message) 
+        => messages.Add(CreateMessage(
+            toastType, 
+            title, 
+            message));
+
+    private ToastMessage CreateMessage(ToastType toastType, string title, string message)
+        => new ToastMessage
+            {
+                Type = toastType,
+                Title = title,
+                HelpText = $"{DateTime.Now}",
+                Message = $"{message}: {DateTime.Now}",
+            };
+
+    #endregion
 }

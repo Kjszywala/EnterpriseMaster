@@ -5,6 +5,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
 @inject TaskServices taskServices
 @inject WhatsNewInfoService whatsNewServices
+@inherits MainLayout
 
 <div class="dashboardGrid">
     <div class="dashboardBox1">
@@ -115,6 +116,7 @@
         </div>
     </div>
 </div>
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 <Modal @ref="modal" Title="@modalModel.Title" IsVerticallyCentered="true">
     <BodyTemplate>
@@ -301,6 +303,5 @@
     {
         await modal?.HideAsync();
     }
-
     #endregion
 }
