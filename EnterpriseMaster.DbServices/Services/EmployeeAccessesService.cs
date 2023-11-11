@@ -3,11 +3,11 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    public class UserAccessesService :
+    public class EmployeeAccessesService :
         BaseServices<EmployeeAccesses>,
-        IUserAccessesService
+        IEmployeeAccessesServices
     {
-        public UserAccessesService() 
+        public EmployeeAccessesService() 
             : base("/api/v1.0/UserAccesses/")
         {
         }

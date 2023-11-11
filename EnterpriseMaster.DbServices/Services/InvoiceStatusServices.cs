@@ -3,11 +3,11 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    public class InvoiceStatusService :
+    public class InvoiceStatusServices :
         BaseServices<InvoiceStatuses>,
         IInvoiceStatusService
     {
-        public InvoiceStatusService() 
+        public InvoiceStatusServices() 
             : base("/api/v1.0/InvoiceStatuses/")
         {
         }

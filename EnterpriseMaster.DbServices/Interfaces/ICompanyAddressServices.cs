@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.DbServices.Interfaces
 {
-    public interface IUserAccessesService : IBaseServices<EmployeeAccesses>
+    public interface ICompanyAddressServices : IBaseServices<CompanyAddress>
     {
     }
 }

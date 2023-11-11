@@ -3,6 +3,7 @@ using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
 using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
+using EnterpriseMaster.DesktopApp.Data.Services.EmployeeServices;
 using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<LoginService>();
             builder.Services.AddSingleton<TaskServices>();
             builder.Services.AddSingleton<WhatsNewInfoService>();
+            builder.Services.AddSingleton<EmployeeService>();
 
             // Db injection
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();
@@ -67,6 +69,8 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<ISupportCaseServices, SupportCaseServices>();
             builder.Services.AddScoped<ICaseStatusServices, CaseStatusServices>();
             builder.Services.AddScoped<ITasksServices, TasksServices>();
+            builder.Services.AddScoped<ICompaniesServices, CompaniesServices>();
+            builder.Services.AddScoped<ICompanyAddressServices, CompanyAddressServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

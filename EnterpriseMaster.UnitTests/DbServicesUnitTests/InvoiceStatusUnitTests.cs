@@ -4,7 +4,7 @@ namespace EnterpriseMaster.UnitTests.DbServicesUnitTests
 {
     public class InvoiceStatusUnitTests
     {
-        InvoiceStatusService invoiceStatusService = new InvoiceStatusService();
+        InvoiceStatusServices invoiceStatusService = new InvoiceStatusServices();
 
         [Test]
         public async Task CreateMultipleInvoiceStatuses_TestAsync()

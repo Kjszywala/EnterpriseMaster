@@ -1,0 +1,44 @@
+﻿.full-height-add-employee {
+    height: 81vh; /* Make the column full height of the viewport */
+    background-color: #f0f0f0; /* Just for visualization */
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    margin-top: 5px;
+}
+
+.inner-grid-add-employee {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Each column takes up 50% of the available height */
+}
+.col-height-add-employee {
+    min-height: 40vh; /* Each column takes up 50% of the available height */
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    margin: 5px;
+    background-color: #f0f0f0; /* Just for visualization */
+}
+/* Style the dropdown */
+.dropdown-style {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 300px;
+}
+
+/* Style the options */
+.dropdown-style option {
+    padding: 8px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+}
+.col-dropdown {
+    display: flex;
+    height: 50px;
+    margin: 10px;
+}
+.col-dropdown p{
+    margin:13px;
+}

@@ -9,7 +9,17 @@
         </TitleTemplate>
         <Content>
             <br />
-           <Grid TItem="Employees" class="table table-hover table-bordered table-striped" DataProvider="EmployeesDataProvider" AllowFiltering="true" Responsive="true">
+           <Grid TItem="Employees" 
+                AllowPaging="true"
+                AllowSorting="true"
+                AllowRowClick="true" 
+                class="table table-hover table-bordered table-striped" 
+                DataProvider="EmployeesDataProvider" 
+                AllowFiltering="true" 
+                Responsive="true"
+                PageSize="15"
+                PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                PaginationItemsTextFormat="{0} - {1} of {2} pages">
                 <GridColumn TItem="Employees" HeaderText="Id" Filterable="false">
                     @context.Id
                 </GridColumn>
@@ -26,10 +36,6 @@
                     @context.IsActive
                 </GridColumn>
             </Grid>
-            <p class="mt-2">
-                <b>This is some placeholder content the Home tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-                <Button Color="ButtonColor.Primary" @onclick="ShowFaqsAsync">Edit Tab</Button>
-            </p>
         </Content>
     </Tab>
     <Tab Name="add">
@@ -38,9 +44,27 @@
         </TitleTemplate>
         <Content>
             <br />
-            <p class="mt-2">
-                <b>This is some placeholder content the Profile tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 full-height-add-employee">
+                        1
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row full-height">
+                            <div class="col-md-12">
+                                <div class="inner-grid-add-employee">
+                                    <div class="col-md-12 col-height-add-employee">
+                                        2
+                                    </div>
+                                    <div class="col-md-12 col-height-add-employee">
+                                        3
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab Name="edit">
@@ -49,9 +73,38 @@
         </TitleTemplate>
         <Content>
             <br />
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <div class="container">
+                <div class="row">
+                    <div class="col col-dropdown">
+                        <p>Select an Employee: </p>
+                        <select id="employeeDropdown" class="dropdown-style">
+                            @foreach (var emp in employees)
+                            {
+                                <option value="@emp.Id">@emp.FirstName @emp.LastName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 full-height-add-employee">
+                        1
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row full-height">
+                            <div class="col-md-12">
+                                <div class="inner-grid-add-employee">
+                                    <div class="col-md-12 col-height-add-employee">
+                                        2
+                                    </div>
+                                    <div class="col-md-12 col-height-add-employee">
+                                        3
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
 </Tabs>
@@ -65,6 +118,11 @@
 
     #region grid
     private IEnumerable<Employees> employees;
+
+    protected async override Task OnInitializedAsync()
+    {
+        employees = GetEmployees();
+    }
 
     private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)
     {
@@ -87,8 +145,22 @@
             new Employees { Id = 101, FirstName = "Daniel", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
             new Employees { Id = 108, FirstName = "Zayne", Position = "Data Analyst", HireDate = DateTime.Now, IsActive = true },
             new Employees { Id = 109, FirstName = "Isha", Position = "App Maker", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 107, FirstName = "Alice", Position = "AI Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 103, FirstName = "Bob", Position = "Senior DevOps Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 106, FirstName = "John", Position = "Data Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 104, FirstName = "Pop", Position = "Associate Architect", HireDate = DateTime.Now, IsActive = false },
+            new Employees { Id = 105, FirstName = "Ronald", Position = "Senior Data Engineer", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 102, FirstName = "Line", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 101, FirstName = "Daniel", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 108, FirstName = "Zayne", Position = "Data Analyst", HireDate = DateTime.Now, IsActive = true },
+            new Employees { Id = 109, FirstName = "Isha", Position = "App Maker", HireDate = DateTime.Now, IsActive = true },
         };
     }
+    #endregion
+
+    #region Employee
+
+
     #endregion
 
 }
