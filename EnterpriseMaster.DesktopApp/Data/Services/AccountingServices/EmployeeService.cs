@@ -1,7 +1,7 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
 
-namespace EnterpriseMaster.DesktopApp.Data.Services.EmployeeServices
+namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
 {
     public class EmployeeService
     {
@@ -54,10 +54,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.EmployeeServices
         {
             try
             {
-                var employeeAddresses = (await employeeAddressesServices.GetAllAsync());
-                var users = (await usersServices.GetAllAsync());
-                var employeeAccesList = (await employeeAccessesService.GetAllAsync());
-                var tasks = (await taskServices.GetAllAsync());
+                var employeeAddresses = await employeeAddressesServices.GetAllAsync();
+                var users = await usersServices.GetAllAsync();
+                var employeeAccesList = await employeeAccessesService.GetAllAsync();
+                var tasks = await taskServices.GetAllAsync();
                 var company = (await companiesServices.GetAllAsync()).Where(item => item.Name == Config.Company).FirstOrDefault();
 
                 if (company != null)
@@ -71,7 +71,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.EmployeeServices
                 {
                     foreach (var employeeAddress in employeeAddresses)
                     {
-                        if(employee.EmployeeAddressId == employeeAddress.Id)
+                        if (employee.EmployeeAddressId == employeeAddress.Id)
                         {
                             employee.EmployeeAddress = employeeAddress;
                         }
@@ -105,22 +105,22 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.EmployeeServices
 
         public async Task<bool> AddEmployeesAsync(Employees employee)
         {
-            return (await employeeService.AddAsync(employee));
+            return await employeeService.AddAsync(employee);
         }
 
         public async Task<bool> RemoveEmployeeAsync(int id)
         {
-            return (await employeeService.RemoveAsync(id));
+            return await employeeService.RemoveAsync(id);
         }
 
         public async Task<bool> UpdateEmployeeAsync(Employees employee)
         {
-            return (await employeeService.EditAsync(employee.Id, employee));
+            return await employeeService.EditAsync(employee.Id, employee);
         }
 
-        public async Task<List<EmployeeAccesses>> GetEmployeeAccessesAsync(Employees employee)
+        public async Task<List<EmployeeAccesses>> GetEmployeeAccessesAsync()
         {
-            return (await employeeAccessesService.GetAllAsync()).ToList();
+            return await employeeAccessesService.GetAllAsync();
         }
 
         public async Task<List<EmployeeAddresses>> GetEmployeeAddressAsync(int id)

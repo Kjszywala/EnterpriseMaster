@@ -2,8 +2,8 @@
 using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
+using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
 using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
-using EnterpriseMaster.DesktopApp.Data.Services.EmployeeServices;
 using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 using Microsoft.Extensions.Logging;
@@ -71,6 +71,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<ITasksServices, TasksServices>();
             builder.Services.AddScoped<ICompaniesServices, CompaniesServices>();
             builder.Services.AddScoped<ICompanyAddressServices, CompanyAddressServices>();
+            builder.Services.AddScoped<IEmployeeAccessesServices, EmployeeAccessesService>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

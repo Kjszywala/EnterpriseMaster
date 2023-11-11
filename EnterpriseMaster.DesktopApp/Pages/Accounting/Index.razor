@@ -1,7 +1,10 @@
 ﻿@page "/accounting"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
 @inherits MainLayout
+@inject EmployeeService employeeService
+
 <Tabs @ref="tabs" EnableFadeEffect="true">
     <Tab IsActive="true" Name="accounts">
         <TitleTemplate>
@@ -47,17 +50,106 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 full-height-add-employee">
-                        1
+                        <div class="styled-form">
+                            <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" id="firstName" name="firstName" @bind="employee.FirstName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" id="lastName" name="lastName" @bind="employee.FirstName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" @bind="employee.FirstName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="department">Department:</label>
+                                <input type="text" id="department" name="department" @bind="employee.FirstName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="position">Position:</label>
+                                <input type="text" id="position" name="position" @bind="employee.FirstName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="salary">Salary:</label>
+                                <input type="text" id="salary" name="salary" @bind="employee.FirstName">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">Image:</label>
+                                <input type="file" id="image" name="image" @bind="employee.FirstName">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="hireDate">Hire Date:</label>
+                                <input type="date" id="hireDate" @bind="employee.HireDate" name="hireDate" required>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-8">
                         <div class="row full-height">
                             <div class="col-md-12">
                                 <div class="inner-grid-add-employee">
                                     <div class="col-md-12 col-height-add-employee">
-                                        2
+                                        <div class="child-div">
+                                            <div class="styled-form">
+                                                <div class="form-group">
+                                                    <label for="DateOfBirth">Date Of Birth:</label>
+                                                    <input type="date" id="DateOfBirth" @bind="employee.DateOfBirth" name="DateOfBirth" required>
+                                                </div>
+                                                <label for="houseNumber">House Number:</label>
+                                                <input type="text" id="houseNumber" @bind="employee.FirstName" name="houseNumber">
+
+                                                <label for="street">Street:</label>
+                                                <input type="text" id="street" @bind="employee.FirstName" name="street">
+
+                                                <label for="city">City:</label>
+                                                <input type="text" id="city" @bind="employee.FirstName" name="city">
+                                            </div>
+                                        </div>
+                                        <div class="child-div">
+                                            <div class="styled-form">
+                                                <label for="postCode">Post Code:</label>
+                                                <input type="text" id="postCode" @bind="employee.FirstName" name="postCode">
+
+                                                <label for="country">Country:</label>
+                                                <input type="text" id="country" @bind="employee.FirstName" name="country">
+                                                <label for="employeeAccess">Account Access:</label>
+                                                @if (employeeAccesses == null)
+                                                {
+                                                    <p>Loading...</p>
+                                                }
+                                                else
+                                                {
+                                                    <select class="styled-select" @onchange="OnEmployeeAccessSelected">
+                                                        <option value="">Select an Employee Access</option>
+                                                        @foreach (var access in employeeAccesses)
+                                                        {
+                                                            <option value="@access.Id">@access.Access</option>
+                                                        }
+                                                    </select>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 col-height-add-employee">
-                                        3
+                                        <div class="styled-form">
+                                            <div class="password-form">
+                                                <label for="password">Password:</label>
+                                                <input type="password" id="password" @bind="password" name="password" required>
+
+                                                <label for="confirmPassword">Confirm Password:</label>
+                                                <input type="password" id="confirmPassword" @bind="confirmPassword" name="confirmPassword" required>
+
+                                                <Button Color="ButtonColor.Success" Size="Size.Large"> Add Employee </Button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -76,8 +168,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col col-dropdown">
-                        <p>Select an Employee: </p>
                         <select id="employeeDropdown" class="dropdown-style">
+                            <option>Select an Employee</option>
                             @foreach (var emp in employees)
                             {
                                 <option value="@emp.Id">@emp.FirstName @emp.LastName</option>
@@ -87,17 +179,105 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 full-height-add-employee">
-                        1
+                        <div class="styled-form">
+                            <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="department">Department:</label>
+                                <input type="text" id="department" name="department" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="position">Position:</label>
+                                <input type="text" id="position" name="position" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="salary">Salary:</label>
+                                <input type="text" id="salary" name="salary">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">Image:</label>
+                                <input type="file" id="image" name="image">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="hireDate">Hire Date:</label>
+                                <input type="date" id="hireDate" name="hireDate" required>
+                            </div>
+
+                        </div>
                     </div>
                     <div class="col-md-8">
                         <div class="row full-height">
                             <div class="col-md-12">
                                 <div class="inner-grid-add-employee">
                                     <div class="col-md-12 col-height-add-employee">
-                                        2
+                                        <div class="child-div">
+                                            <div class="styled-form">
+                                                <div class="form-group">
+                                                    <label for="DateOfBirth">Date Of Birth:</label>
+                                                    <input type="date" id="DateOfBirth" name="DateOfBirth" required>
+                                                </div>
+                                                <label for="houseNumber">House Number:</label>
+                                                <input type="text" id="houseNumber" name="houseNumber">
+
+                                                <label for="street">Street:</label>
+                                                <input type="text" id="street" name="street">
+
+                                                <label for="city">City:</label>
+                                                <input type="text" id="city" name="city">
+                                            </div>
+                                        </div>
+                                        <div class="child-div">
+                                            <div class="styled-form">
+                                                <label for="postCode">Post Code:</label>
+                                                <input type="text" id="postCode" name="postCode">
+
+                                                <label for="country">Country:</label>
+                                                <input type="text" id="country" name="country">
+
+                                                <label for="employeeAccess">Employee Access:</label>
+                                                @if (employeeAccesses == null)
+                                                {
+                                                    <p>Loading...</p>
+                                                }
+                                                else
+                                                {
+                                                    <select class="styled-select" @onchange="OnEmployeeAccessSelected">
+                                                        <option value="">Select an Employee Access</option>
+                                                        @foreach (var access in employeeAccesses)
+                                                        {
+                                                            <option value="@access.Id">@access.Access</option>
+                                                        }
+                                                    </select>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 col-height-add-employee">
-                                        3
+                                        <div class="styled-form">
+                                            <label for="password">Password:</label>
+                                            <input type="password" id="password" name="password" required>
+
+                                            <label for="confirmPassword">Confirm Password:</label>
+                                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                            <Button Color="ButtonColor.Success" Size="Size.Large"> Update Employee </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -111,17 +291,21 @@
 
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
+
     Tabs tabs;
     private async Task ShowFaqsAsync() => await tabs.ShowTabByNameAsync("edit");
     private async Task ShowAccountsAsync() => await tabs.ShowTabByNameAsync("accounts");
     private async Task ShowAddAsync() => await tabs.ShowTabByNameAsync("add");
 
     #region grid
+
     private IEnumerable<Employees> employees;
 
-    protected async override Task OnInitializedAsync()
+    protected async override void OnInitialized()
     {
         employees = GetEmployees();
+        var accesses = await employeeService.GetEmployeeAccessesAsync();
+        employeeAccesses = accesses ?? new List<EmployeeAccesses>();
     }
 
     private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)
@@ -156,9 +340,29 @@
             new Employees { Id = 109, FirstName = "Isha", Position = "App Maker", HireDate = DateTime.Now, IsActive = true },
         };
     }
+
     #endregion
 
     #region Employee
+
+    private IEnumerable<EmployeeAccesses> employeeAccesses;
+    private Employees employee = new Employees();
+    private EmployeeAddresses employeeAddresses;
+    private string password;
+    private string confirmPassword;
+    private int selectedEmployeeAccessId; // To hold the selected value
+
+    #region Add
+
+    private void OnEmployeeAccessSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedEmployeeAccessId = selectedId;
+        }
+    }
+
+    #endregion
 
 
     #endregion

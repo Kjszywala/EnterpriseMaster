@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EnterpriseMaster.DbServices.Models.Database
+﻿namespace EnterpriseMaster.DbServices.Models.Database
 {
-	public class Addresses : Bases
+    public class Addresses : Bases
 	{
 		public string? HouseNumber { get; set; }
 		public string? Street { get; set; }

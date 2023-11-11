@@ -9,6 +9,6 @@
         public string? ContactEmail { get; set; } // Email address for contacting the company
         public string? ContactPhone { get; set; } // Phone number for contacting the company
         public DateTime? FoundedDate { get; set; } // Date when the company was founded
-        public List<Employees> Employees { get; set; } // List of employees associated with the company
+        public List<Employees>? Employees { get; set; } // List of employees associated with the company
     }
 }

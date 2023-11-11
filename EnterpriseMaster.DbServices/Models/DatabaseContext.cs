@@ -41,7 +41,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<SupportCases> SupportCases { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UsersAdresses> UsersAdresses { get; set; }
-        public virtual DbSet<EmployeeAccesses> UserAccesses { get; set; }
+        public virtual DbSet<EmployeeAccesses> EmployeeAccesses { get; set; }
         public virtual DbSet<WhatsNew> WhatsNew { get; set; }
         public virtual DbSet<AboutPage> AboutPage { get; set; }
         public virtual DbSet<BasicPlanPage> BasicPlanPage { get; set; }
