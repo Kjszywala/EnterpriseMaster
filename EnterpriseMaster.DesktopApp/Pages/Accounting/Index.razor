@@ -53,42 +53,42 @@
                         <div class="styled-form">
                             <div class="form-group">
                                 <label for="firstName">First Name:</label>
-                                <input type="text" id="firstName" name="firstName" @bind="employee.FirstName" required>
+                                <input type="text" id="firstName" name="firstName" @bind="firstName" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="lastName">Last Name:</label>
-                                <input type="text" id="lastName" name="lastName" @bind="employee.FirstName" required>
+                                <input type="text" id="lastName" name="lastName" @bind="lastName" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" id="email" name="email" @bind="employee.FirstName" required>
+                                <input type="email" id="email" name="email" @bind="email" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="department">Department:</label>
-                                <input type="text" id="department" name="department" @bind="employee.FirstName" required>
+                                <input type="text" id="department" name="department" @bind="department" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="position">Position:</label>
-                                <input type="text" id="position" name="position" @bind="employee.FirstName" required>
+                                <input type="text" id="position" name="position" @bind="position" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="salary">Salary:</label>
-                                <input type="text" id="salary" name="salary" @bind="employee.FirstName">
+                                <input type="text" id="salary" name="salary" @bind="salary">
                             </div>
 
                             <div class="form-group">
                                 <label for="image">Image:</label>
-                                <input type="file" id="image" name="image" @bind="employee.FirstName">
+                                <input type="file" id="image" name="image" @bind="image">
                             </div>
 
                             <div class="form-group">
                                 <label for="hireDate">Hire Date:</label>
-                                <input type="date" id="hireDate" @bind="employee.HireDate" name="hireDate" required>
+                                <input type="date" id="hireDate" @bind="hireDate" name="hireDate" required>
                             </div>
                         </div>
                     </div>
@@ -101,25 +101,25 @@
                                             <div class="styled-form">
                                                 <div class="form-group">
                                                     <label for="DateOfBirth">Date Of Birth:</label>
-                                                    <input type="date" id="DateOfBirth" @bind="employee.DateOfBirth" name="DateOfBirth" required>
+                                                    <input type="date" id="DateOfBirth" @bind="DateOfBirth" name="DateOfBirth" required>
                                                 </div>
                                                 <label for="houseNumber">House Number:</label>
-                                                <input type="text" id="houseNumber" @bind="employee.FirstName" name="houseNumber">
+                                                <input type="text" id="houseNumber" @bind="houseNumber" name="houseNumber">
 
                                                 <label for="street">Street:</label>
-                                                <input type="text" id="street" @bind="employee.FirstName" name="street">
+                                                <input type="text" id="street" @bind="street" name="street">
 
                                                 <label for="city">City:</label>
-                                                <input type="text" id="city" @bind="employee.FirstName" name="city">
+                                                <input type="text" id="city" @bind="city" name="city">
                                             </div>
                                         </div>
                                         <div class="child-div">
                                             <div class="styled-form">
                                                 <label for="postCode">Post Code:</label>
-                                                <input type="text" id="postCode" @bind="employee.FirstName" name="postCode">
+                                                <input type="text" id="postCode" @bind="postCode" name="postCode">
 
                                                 <label for="country">Country:</label>
-                                                <input type="text" id="country" @bind="employee.FirstName" name="country">
+                                                <input type="text" id="country" @bind="country" name="country">
                                                 <label for="employeeAccess">Account Access:</label>
                                                 @if (employeeAccesses == null)
                                                 {
@@ -147,7 +147,7 @@
                                                 <label for="confirmPassword">Confirm Password:</label>
                                                 <input type="password" id="confirmPassword" @bind="confirmPassword" name="confirmPassword" required>
 
-                                                <Button Color="ButtonColor.Success" Size="Size.Large"> Add Employee </Button>
+                                                <Button Color="ButtonColor.Success" Size="Size.Large" @onclick="AddEmployee"> Add Employee </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -288,10 +288,10 @@
         </Content>
     </Tab>
 </Tabs>
-
+<Preload />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
-
+    [Inject] protected PreloadService preloadService { get; set; }
     Tabs tabs;
     private async Task ShowFaqsAsync() => await tabs.ShowTabByNameAsync("edit");
     private async Task ShowAccountsAsync() => await tabs.ShowTabByNameAsync("accounts");
@@ -304,8 +304,7 @@
     protected async override void OnInitialized()
     {
         employees = GetEmployees();
-        var accesses = await employeeService.GetEmployeeAccessesAsync();
-        employeeAccesses = accesses ?? new List<EmployeeAccesses>();
+        employeeAccesses = await employeeService.GetEmployeeAccessesAsync();
     }
 
     private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)
@@ -346,11 +345,23 @@
     #region Employee
 
     private IEnumerable<EmployeeAccesses> employeeAccesses;
-    private Employees employee = new Employees();
-    private EmployeeAddresses employeeAddresses;
+    private int selectedEmployeeAccessId; // To hold the selected value
     private string password;
     private string confirmPassword;
-    private int selectedEmployeeAccessId; // To hold the selected value
+    private string firstName = "";
+    private string lastName = "";
+    private string email = "";
+    private string department = "";
+    private string position = "";
+    private string salary = "";
+    private string image = "";
+    private DateTime hireDate = DateTime.Now;
+    private DateTime DateOfBirth = DateTime.Now;
+    private string houseNumber = "";
+    private string street = "";
+    private string city = "";
+    private string postCode = "";
+    private string country = "";
 
     #region Add
 
@@ -360,6 +371,120 @@
         {
             selectedEmployeeAccessId = selectedId;
         }
+    }
+
+    private async Task<bool> AddEmployee()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if(!(password == confirmPassword))
+            {
+                ShowMessage(ToastType.Danger, "Something went wrong!", "Passwords do not match!");
+                return false;
+            }
+            var employeeAddress = new EmployeeAddresses()
+            {
+                City = city,
+                Country = country,
+                CreationDate = DateTime.Now, 
+                HouseNumber = houseNumber, 
+                ModificationDate = DateTime.Now, 
+                PostCode = postCode, 
+                Street = street,
+                IsActive = true
+            };
+
+            var userAddress = new UsersAdresses()
+            {
+                City = city,
+                Country = country,
+                CreationDate = DateTime.Now,
+                HouseNumber = houseNumber,
+                ModificationDate = DateTime.Now,
+                PostCode = postCode,
+                Street = street,
+                IsActive = true
+            };
+
+            if(!await employeeService.AddEmployeeAddressAsync(employeeAddress))
+            {
+                ShowMessage(ToastType.Danger, "Something went wrong!", "We could not add employee address this time!");
+                return false;
+            };
+
+            if (!await employeeService.AddUserAddressAsync(userAddress))
+            {
+                ShowMessage(ToastType.Danger, "Something went wrong!", "We could not add user address this time!");
+                return false;
+            };
+
+            var fullEmployeeAddress = await employeeService.GetEmployeeAddressAsync(employeeAddress);
+            var fullUserAddress = await employeeService.GetUserAddressAsync(userAddress);
+
+            var user = new Users()
+            {
+                FirstName = firstName,
+                BusinesArea = department,
+                Email = email,
+                CompanyName = "Wordshop",
+                DateOfBirth = this.DateOfBirth,
+                CreationDate = DateTime.Now,
+                IsActive = true,
+                IsEmployee = true,
+                ModificationDate = DateTime.Now,
+                Position = position,
+                SecondName = lastName, 
+                SubscriptionTypeId = Config.SubscriptionId,
+                Password = BCrypt.Net.BCrypt.HashPassword(password),
+                UserAddressId = fullUserAddress.Id,
+            };
+
+            if(!await employeeService.AddUserAsync(user))
+            {
+                ShowMessage(ToastType.Danger, "Something went wrong!", "We could not add user this time!");
+                return false;
+            }
+
+            var userId = (await employeeService.GetUserBasedOnEmail(user.Email)).Id;
+            var companyId = (await employeeService.GetCompanyBasedOnName(user.CompanyName)).Id;
+
+            var employee = new Employees()
+            {
+                CreationDate = DateTime.Now,
+                DateOfBirth = DateOfBirth,
+                Department = department,
+                Email = email,
+                LastName = lastName,
+                FirstName = firstName,
+                Position = position,
+                Salary = salary,
+                EmployeeAccessId = selectedEmployeeAccessId,
+                EmployeeAddressId = fullEmployeeAddress.Id,
+                IsActive = true,
+                HireDate = hireDate,
+                ModificationDate = DateTime.Now,
+                CompanyId = companyId,
+                UserId = userId
+            };
+
+            if (await employeeService.AddEmployeesAsync(employee))
+            {
+                preloadService.Hide();
+                ShowMessage(ToastType.Success, "Success!", "New employee has been added!");
+                return true;
+            };
+            preloadService.Hide();
+            ShowMessage(ToastType.Danger, "Something went wrong!", "We could not add employee this time!");
+            return false;
+        }
+        catch (Exception e)
+        {
+            preloadService.Hide();
+            ShowMessage(ToastType.Danger, "Something went wrong!", e.Message);
+            return false;
+        }
+       
     }
 
     #endregion

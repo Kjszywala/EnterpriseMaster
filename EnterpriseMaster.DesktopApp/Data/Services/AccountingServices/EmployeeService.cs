@@ -105,6 +105,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
 
         public async Task<bool> AddEmployeesAsync(Employees employee)
         {
+
             return await employeeService.AddAsync(employee);
         }
 
@@ -123,9 +124,50 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
             return await employeeAccessesService.GetAllAsync();
         }
 
-        public async Task<List<EmployeeAddresses>> GetEmployeeAddressAsync(int id)
+        public async Task<bool> AddUserAsync(Users user)
         {
-            return (await employeeAddressesServices.GetAllAsync()).Where(item => item.Id == id).ToList();
+
+            return await usersServices.AddAsync(user);
+        }
+
+        public async Task<EmployeeAddresses> GetEmployeeAddressAsync(EmployeeAddresses employeeAddresses)
+        {
+            return (await employeeAddressesServices.GetAllAsync()).Where(item =>
+               item.Street == employeeAddresses.Street &&
+               item.HouseNumber == employeeAddresses.HouseNumber &&
+               item.City == employeeAddresses.City &&
+               item.PostCode == employeeAddresses.PostCode)
+               .FirstOrDefault();
+        }
+
+        public async Task<bool> AddEmployeeAddressAsync(EmployeeAddresses employeeAddresses)
+        {
+            return await employeeAddressesServices.AddAsync(employeeAddresses);
+        }
+
+        public async Task<bool> AddUserAddressAsync(UsersAdresses userAddress)
+        {
+            return await usersAdressesService.AddAsync(userAddress);
+        }
+
+        public async Task<UsersAdresses> GetUserAddressAsync(UsersAdresses userAddress)
+        {
+            return (await usersAdressesService.GetAllAsync()).Where(item => 
+                item.Street == userAddress.Street && 
+                item.HouseNumber == userAddress.HouseNumber &&
+                item.City == userAddress.City &&
+                item.PostCode == userAddress.PostCode)
+                .FirstOrDefault();
+        }
+
+        public async Task<Companies> GetCompanyBasedOnName(string name)
+        {
+            return (await companiesServices.GetAllAsync()).Where(item => item.Name == name).FirstOrDefault();
+        }
+
+        public async Task<Users> GetUserBasedOnEmail(string email)
+        {
+            return (await usersServices.GetAllAsync()).Where(item => item.Email == email).FirstOrDefault();
         }
 
         #endregion
