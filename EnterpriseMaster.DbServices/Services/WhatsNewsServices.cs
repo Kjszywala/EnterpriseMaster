@@ -8,7 +8,7 @@ namespace EnterpriseMaster.DbServices.Services
         IWhatsNewsServices
     {
         public WhatsNewsServices()
-            : base("/api/v1.0/WhatsNew/")
+            : base("/api/v1.0/WhatsNews/")
         {
         }
     }

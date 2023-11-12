@@ -77,10 +77,15 @@
 .dashboardTitle {
     color: #323036;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
-
+.spacer {
+    flex: 1; /* Takes up remaining space */
+}
+.buttonsDiv {
+    display: flex;
+    justify-content: flex-end;
+}
 /*Modal styles*/
 .task-item {
     border: 1px solid #ccc;

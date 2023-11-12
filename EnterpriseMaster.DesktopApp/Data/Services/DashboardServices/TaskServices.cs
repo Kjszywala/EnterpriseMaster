@@ -41,7 +41,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             {
                 var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
-                    .Where(item => item.IsActive == true)
+                    .Where(item => item.TaskStatusId == 1)
                     .Where(item3 => item3.EmployeeId == currentEmployee.Id)
                     .ToList();
             }
@@ -58,8 +58,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             {
                 var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
-                    .Where(item => item.IsActive == false)
-                    .Where(item => item.IsCompleted == true)
+                    .Where(item => item.TaskStatusId == 3)
                     .Where(item3 => item3.EmployeeId == currentEmployee.Id)
                     .ToList();
             }
@@ -74,10 +73,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
+                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
-                    .Where(item => item.IsActive == false)
+                    .Where(item => item.TaskStatusId == 3)
                     .Where(item2 => item2.ModificationDate >= DateTime.Now.AddDays(-5))
-                    .Where(item3 => item3.EmployeeId == Config.UserId)
+                    .Where(item3 => item3.EmployeeId == currentEmployee.Id)
                     .ToList();
             }
             catch (Exception e)
@@ -92,6 +92,41 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             try
             {
                 var response = await tasksServices.AddAsync(task);
+                if (response)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<Tasks>> GetAllInProgressTasks()
+        {
+            try
+            {
+                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
+                return (await tasksServices.GetAllAsync())
+                    .Where(item => item.TaskStatusId == 2)
+                    .Where(item3 => item3.EmployeeId == currentEmployee.Id)
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> UpdateTask(Tasks task)
+        {
+            try
+            {
+                var response = await tasksServices.EditAsync(task.Id, task);
                 if (response)
                 {
                     return true;
@@ -130,6 +165,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 var task = await tasksServices.GetAsync(id);
                 task.IsCompleted = true;
                 task.IsActive = false;
+                task.TaskStatusId = 3;
                 var response = await tasksServices.EditAsync(id, task);
                 if (response)
                 {
@@ -151,6 +187,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 var task = await tasksServices.GetAsync(id);
                 task.IsCompleted = false;
                 task.IsActive = true;
+                task.TaskStatusId = 1;
                 var response = await tasksServices.EditAsync(id, task);
                 if (response)
                 {
