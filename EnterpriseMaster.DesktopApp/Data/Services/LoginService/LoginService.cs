@@ -11,16 +11,25 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
         private IAuthenticationLogic authenticationLogic;
         private IErrorLogsServices errorLogsServices;
         private IUsersServices usersServices;
+        private IEmployeesServices employeesServices;
+        private IEmployeeAccessesServices employeeAccessesServices;
 
         #endregion
 
         #region Ctor
 
-        public LoginService(IAuthenticationLogic _authenticationLogic, IErrorLogsServices _errorLogsServices, IUsersServices _usersServices)
+        public LoginService(
+            IAuthenticationLogic _authenticationLogic, 
+            IErrorLogsServices _errorLogsServices, 
+            IUsersServices _usersServices,
+            IEmployeesServices _employeesServices,
+            IEmployeeAccessesServices _employeeAccessesServices)
         {
             authenticationLogic = _authenticationLogic;
             errorLogsServices = _errorLogsServices;
             usersServices = _usersServices;
+            employeesServices = _employeesServices;
+            employeeAccessesServices = _employeeAccessesServices;
         }
 
         #endregion
@@ -31,7 +40,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
         {
             try
             {
-                var users = await usersServices.GetAllAsync();
+                var users = (await usersServices.GetAllAsync());
                 var user = new Users
                 {
                     Email = email,
@@ -42,8 +51,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                 {
                     Config.Email = email;
                     Config.UserId =  users.Where(item => item.Email == user.Email).FirstOrDefault().Id;
+                    var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                     Config.SubscriptionId = users.Where(item => item.Email == user.Email).FirstOrDefault().SubscriptionTypeId;
                     Config.Company = users.Where(item => item.Email == user.Email).FirstOrDefault().CompanyName;
+                    Config.CompanyId = users.Where(item => item.Email == user.Email).FirstOrDefault().CompaniesId;
+                    Config.EmployeeAccess = (await employeeAccessesServices.GetAllAsync()).Where(item => item.Id == currentEmployee.EmployeeAccessId).FirstOrDefault().Access;
                 }
                 return isAuthenticated;
             }

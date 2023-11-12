@@ -7,6 +7,8 @@
         public string? SecondName { get; set; }
         public string Password { get; set; }
         public string? CompanyName { get; set; }
+        public int? CompaniesId { get; set; }
+        public Companies? Company { get; set; }
         public string Email { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Position { get; set; }

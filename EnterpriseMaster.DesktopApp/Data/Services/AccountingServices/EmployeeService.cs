@@ -160,6 +160,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
                 .FirstOrDefault();
         }
 
+        public async Task<List<Employees>> GetAllEmployeesBasedOnCompanyName()
+        {
+            return (await employeeService.GetAllAsync()).Where(item => item.CompanyId == Config.CompanyId).ToList();
+        }
+
         public async Task<Companies> GetCompanyBasedOnName(string name)
         {
             return (await companiesServices.GetAllAsync()).Where(item => item.Name == name).FirstOrDefault();

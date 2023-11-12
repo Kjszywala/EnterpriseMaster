@@ -9,17 +9,26 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 
         IErrorLogsServices errorLogsServices;
         ITasksServices tasksServices;
+        IEmployeesServices employeesServices;
+        ITasksStatusesService tasksStatusesServices;
+        IUsersServices usersServices;
 
         #endregion
 
         #region Ctor
 
         public TaskServices(
-            IErrorLogsServices _iErrorLogsServices, 
-            ITasksServices _iTasksServices)
+            IErrorLogsServices _iErrorLogsServices,
+            ITasksServices _iTasksServices,
+            IEmployeesServices _employeesServices,
+            ITasksStatusesService _tasksStatusesServices,
+            IUsersServices _usersServices)
         {
             errorLogsServices = _iErrorLogsServices;
             tasksServices = _iTasksServices;
+            employeesServices = _employeesServices;
+            tasksStatusesServices = _tasksStatusesServices;
+            usersServices = _usersServices;
         }
 
         #endregion
@@ -30,9 +39,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
+                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.IsActive == true)
-                    .Where(item3 => item3.EmployeeId == Config.UserId)
+                    .Where(item3 => item3.EmployeeId == currentEmployee.Id)
                     .ToList();
             }
             catch (Exception e)
@@ -46,10 +56,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
+                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.IsActive == false)
                     .Where(item => item.IsCompleted == true)
-                    .Where(item3 => item3.EmployeeId == Config.UserId)
+                    .Where(item3 => item3.EmployeeId == currentEmployee.Id)
                     .ToList();
             }
             catch (Exception e)
@@ -66,7 +77,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.IsActive == false)
                     .Where(item2 => item2.ModificationDate >= DateTime.Now.AddDays(-5))
-                    .Where(item3 =>item3.EmployeeId == Config.UserId)
+                    .Where(item3 => item3.EmployeeId == Config.UserId)
                     .ToList();
             }
             catch (Exception e)
@@ -99,7 +110,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             try
             {
                 var response = await tasksServices.RemoveAsync(id);
-                if(response)
+                if (response)
                 {
                     return true;
                 }
@@ -146,6 +157,58 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                     return true;
                 }
                 return false;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<Tasks> GetTaskAsync(int id)
+        {
+            try
+            {
+                return await tasksServices.GetAsync(id);
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<Employees>> GetAllEmployeesForCurrentCompany()
+        {
+            try
+            {
+                var users = (await usersServices.GetAllAsync());
+                var employees = (await employeesServices.GetAllAsync()).Where(item => item.CompanyId == Config.CompanyId).ToList();
+                foreach (var employee in employees)
+                {
+                    foreach (var user in users)
+                    {
+                        if (employee.UserId == user.Id)
+                        {
+                            employee.User = user;
+                        }
+                    }
+                }
+                return employees;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<DbServices.Models.Database.TaskStatus>> GetAllTaskStatuses()
+        {
+            try
+            {
+                var statuses = (await tasksStatusesServices.GetAllAsync()).ToList();
+                return statuses;
             }
             catch (Exception e)
             {

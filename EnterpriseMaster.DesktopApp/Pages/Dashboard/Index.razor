@@ -31,19 +31,16 @@
                       PaginationItemsTextFormat="{0} - {1} of {2} pages"
                       ItemsPerPageText="Items per page"
                       Responsive="true"
-                      OnRowClick="OnShowModalClick">
-                    <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id" FilterTextboxWidth="80">
-                        @context.Id
+                      OnRowClick="OnShowModalClick"
+                      >
+                    <GridColumn TItem="Tasks" HeaderText="Task" PropertyName="Task" SortKeySelector="item => item.Task" FilterTextboxWidth="80">
+                        @context.Task
                     </GridColumn>
                     <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
                         @context.Description
                     </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="CreationDate" PropertyName="CreationDate" SortKeySelector="item => item.CreationDate" FilterTextboxWidth="40">
-                        @context.CreationDate
-                    </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center">
-                        <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;"><span><iconify-icon icon="mdi:check-thick"></iconify-icon></span></Button>
-                        <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;"><span><iconify-icon icon="mdi:remove-bold"></iconify-icon></span></Button>
+                    <GridColumn TItem="Tasks" HeaderText="CompleteBy" PropertyName="CompleteBy" SortKeySelector="item => item.CompleteBy" FilterTextboxWidth="40">
+                        @context.CompleteBy.ToString("dd-MM-yyyy")
                     </GridColumn>
                 </Grid>
             </div>
@@ -61,7 +58,7 @@
                   AllowSorting="true"
                   AllowRowClick="true"
                   Class="table table-hover table-bordered table-striped"
-                  DataProvider="TasksDataProvider"
+                  DataProvider="TasksCompletedDataProvider"
                   FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                   HeaderRowCssClass="bg-dark text-white border-bottom-0"
                   PageSize="5"
@@ -70,19 +67,15 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true"
-                  OnRowClick="OnShowModalClick">
-                <GridColumn TItem="Tasks" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id" FilterTextboxWidth="80">
-                    @context.Id
+                  OnRowClick="OnShowCompletedModalClick">
+                <GridColumn TItem="Tasks" HeaderText="Task" PropertyName="Task" SortKeySelector="item => item.Task" FilterTextboxWidth="80">
+                    @context.Task
                 </GridColumn>
                 <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
-                    @context.Title
+                    @context.Description
                 </GridColumn>
                 <GridColumn TItem="Tasks" HeaderText="DateCompleted" PropertyName="ModificationDate" SortKeySelector="item => item.ModificationDate" FilterTextboxWidth="40">
-                    @context.ModificationDate
-                </GridColumn>
-                <GridColumn TItem="Tasks" HeaderText="Actions" Filterable="false" TextAlignment="Alignment.Center">
-                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="jam:refresh-reverse"></iconify-icon></span></Button>
-                    <Button Color="ButtonColor.Danger" Outline="true" Size="Size.Small" style="margin:2px;" title="remove"><span><iconify-icon icon="mdi:remove-bold"></iconify-icon></span></Button>
+                    @context.ModificationDate.ToString("dd-MM-yyyy")
                 </GridColumn>
             </Grid>
         </div>
@@ -118,36 +111,66 @@
 </div>
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
-<Modal @ref="modal" Title="@modalModel.Title" IsVerticallyCentered="true">
+<Modal @ref="modal" Title="@modalTask.Title" IsVerticallyCentered="true">
     <BodyTemplate>
         <div class="task-id">
-            <span><strong>ID:</strong></span>
-            <span>@modalModel.Id</span>
+            <span><strong>Task:</strong></span>
+            <span>@modalTask.Task</span>
         </div>
         <div class="task-description">
             <span><strong>Description:</strong></span>
-            <span>@modalModel.Description</span>
+            <span>@modalTask.Description</span>
         </div>
         <div class="task-status">
             <span><strong>Status:</strong></span>
-            <span>@modalModel.Status</span>
+            <span>@modalTask.TaskStatus.Status</span>
         </div>
         <div class="task-complete-by">
             <span><strong>Complete By:</strong></span>
-            <span>@modalModel.CompleteBy.ToString("yyyy-MM-dd")</span>
+            <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
         </div>
         <div class="task-creation-date">
             <span><strong>Creation Date:</strong></span>
-            <span>@modalModel.CreationDate.ToString("yyyy-MM-dd")</span>
+            <span>@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalModel.Id)">Set As Complete</Button>
-        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Remove</Button>
+        <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalTask.Id)">Set As Complete</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
     </FooterTemplate>
 </Modal>
 
-<Modal @ref="modalAddTask" Title="@modalModel.Title" IsVerticallyCentered="true">
+<Modal @ref="modalComplete" Title="@modalTask.Title" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="task-id">
+            <span><strong>Task:</strong></span>
+            <span>@modalTask.Task</span>
+        </div>
+        <div class="task-description">
+            <span><strong>Description:</strong></span>
+            <span>@modalTask.Description</span>
+        </div>
+        <div class="task-status">
+            <span><strong>Status:</strong></span>
+            <span>@modalTask.TaskStatus.Status</span>
+        </div>
+        <div class="task-complete-by">
+            <span><strong>Complete By:</strong></span>
+            <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+        </div>
+        <div class="task-creation-date">
+            <span><strong>Creation Date:</strong></span>
+            <span>@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Success" @onclick="(e) => reverseCompleted(modalTask.Id)">Reverse Task</Button>
+        <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Close</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalCompleteClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="modalAddTask" Title="@taskModel.Title" IsVerticallyCentered="true">
     <BodyTemplate>
         <div class="form-group">
             <label for="task">Task:</label>
@@ -156,32 +179,48 @@
 
         <div class="form-group">
             <label for="description">Description:</label>
-            <textarea id="description" class="form-control" @bind="taskModel.Description"></textarea>
+            <textarea id="description" class="form-control" @bind="taskModel.Description" required></textarea>
         </div>
 
         <div class="form-group">
             <label for="completeBy">Complete By:</label>
-            <input type="date" id="completeBy" class="form-control" @bind="taskModel.CompleteBy">
+            <input type="date" id="completeBy" class="form-control" @bind="taskModel.CompleteBy" required>
         </div>
 
         <div class="form-group">
             <label for="employeeId">Employee:</label>
-            <select id="employeeId" class="form-control" @bind="taskModel.EmployeeId">
-                @foreach (var employee in employees)
-                {
-                    <option value="@employee.Id">@employee.FirstName</option>
-                }
-            </select>
+            @if (employeesList == null)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <select class="styled-select" @onchange="OnEmployeeAccessSelected" required>
+                    <option value="">Select an Employee</option>
+                    @foreach (var access in employeesList)
+                    {
+                        <option value="@access.Id">@access.User.Email</option>
+                    }
+                </select>
+            }
         </div>
 
         <div class="form-group">
             <label for="taskStatusId">Task Status:</label>
-            <select id="taskStatusId" class="form-control" @bind="taskModel.TaskStatusId">
-                @foreach (var taskStatus in taskStatuses)
-                {
-                    <option value="@taskStatus.Id">@taskStatus.Status</option>
-                }
-            </select>
+            @if (taskStatusList == null)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <select class="styled-select" @onchange="OnTaskAccessSelected" required>
+                    <option value="">Select a Task Status</option>
+                    @foreach (var access in taskStatusList)
+                    {
+                        <option value="@access.Id">@access.Status</option>
+                    }
+                </select>
+            }
         </div>
     </BodyTemplate>
     <FooterTemplate>
@@ -189,54 +228,115 @@
         <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
     </FooterTemplate>
 </Modal>
-
+<Preload />
 @code {
-    private List<Tasks> tasks = new List<Tasks>();
-    private List<Tasks> tasksCompleted = new List<Tasks>();
+    private IEnumerable<Tasks> tasks;
+    private IEnumerable<Tasks> tasksCompleted;
+    private List<EnterpriseMaster.DbServices.Models.Database.TaskStatus> taskStatusList = new List<DbServices.Models.Database.TaskStatus>();
+    private List<Employees> employeesList = new List<Employees>();
+    //[Inject] NavigationManager NavigationManager { get; set; }
 
-    protected async override Task OnInitializedAsync()
+    protected async override void OnInitialized()
     {
-        tasks = (await taskServices.GetAllActiveTasks()).ToList();
-        tasksCompleted = (await taskServices.GetAllCompletedTasks()).ToList();
+        tasks = (await taskServices.GetAllActiveTasks());
+        tasksCompleted = (await taskServices.GetAllCompletedTasks());
+        taskStatusList = (await taskServices.GetAllTaskStatuses()).ToList();
+        employeesList = (await taskServices.GetAllEmployeesForCurrentCompany()).ToList();
     }
 
     private async Task<GridDataProviderResult<Tasks>> TasksDataProvider(GridDataProviderRequest<Tasks> request)
     {
+        if (tasks is null) // pull employees only one time for client-side filtering, sorting, and paging
+            tasks = await taskServices.GetAllActiveTasks(); // call a service or an API to pull the employees
+
         return await Task.FromResult(request.ApplyTo(tasks));
+    }
+
+    private async Task<GridDataProviderResult<Tasks>> TasksCompletedDataProvider(GridDataProviderRequest<Tasks> request)
+    {
+        if (tasksCompleted is null) // pull employees only one time for client-side filtering, sorting, and paging
+            tasksCompleted = await taskServices.GetAllCompletedTasks(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(tasksCompleted));
     }
 
     #region TasksMethods
 
-    private Tasks taskModel = new Tasks();
-
     private async Task setCompleted(int id)
     {
-        await taskServices.CompleteTask(id);
-        tasks = await taskServices.GetAllActiveTasks();
-        tasksCompleted = await taskServices.GetAllCompletedTasks();
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            var isCompleted = await taskServices.CompleteTask(id);
+            var taskCompleted = await taskServices.GetTaskAsync(id);
+            tasks = await taskServices.GetAllActiveTasks();
+            tasksCompleted = await taskServices.GetAllCompletedTasks();
+            await modal?.HideAsync();
+            preloadService.Hide();
+            //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            if (isCompleted)
+            {
+                ShowMessage(ToastType.Success, "Success!", $"Task {taskCompleted.Task} set to copleted");
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while completing a task!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
-    private async Task addTask()
-    {
-        taskModel.CreationDate = DateTime.Now;
-        taskModel.ModificationDate = DateTime.Now;
-        await taskServices.AddNewTask(taskModel);
-        tasks = await taskServices.GetAllActiveTasks();
-        tasksCompleted = await taskServices.GetAllCompletedTasks();
-    }
 
     private async Task reverseCompleted(int id)
     {
-        await taskServices.AddNewTask(taskModel);
-        tasks = await taskServices.GetAllActiveTasks();
-        tasksCompleted = await taskServices.GetAllCompletedTasks();
+        try
+        {
+            var isReversed = await taskServices.ReverseTask(id);
+            tasks = await taskServices.GetAllActiveTasks();
+            tasksCompleted = await taskServices.GetAllCompletedTasks();
+            var taskReversed = await taskServices.GetTaskAsync(id);
+            //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            await modalComplete?.HideAsync();
+            if (isReversed)
+            {
+                ShowMessage(ToastType.Success, "Success!", $"Task {taskReversed.Task} reversed");
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while reversing a task!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
     private async Task removeTask(int id)
     {
-        await taskServices.RemoveTask(id);
-        tasks = await taskServices.GetAllActiveTasks();
-        tasksCompleted = await taskServices.GetAllCompletedTasks();
+        try
+        {
+            var taskRemoved = await taskServices.GetTaskAsync(id);
+            var isRemoved = await taskServices.RemoveTask(id);
+            tasks = await taskServices.GetAllActiveTasks();
+            tasksCompleted = await taskServices.GetAllCompletedTasks();
+            await modalComplete?.HideAsync();
+            if (isRemoved)
+            {
+                ShowMessage(ToastType.Success, "Success!", $"Task {taskRemoved.Task} has been removed");
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing a task!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
     #endregion
@@ -252,23 +352,13 @@
     #region ModalAddTask
 
     private Modal modalAddTask;
-
-    private List<Employees> employees = new List<Employees>
-    {
-        new Employees { Id = 1, FirstName = "Employee 1" },
-        new Employees { Id = 2, FirstName = "Employee 2" },
-        // Add more employees
-    };
-
-    private List<EnterpriseMaster.DbServices.Models.Database.TaskStatus> taskStatuses = new List<EnterpriseMaster.DbServices.Models.Database.TaskStatus>
-    {
-        new EnterpriseMaster.DbServices.Models.Database.TaskStatus { Id = 1, Status = "Status 1" },
-        new EnterpriseMaster.DbServices.Models.Database.TaskStatus { Id = 2, Status = "Status 2" },
-        // Add more task statuses
-    };
+    private int selectedTaskStatusId; // To hold the selected value
+    private int selectedEmployeeId; // To hold the selected value
+    private Tasks taskModel = new Tasks();
 
     private async Task OnShowModalAddTaskClick()
     {
+        taskModel.CompleteBy = DateTime.Now;
         await modalAddTask?.ShowAsync();
     }
 
@@ -277,31 +367,90 @@
         await modalAddTask?.HideAsync();
     }
 
+    private void OnTaskAccessSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedTaskStatusId = selectedId;
+        }
+    }
+    private void OnEmployeeAccessSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedEmployeeId = selectedId;
+        }
+    }
+
+    private async Task addTask()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (string.IsNullOrEmpty(taskModel.Task) ||
+                string.IsNullOrEmpty(taskModel.Description))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Task and Description cannot be empty");
+                return;
+            }
+            taskModel.CreationDate = DateTime.Now;
+            taskModel.ModificationDate = DateTime.Now;
+            taskModel.EmployeeId = selectedEmployeeId;
+            taskModel.IsActive = true;
+            taskModel.TaskStatusId = selectedTaskStatusId;
+            var response = await taskServices.AddNewTask(taskModel);
+            tasks = await taskServices.GetAllActiveTasks();
+            tasksCompleted = await taskServices.GetAllCompletedTasks();
+            
+            tasks = (await taskServices.GetAllActiveTasks()).ToList();
+            preloadService.Hide();
+            //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+            if (response)
+            {
+                ShowMessage(ToastType.Success, "Success!", "Task added succesfully");
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a task!");
+            }
+            modalAddTask?.HideAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
+    }
+
     #endregion
 
-    #region ModalTaskWindow
+    #region ModalRowProperties
 
     private Modal modal;
-    private ModalModel modalModel = new ModalModel();
-    private string title = "Test Case";
+    private Modal modalComplete;
+    private Tasks modalTask = new Tasks();
 
-    private async Task OnShowModalClick()
+    private async Task OnShowModalClick(GridRowEventArgs<Tasks> args)
     {
-        modalModel = new ModalModel()
-        {
-            Id = 1,
-            Title = "Example Task",
-            Description = "This is an example task.",
-            Status = "In Progress",
-            CompleteBy = DateTime.Now.Add(TimeSpan.FromDays(7)),
-            CreationDate = DateTime.Now.Add(TimeSpan.FromDays(-7))
-        };
+        modalTask = await taskServices.GetTaskAsync(args.Item.Id);
+        modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         await modal?.ShowAsync();
+    }
+    
+    private async Task OnShowCompletedModalClick(GridRowEventArgs<Tasks> args)
+    {
+        modalTask = await taskServices.GetTaskAsync(args.Item.Id);
+        modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
+        await modalComplete?.ShowAsync();
     }
 
     private async Task OnHideModalClick()
     {
         await modal?.HideAsync();
+    }
+
+    private async Task OnHideModalCompleteClick()
+    {
+        await modalComplete?.HideAsync();
     }
     #endregion
 }

@@ -69,6 +69,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<ISupportCaseServices, SupportCaseServices>();
             builder.Services.AddScoped<ICaseStatusServices, CaseStatusServices>();
             builder.Services.AddScoped<ITasksServices, TasksServices>();
+            builder.Services.AddScoped<ITasksStatusesService, TasksStatusesService>();
             builder.Services.AddScoped<ICompaniesServices, CompaniesServices>();
             builder.Services.AddScoped<ICompanyAddressServices, CompanyAddressServices>();
             builder.Services.AddScoped<IEmployeeAccessesServices, EmployeeAccessesService>();

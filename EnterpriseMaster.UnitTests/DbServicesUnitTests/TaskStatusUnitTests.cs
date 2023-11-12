@@ -5,7 +5,7 @@ namespace EnterpriseMaster.UnitTests.DbServicesUnitTests
 {
     public class TaskStatusUnitTests
     {
-        TaskStatusService taskStatusService = new TaskStatusService();
+        TasksStatusesService taskStatusService = new TasksStatusesService();
 
 
 

@@ -243,8 +243,8 @@ else
 <Preload />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
-    private string email;
-    private string password;
+    private string email = "kjszywala@protonmail.com";
+    private string password = "Lenioslaw161502";
     private bool isSidebarClosed = true;
     private string sidebarClass => isSidebarClosed ? "close" : "";
 
@@ -271,18 +271,26 @@ else
 
     private async Task LoginClicked()
     {
-        preloadService.Show(SpinnerColor.Dark);
-        Config.IsLoggedIn = await loginService.AuthenticateAsync(email, password);
-        await Task.Delay(3000);
-        if(!Config.IsLoggedIn)
+        try
         {
-            ShowMessage(ToastType.Danger, "Incorrect Details!", "Wrong login or password. Please try again");
+            preloadService.Show(SpinnerColor.Dark);
+            Config.IsLoggedIn = await loginService.AuthenticateAsync(email, password);
+            await Task.Delay(2000);
+            if (!Config.IsLoggedIn)
+            {
+                ShowMessage(ToastType.Danger, "Incorrect Details!", "Wrong login or password. Please try again");
+            }
+            else
+            {
+                ShowMessage(ToastType.Success, "Details Correct!", "Welcome to Enterprise Master! You have successfully logged in");
+            }
+            preloadService.Hide();
         }
-        else
+        catch (Exception e)
         {
-            ShowMessage(ToastType.Success, "Details Correct!", "Welcome in Enterprise Master! You have successfully logged in");
+            ShowMessage(ToastType.Danger, "Upsss!", "Something went wrong");
+            preloadService.Hide();
         }
-        preloadService.Hide();
     }
 
     protected override async Task OnInitializedAsync()
