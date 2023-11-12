@@ -127,27 +127,22 @@
                 <h3>What's new</h3>
                 <div class="spacer"></div>
                 <div class="buttonsDiv">
-                    <Button Color="ButtonColor.Info" Outline="true" Size="Size.Small" style="margin:2px; margin-right" title="Completed"><span><iconify-icon icon="tdesign:refresh"></iconify-icon></span></Button>
-                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
+                    <Button Color="ButtonColor.Info" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed" @onclick="RefreshNews"><span><iconify-icon icon="tdesign:refresh"></iconify-icon></span></Button>
+                    <Button Color="ButtonColor.Success" Outline="true" Size="Size.Small" style="margin:2px;" title="Completed" @onclick="OnShowModalNewsAddClick"><span><iconify-icon icon="mingcute:plus-fill"></iconify-icon></span></Button>
                 </div>
             </div>
             <hr class="dashboardHr" style="color:black;" />
-            @if (news == null)
+            @foreach (var whatsNew in news)
             {
-                <p>Loading...</p>
-            }
-            else
-            {
-                @foreach (var whatsNew in news)
-                {
-                    <Card Color="CardColor.Dark" Class="mb-4" Style="width:100%;box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);">
-                        <CardHeader>@whatsNew.Notes</CardHeader>
-                        <CardBody>
-                            <CardTitle>@whatsNew.Title</CardTitle>
-                            <CardText>@whatsNew.Description</CardText>
-                        </CardBody>
-                    </Card>
-                }
+                <Card Color="CardColor.Dark" Class="mb-4" Style="width:100%;box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);">
+                    <CardHeader class="dashboardTitle">
+                        @whatsNew.Notes
+                    </CardHeader>
+                    <CardBody>
+                        <CardTitle>@whatsNew.Title</CardTitle>
+                        <CardText>@whatsNew.Description</CardText>
+                    </CardBody>
+                </Card>
             }
         </div>
     </div>
@@ -304,6 +299,54 @@
         <Button Color="ButtonColor.Danger" @onclick="OnHideModalAddClick">Close</Button>
     </FooterTemplate>
 </Modal>
+
+<Modal @ref="newsModal" Title="@whatsNewModel.Title" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="task-id">
+            <span><strong>Title:</strong></span>
+            <span>@whatsNewModel.Title</span>
+        </div>
+        <div class="task-description">
+            <span><strong>Description:</strong></span>
+            <span>@whatsNewModel.Description</span>
+        </div>
+        <div class="task-status">
+            <span><strong>Notes:</strong></span>
+            <span>@whatsNewModel.Notes</span>
+        </div>
+        <div class="task-complete-by">
+            <span><strong>Date:</strong></span>
+            <span>@whatsNewModel.CreationDate.ToString("yyyy-MM-dd")</span>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalNewsClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+<Modal @ref="modalAddNews" Title="@whatsNewModel.Title" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="form-group">
+            <label for="task">Title:</label>
+            <input type="text" id="task" class="form-control" @bind="whatsNewModel.Notes" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" class="form-control" @bind="whatsNewModel.Description" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="completeBy">Date released:</label>
+            <input type="date" id="completeBy" class="form-control" @bind="whatsNewModel.CreationDate" required>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Success" @onclick="AddNews">Add Info</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalNewsAddClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
 <Preload />
 @code {
     private IEnumerable<Tasks> tasks;
@@ -326,6 +369,97 @@
         await gridTasksCompleted.RefreshDataAsync();
         await gridTasksInProgress.RefreshDataAsync();
     }
+
+    #region News
+
+    private List<WhatsNew> news = new List<WhatsNew>();
+    private Modal newsModal;
+    private Modal modalAddNews;
+    private WhatsNew whatsNewModel = new WhatsNew();
+
+    private async Task OnShowModalNewsClick(GridRowEventArgs<Tasks> args)
+    {
+        whatsNewModel = await whatsNewServices.GetNews(args.Item.Id);
+        await newsModal?.ShowAsync();
+    }
+
+    private async Task OnHideModalNewsClick()
+    {
+        await newsModal?.HideAsync();
+    } 
+
+    private async Task OnShowModalNewsAddClick()
+    {
+        whatsNewModel = new WhatsNew();
+        whatsNewModel.CreationDate = DateTime.Now;
+        await modalAddNews?.ShowAsync();
+    }
+
+    private async Task OnHideModalNewsAddClick()
+    {
+        await modalAddNews?.HideAsync();
+    }
+
+    private async Task AddNews()
+    {
+        try
+        {
+            whatsNewModel.IsActive = true;
+            var response = await whatsNewServices.AddNews(whatsNewModel);
+            await modalAddNews?.HideAsync();
+            if (response)
+            {
+                ShowMessage(ToastType.Success, "Success!", "Information added succesfully");
+                news = (await newsServices.GetAllActiveNews()).ToList();
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a information!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding an information!");
+        }
+    }
+
+    private async Task RefreshNews()
+    {
+        try
+        {
+            news = (await newsServices.GetAllActiveNews()).ToList();
+            ShowMessage(ToastType.Success, "Success!", "Information refreshed succesfully");
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while refreshing this component!");
+        }
+    }
+
+    private async Task removeNews(int id)
+    {
+        try
+        {
+            var response = await whatsNewServices.RemoveNews(id);
+            if (response)
+            {
+                ShowMessage(ToastType.Success, "Success!", "Information removed succesfully");
+                news = (await newsServices.GetAllActiveNews()).ToList();
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing a information!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing this component!");
+        }
+    }
+
+    #endregion
+
+    #region DataGrid fillers
 
     private async Task<GridDataProviderResult<Tasks>> TasksDataProvider(GridDataProviderRequest<Tasks> request)
     {
@@ -350,6 +484,8 @@
 
         return await Task.FromResult(request.ApplyTo(tasksInProgress));
     }
+
+    #endregion
 
     #region TasksMethods
 
@@ -502,13 +638,6 @@
 
     #endregion
 
-    #region News
-
-    private List<WhatsNew> news = new List<WhatsNew>();
-
-
-    #endregion
-
     #region InProgress
 
     private Modal modalProgressTask;
@@ -570,6 +699,7 @@
             var response = await taskServices.AddNewTask(taskModel);
             tasks = await taskServices.GetAllActiveTasks();
             tasksCompleted = await taskServices.GetAllCompletedTasks();
+            tasksInProgress = await taskServices.GetAllInProgressTasks();
             
             tasks = (await taskServices.GetAllActiveTasks()).ToList();
             preloadService.Hide();

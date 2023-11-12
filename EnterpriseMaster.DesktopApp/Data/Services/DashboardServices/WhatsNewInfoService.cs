@@ -72,6 +72,21 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             }
         }
 
+        public async Task<bool> RemoveNews(int id)
+        {
+            try
+            {
+                var response = await whatsNewsServices.RemoveAsync(id);
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
         #endregion
 
     }
