@@ -419,7 +419,7 @@
         }
         catch (Exception e)
         {
-            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding an information!");
+            ShowMessage(ToastType.Warning, "Warning!", $"{e.Message}");
         }
     }
 

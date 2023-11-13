@@ -103,6 +103,21 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
             }
         }
 
+        public async Task<Employees> GetEmployeebyId(int id)
+        {
+            return await employeeService.GetAsync(id);
+        }
+
+        public async Task<EmployeeAccesses> GetEmployeeAccessById(int id)
+        {
+            return await employeeAccessesService.GetAsync(id);
+        }
+
+        public async Task<EmployeeAddresses> GetEmployeeAddressById(int id)
+        {
+            return await employeeAddressesServices.GetAsync(id);
+        }
+
         public async Task<bool> AddEmployeesAsync(Employees employee)
         {
 
@@ -117,6 +132,21 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
         public async Task<bool> UpdateEmployeeAsync(Employees employee)
         {
             return await employeeService.EditAsync(employee.Id, employee);
+        }
+
+        public async Task<bool> UpdateEmployeeAddressAsync(EmployeeAddresses employeeAddresses)
+        {
+            return await employeeAddressesServices.EditAsync(employeeAddresses.Id, employeeAddresses);
+        }
+        
+        public async Task<bool> UpdateUserAddressAsync(UsersAdresses userAddresses)
+        {
+            return await usersAdressesService.EditAsync(userAddresses.Id, userAddresses);
+        }
+
+        public async Task<bool> UpdateUserAsync(Users user)
+        {
+            return await usersServices.EditAsync(user.Id, user);
         }
 
         public async Task<List<EmployeeAccesses>> GetEmployeeAccessesAsync()

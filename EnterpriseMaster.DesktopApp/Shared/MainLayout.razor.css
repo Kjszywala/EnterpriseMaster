@@ -530,3 +530,15 @@ input[type="submit"]:active {
         padding: 16px 48px;
     }
 }
+.spacer {
+    flex: 1; /* Takes up remaining space */
+}
+.companyName {
+    margin: 15px;
+    font-family: 'Arial', sans-serif; /* Change the font family as needed */
+    font-size: 28px; /* Adjust the font size */
+    font-weight: bold; /* Makes the text bold */
+    color: #333; /* Adjust the color as per your design */
+    text-transform: uppercase;
+    color: #571a6b;
+}

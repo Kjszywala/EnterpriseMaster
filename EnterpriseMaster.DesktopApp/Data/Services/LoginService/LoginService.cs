@@ -51,6 +51,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                 {
                     Config.Email = email;
                     Config.UserId =  users.Where(item => item.Email == user.Email).FirstOrDefault().Id;
+                    Config.FirstName = users.Where(item => item.Email == user.Email).FirstOrDefault().FirstName;
+                    Config.LastName = users.Where(item => item.Email == user.Email).FirstOrDefault().SecondName;
+                    Config.Position = users.Where(item => item.Email == user.Email).FirstOrDefault().Position;
                     var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                     Config.SubscriptionId = users.Where(item => item.Email == user.Email).FirstOrDefault().SubscriptionTypeId;
                     Config.Company = users.Where(item => item.Email == user.Email).FirstOrDefault().CompanyName;

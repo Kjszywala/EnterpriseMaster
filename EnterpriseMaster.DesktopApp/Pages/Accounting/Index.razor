@@ -12,31 +12,43 @@
         </TitleTemplate>
         <Content>
             <br />
-           <Grid TItem="Employees" 
+           <Grid TItem="Employees"
+                  @ref="gridEmployees"
+                AllowFiltering="true"
                 AllowPaging="true"
                 AllowSorting="true"
-                AllowRowClick="true" 
-                class="table table-hover table-bordered table-striped" 
+                AllowRowClick="true"
                 DataProvider="EmployeesDataProvider" 
-                AllowFiltering="true" 
-                Responsive="true"
-                PageSize="15"
+                Class="table table-hover table-bordered table-striped"
+                FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                PageSize="5"
+                PageSizeSelectorVisible="true"
                 PageSizeSelectorItems="@(new int[] { 5,10,20 })"
-                PaginationItemsTextFormat="{0} - {1} of {2} pages">
-                <GridColumn TItem="Employees" HeaderText="Id" Filterable="false">
-                    @context.Id
-                </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="First Name" PropertyName="FirstName">
+                PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                ItemsPerPageText="Items per page"
+                Responsive="true">
+                <GridColumn TItem="Employees" HeaderText="First Name" Filterable="false">
                     @context.FirstName
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="Last Name" PropertyName="LastName">
+                    @context.LastName
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="E-mail" PropertyName="Email">
+                    @context.Email
+                </GridColumn>
+                <GridColumn TItem="Employees" HeaderText="Hire Date" PropertyName="HireDate">
+                    @if (@context.HireDate != null)
+                    {
+                        @context.HireDate.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        @context.HireDate
+                    }
                 </GridColumn>
                 <GridColumn TItem="Employees" HeaderText="Position" PropertyName="Position">
                     @context.Position
-                </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="Hire Date" PropertyName="HireDate">
-                    @context.HireDate
-                </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="Active" Filterable="false">
-                    @context.IsActive
                 </GridColumn>
             </Grid>
         </Content>
@@ -168,13 +180,20 @@
             <div class="container">
                 <div class="row">
                     <div class="col col-dropdown">
-                        <select id="employeeDropdown" class="dropdown-style">
-                            <option>Select an Employee</option>
-                            @foreach (var emp in employees)
-                            {
-                                <option value="@emp.Id">@emp.FirstName @emp.LastName</option>
-                            }
-                        </select>
+                        @if (employeesList == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnEmployeeSelected">
+                                <option>Select an Employee</option>
+                                @foreach (var access in employeesList)
+                                {
+                                    <option value="@access.Id">@access.Email</option>
+                                }
+                            </select>
+                        }
                     </div>
                 </div>
                 <div class="row">
@@ -182,32 +201,32 @@
                         <div class="styled-form">
                             <div class="form-group">
                                 <label for="firstName">First Name:</label>
-                                <input type="text" id="firstName" name="firstName" required>
+                                <input type="text" id="firstName" name="firstName" @bind="firstNameEdit" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="lastName">Last Name:</label>
-                                <input type="text" id="lastName" name="lastName" required>
+                                <input type="text" id="lastName" name="lastName" @bind="lastNameEdit" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" id="email" name="email" required>
+                                <input type="email" id="email" name="email" @bind="emailEdit" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="department">Department:</label>
-                                <input type="text" id="department" name="department" required>
+                                <input type="text" id="department" name="department" @bind="departmentEdit" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="position">Position:</label>
-                                <input type="text" id="position" name="position" required>
+                                <input type="text" id="position" name="position" @bind="positionEdit" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="salary">Salary:</label>
-                                <input type="text" id="salary" name="salary">
+                                <input type="text" id="salary" name="salary" @bind="salaryEdit">
                             </div>
 
                             <div class="form-group">
@@ -217,7 +236,7 @@
 
                             <div class="form-group">
                                 <label for="hireDate">Hire Date:</label>
-                                <input type="date" id="hireDate" name="hireDate" required>
+                                <input type="date" id="hireDate" name="hireDate" @bind="hireDateEdit" required>
                             </div>
 
                         </div>
@@ -231,25 +250,25 @@
                                             <div class="styled-form">
                                                 <div class="form-group">
                                                     <label for="DateOfBirth">Date Of Birth:</label>
-                                                    <input type="date" id="DateOfBirth" name="DateOfBirth" required>
+                                                    <input type="date" id="DateOfBirth" name="DateOfBirth" @bind="DateOfBirthEdit" required>
                                                 </div>
                                                 <label for="houseNumber">House Number:</label>
-                                                <input type="text" id="houseNumber" name="houseNumber">
+                                                <input type="text" id="houseNumber" name="houseNumber" @bind="houseNumberEdit">
 
                                                 <label for="street">Street:</label>
-                                                <input type="text" id="street" name="street">
+                                                <input type="text" id="street" name="street" @bind="streetEdit">
 
                                                 <label for="city">City:</label>
-                                                <input type="text" id="city" name="city">
+                                                <input type="text" id="city" name="city" @bind="cityEdit">
                                             </div>
                                         </div>
                                         <div class="child-div">
                                             <div class="styled-form">
                                                 <label for="postCode">Post Code:</label>
-                                                <input type="text" id="postCode" name="postCode">
+                                                <input type="text" id="postCode" name="postCode" @bind="postCodeEdit">
 
                                                 <label for="country">Country:</label>
-                                                <input type="text" id="country" name="country">
+                                                <input type="text" id="country" name="country" @bind="countryEdit">
 
                                                 <label for="employeeAccess">Employee Access:</label>
                                                 @if (employeeAccesses == null)
@@ -258,10 +277,15 @@
                                                 }
                                                 else
                                                 {
-                                                    <select class="styled-select" @onchange="OnEmployeeAccessSelected">
+                                                    <select class="styled-select" @onchange="OnEmployeeAccessEditSelected">
                                                         <option value="">Select an Employee Access</option>
                                                         @foreach (var access in employeeAccesses)
                                                         {
+                                                            if (accessEdit == access.Access)
+                                                            {
+                                                                <option value="@access.Id" selected>@access.Access</option>
+                                                                continue;
+                                                            }
                                                             <option value="@access.Id">@access.Access</option>
                                                         }
                                                     </select>
@@ -272,11 +296,11 @@
                                     <div class="col-md-12 col-height-add-employee">
                                         <div class="styled-form">
                                             <label for="password">Password:</label>
-                                            <input type="password" id="password" name="password" required>
+                                            <input type="password" id="password" name="password" @bind="editPassword" required>
 
                                             <label for="confirmPassword">Confirm Password:</label>
-                                            <input type="password" id="confirmPassword" name="confirmPassword" required>
-                                            <Button Color="ButtonColor.Success" Size="Size.Large"> Update Employee </Button>
+                                            <input type="password" id="confirmPassword" name="confirmPassword" @bind="editConfirmPassword" required>
+                                            <Button Color="ButtonColor.Success" Size="Size.Large" @onclick="updateEmployee"> Update Employee </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -299,52 +323,246 @@
 
     #region grid
 
-    private IEnumerable<Employees> employees;
+    private List<Employees> employees;
+    private List<Employees> employeesList = new List<Employees>();
+    private Grid<Employees> gridEmployees;
 
     protected async override void OnInitialized()
     {
-        employees = GetEmployees();
+        employees = await employeeService.GetEmployeesAsync();
+        employeesList = await employeeService.GetEmployeesAsync();
         employeeAccesses = await employeeService.GetEmployeeAccessesAsync();
     }
 
     private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)
     {
         if (employees is null) // pull employees only one time for client-side filtering, sorting, and paging
-            employees = GetEmployees(); // call a service or an API to pull the employees
+            employees = await employeeService.GetEmployeesAsync(); // call a service or an API to pull the employees
 
         return await Task.FromResult(request.ApplyTo(employees));
-    }
-
-    private IEnumerable<Employees> GetEmployees()
-    {
-        return new List<Employees>
-        {
-            new Employees { Id = 107, FirstName = "Alice", Position = "AI Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 103, FirstName = "Bob", Position = "Senior DevOps Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 106, FirstName = "John", Position = "Data Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 104, FirstName = "Pop", Position = "Associate Architect", HireDate = DateTime.Now, IsActive = false },
-            new Employees { Id = 105, FirstName = "Ronald", Position = "Senior Data Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 102, FirstName = "Line", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 101, FirstName = "Daniel", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 108, FirstName = "Zayne", Position = "Data Analyst", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 109, FirstName = "Isha", Position = "App Maker", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 107, FirstName = "Alice", Position = "AI Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 103, FirstName = "Bob", Position = "Senior DevOps Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 106, FirstName = "John", Position = "Data Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 104, FirstName = "Pop", Position = "Associate Architect", HireDate = DateTime.Now, IsActive = false },
-            new Employees { Id = 105, FirstName = "Ronald", Position = "Senior Data Engineer", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 102, FirstName = "Line", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 101, FirstName = "Daniel", Position = "Architect", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 108, FirstName = "Zayne", Position = "Data Analyst", HireDate = DateTime.Now, IsActive = true },
-            new Employees { Id = 109, FirstName = "Isha", Position = "App Maker", HireDate = DateTime.Now, IsActive = true },
-        };
     }
 
     #endregion
 
     #region Employee
 
-    private IEnumerable<EmployeeAccesses> employeeAccesses;
+    #region EditEmployee
+
+    private string editPassword;
+    private string editConfirmPassword;
+    private int selectedEmployeeId;
+    private string firstNameEdit;
+    private string lastNameEdit;
+    private string emailEdit;
+    private string departmentEdit;
+    private string positionEdit;
+    private string salaryEdit;
+    private DateTime? hireDateEdit;
+    private DateTime? DateOfBirthEdit;
+    private string houseNumberEdit;
+    private string streetEdit;
+    private string cityEdit;
+    private string postCodeEdit;
+    private string countryEdit;
+    private string accessEdit;
+    private EmployeeAddresses employeeAddressEdit;
+    private EmployeeAccesses employeeAccessEdit;
+    private Employees employeeEdit;
+    private int selectedEmployeeAccessEditId;
+
+    private async void OnEmployeeSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedEmployeeId = selectedId;
+        }
+
+        employeeEdit = await employeeService.GetEmployeebyId(selectedEmployeeId);
+        employeeAddressEdit = await employeeService.GetEmployeeAddressById((int)employeeEdit.EmployeeAddressId);
+        employeeAccessEdit = await employeeService.GetEmployeeAccessById((int)employeeEdit.EmployeeAccessId);
+
+        firstNameEdit = employeeEdit.FirstName;
+        lastNameEdit = employeeEdit.LastName;
+        emailEdit = employeeEdit.Email;
+        departmentEdit = employeeEdit.Department;
+        positionEdit = employeeEdit.Position;
+        salaryEdit = employeeEdit.Salary;
+        hireDateEdit = employeeEdit.HireDate;
+        DateOfBirthEdit = employeeEdit.DateOfBirth;
+        houseNumberEdit = employeeAddressEdit.HouseNumber;
+        streetEdit = employeeAddressEdit.Street;
+        cityEdit = employeeAddressEdit.City;
+        postCodeEdit = employeeAddressEdit.PostCode;
+        countryEdit = employeeAddressEdit.Country;
+        accessEdit = employeeAccessEdit.Access;
+        StateHasChanged();
+    }
+
+    private void OnEmployeeAccessEditSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedEmployeeAccessEditId = selectedId;
+        }
+    }
+
+    private async void updateEmployee()
+    {
+        preloadService.Show(SpinnerColor.Dark);
+
+        var employeeAddress = new EmployeeAddresses()
+        {
+            City = cityEdit,
+            Country = countryEdit,
+            ModificationDate = DateTime.Now,
+            HouseNumber = houseNumberEdit,
+            IsActive = true,
+            Id = employeeAddressEdit.Id,
+            PostCode = postCodeEdit,
+            Street = streetEdit 
+        };
+
+        var currentUser = await employeeService.GetUserBasedOnEmail(employeeEdit.Email);
+
+        var userAddress = new UsersAdresses()
+        {
+            City = cityEdit,
+            Country = countryEdit,
+            ModificationDate = DateTime.Now,
+            HouseNumber = houseNumberEdit,
+            IsActive = true,
+            Id = (int)currentUser.UserAddressId,
+            PostCode = postCodeEdit,
+            Street = streetEdit
+        };
+
+        var responseAddress = await employeeService.UpdateEmployeeAddressAsync(employeeAddress);
+        var responseUserAddress = await employeeService.UpdateUserAddressAsync(userAddress);
+
+        if (!responseAddress)
+        {
+            ShowMessage(ToastType.Danger, "Something went wrong!", "We could not edit employee address this time!");
+            return;
+        };
+
+        if (!responseUserAddress)
+        {
+            ShowMessage(ToastType.Danger, "Something went wrong!", "We could not edit user address this time!");
+            return;
+        };
+
+        var fullEmployeeAddress = await employeeService.GetEmployeeAddressAsync(employeeAddress);
+        var fullUserAddress = await employeeService.GetUserAddressAsync(userAddress);
+
+        var user = new Users();
+
+        if(string.IsNullOrEmpty(editPassword) || string.IsNullOrEmpty(editConfirmPassword))
+        {
+            user = new Users()
+            {
+                Id = currentUser.Id,
+                FirstName = firstNameEdit,
+                BusinesArea = departmentEdit,
+                Email = emailEdit,
+                CompanyName = Config.Company,
+                DateOfBirth = DateOfBirthEdit,
+                IsActive = true,
+                IsEmployee = true,
+                ModificationDate = DateTime.Now,
+                Position = positionEdit,
+                SecondName = lastNameEdit,
+                SubscriptionTypeId = Config.SubscriptionId,
+                UserAddressId = fullUserAddress.Id,
+                CompaniesId = currentUser.CompaniesId,
+                CreationDate = currentUser.CreationDate,
+                Password = currentUser.Password
+            };
+        }
+        else
+        {
+            if(editPassword == editConfirmPassword)
+            {
+                user = new Users()
+                {
+                    Id = currentUser.Id,
+                    FirstName = firstNameEdit,
+                    BusinesArea = departmentEdit,
+                    Email = emailEdit,
+                    CompanyName = Config.Company,
+                    DateOfBirth = DateOfBirthEdit,
+                    IsActive = true,
+                    IsEmployee = true,
+                    ModificationDate = DateTime.Now,
+                    Position = positionEdit,
+                    SecondName = lastNameEdit,
+                    SubscriptionTypeId = Config.SubscriptionId,
+                    Password = BCrypt.Net.BCrypt.HashPassword(password),
+                    UserAddressId = fullUserAddress.Id,
+                    CompaniesId = currentUser.CompaniesId,
+                    CreationDate = currentUser.CreationDate
+                };
+            }
+            else
+            {
+                ShowMessage(ToastType.Danger, "Something went wrong!", "Passwords do not match!");
+                return;
+            }
+        }
+
+        var userResponse = await employeeService.UpdateUserAsync(user);
+
+        if (!userResponse)
+        {
+            ShowMessage(ToastType.Danger, "Something went wrong!", "We could not edit user this time!");
+            return;
+        };
+
+        var currentEmployee = (await employeeService.GetEmployeebyId(selectedEmployeeId));
+
+        var selectedId = 
+            selectedEmployeeAccessEditId == 0 
+            ? currentEmployee.EmployeeAccessId
+            : selectedEmployeeAccessEditId;
+
+        var employee = new Employees()
+        {
+            Id = selectedEmployeeId,
+            DateOfBirth = DateOfBirthEdit,
+            Department = departmentEdit,
+            Email = emailEdit,
+            LastName = lastNameEdit,
+            FirstName = firstNameEdit,
+            Position = positionEdit,
+            Salary = salaryEdit,
+            EmployeeAccessId = selectedId,
+            EmployeeAddressId = employeeAddress.Id,
+            IsActive = true,
+            HireDate = hireDateEdit,
+            ModificationDate = DateTime.Now,
+            CompanyId = currentUser.CompaniesId,
+            UserId = user.Id,
+            CreationDate = currentEmployee.CreationDate,
+        };
+
+        var employeeResponse = await employeeService.UpdateEmployeeAsync(employee);
+
+        if (employeeResponse)
+        {
+            preloadService.Hide();
+            StateHasChanged();
+            ShowMessage(ToastType.Success, "Success!", "Employee succesfully edited!");
+            await gridEmployees.RefreshDataAsync();
+            return;
+        };
+        preloadService.Hide();
+        ShowMessage(ToastType.Danger, "Something went wrong!", "We could not edit employee this time!");
+    }
+
+    #endregion
+
+    #region Add
+
+    private List<EmployeeAccesses> employeeAccesses;
     private int selectedEmployeeAccessId; // To hold the selected value
     private string password;
     private string confirmPassword;
@@ -363,7 +581,6 @@
     private string postCode = "";
     private string country = "";
 
-    #region Add
 
     private void OnEmployeeAccessSelected(ChangeEventArgs e)
     {
@@ -427,7 +644,7 @@
                 FirstName = firstName,
                 BusinesArea = department,
                 Email = email,
-                CompanyName = "Wordshop",
+                CompanyName = Config.Company,
                 DateOfBirth = this.DateOfBirth,
                 CreationDate = DateTime.Now,
                 IsActive = true,
@@ -472,6 +689,7 @@
             {
                 preloadService.Hide();
                 ShowMessage(ToastType.Success, "Success!", "New employee has been added!");
+                await gridEmployees.RefreshDataAsync();
                 return true;
             };
             preloadService.Hide();
@@ -488,7 +706,6 @@
     }
 
     #endregion
-
 
     #endregion
 

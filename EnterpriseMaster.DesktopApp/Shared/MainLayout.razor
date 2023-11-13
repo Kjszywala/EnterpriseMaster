@@ -223,8 +223,8 @@ else
                         <!--<img src="image/profile.jpg" alt="profileImg">-->
                     </div>
                     <div class="name-job">
-                        <div class="profile_name">Kamil Szywala</div>
-                        <div class="job">Web Developer</div>
+                        <div class="profile_name">@Config.FirstName @Config.LastName</div>
+                        <div class="job">@Config.Position</div>
                     </div>
                     <i class='bx bx-log-out'></i>
                 </div>
@@ -234,6 +234,8 @@ else
     <section class="home-section">
         <div class="home-content">
             <i class='bx bx-menu' @onclick="ToggleSidebar"></i>
+            <div class="spacer"></div>
+            <h2 class="companyName">@Config.Company</h2>
         </div>
         <div style="margin: 10px;">
             @Body
@@ -288,7 +290,7 @@ else
         }
         catch (Exception e)
         {
-            ShowMessage(ToastType.Danger, "Upsss!", "Something went wrong");
+            ShowMessage(ToastType.Danger, "Upsss!", $"{e.Message}");
             preloadService.Hide();
         }
     }
