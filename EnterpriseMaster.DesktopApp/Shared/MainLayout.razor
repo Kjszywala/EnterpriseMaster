@@ -226,7 +226,7 @@ else
                         <div class="profile_name">@Config.FirstName @Config.LastName</div>
                         <div class="job">@Config.Position</div>
                     </div>
-                    <i class='bx bx-log-out'></i>
+                    <i class='bx bx-log-out' @onclick="Logout"></i>
                 </div>
             </li>
         </ul>
@@ -235,6 +235,7 @@ else
         <div class="home-content">
             <i class='bx bx-menu' @onclick="ToggleSidebar"></i>
             <div class="spacer"></div>
+            <i class='bx bx-log-out' @onclick="Logout" style="font-size:20px; color:white;"></i>
             <h2 class="companyName">@Config.Company</h2>
         </div>
         <div style="margin: 10px;">
@@ -295,11 +296,26 @@ else
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    private async Task Logout()
+    {
+        preloadService.Show(SpinnerColor.Dark);
+        loginService.Logout();
+        if (!Config.IsLoggedIn)
+        {
+            ShowMessage(ToastType.Success, "Success!", "You have successfully logged out");
+        }
+        else
+        {
+            ShowMessage(ToastType.Danger, "Warning!", "Something went wrong while logging out.");
+        }
+        preloadService.Hide();
+    }
+
+    protected override async void OnInitialized()
     {
         preloadService.Show(SpinnerColor.Dark);
         mainPagesModel = await mainLayoutService.GetMainPagesModel();
-        // Initialize your arrows list here
+        // Initialize arrows list here
         arrows.Add(new ArrowInfo { Text = "Dashboard", IsMenuVisible = false });
         arrows.Add(new ArrowInfo { Text = "Category", IsMenuVisible = false });
         arrows.Add(new ArrowInfo { Text = "Posts", IsMenuVisible = false });
