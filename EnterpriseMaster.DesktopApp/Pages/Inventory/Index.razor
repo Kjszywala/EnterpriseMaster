@@ -60,9 +60,71 @@
             <Icon Name="IconName.Diagram3" /> Add Product to Stock
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="container">
+                <!-- First Column -->
+                <div class="column left">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" id="productName" name="productName" @bind="productNameAdd" />
+
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" @bind="descriptionAdd" />
+
+                    <label for="manufacturer">Manufacturer:</label>
+                    <input type="text" id="manufacturer" name="manufacturer" @bind="manufacturerAdd" />
+
+                    <label for="productCode">Product Code:</label>
+                    <input type="text" id="productCode" name="productCode" @bind="productCodeAdd" />
+
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" step="0.01" @bind="priceAdd" />
+                </div>
+
+                <!-- Second Column -->
+                <div class="column right">
+                    <div class="row">
+                        @if (quantityTypes == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <label for="quantityTypeId">Quantity Type:</label>
+                            <select class="styled-select" @onchange="OnQuantityTypeEditSelected">
+                                <option value="">Select a Quantity Type</option>
+                                @foreach (var quantityType in quantityTypes)
+                                {
+                                    <option value="@quantityType.Id">@quantityType.Type</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                    <div class="row">
+                        @if (categories == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <label for="category">Category:</label>
+                            <select class="styled-select" @onchange="OnCategoryEditSelected">
+                                <option value="">Select a Category</option>
+                                @foreach (var category in categories)
+                                {
+                                    <option value="@category.Id">@category.CategotyDescription</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                    <div class="row">
+                        <label for="unitsInStock">Units In Stock:</label>
+                        <input type="number" id="unitsInStock" name="unitsInStock" step="1" @bind="unitsInStockAdd" />
+
+                        <label for="weight">Weight:</label>
+                        <input type="number" id="weight" name="weight" step="0.01" @bind="weightAdd" />
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -70,9 +132,32 @@
             <Icon Name="IconName.Braces" /> Edit Product
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <div class="editDiv">
+                <div class="container">
+                    <!-- Left Div (30%) -->
+                    <div class="left-div">
+                        <h1>Left Div</h1>
+                        <p>This div takes up 30% of the page width.</p>
+                    </div>
+
+                    <!-- Right Div (70%) -->
+                    <div class="right-div">
+                        <div class="container1">
+                            <!-- Top Div (30%) -->
+                            <div class="top-div">
+                                <h1>Top Div</h1>
+                                <p>This div takes up 30% of the page height.</p>
+                            </div>
+
+                            <!-- Bottom Div (70%) -->
+                            <div class="bottom-div">
+                                <h1>Bottom Div</h1>
+                                <p>This div takes up 70% of the page height.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -102,6 +187,8 @@
     protected async override void OnInitialized()
     {
         products = await inventoryService.GetAllProductsAsync();
+        categories = await inventoryService.GetAllCategoriesAsync();
+        quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
         await gridProducts.RefreshDataAsync();
     }
 
@@ -122,7 +209,33 @@
 
     #region Add Product to Stock
 
+    private List<QuantityTypes> quantityTypes;
+    private List<Categories> categories;
+    private int selectedQuantityTypeAddId;
+    private int selectedCategoryAddId;
+    private string productNameAdd = "";
+    private string descriptionAdd = "";
+    private string manufacturerAdd = "";
+    private string productCodeAdd = "";
+    private decimal priceAdd = 0.00m;
+    private decimal unitsInStockAdd = 0.00m;
+    private decimal weightAdd = 0.00m;
 
+    private void OnQuantityTypeEditSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedQuantityTypeAddId = selectedId;
+        }
+    }
+
+    private void OnCategoryEditSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedCategoryAddId = selectedId;
+        }
+    }
 
     #endregion
 

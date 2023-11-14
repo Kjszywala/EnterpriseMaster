@@ -1,2 +1,38 @@
-﻿body {
+﻿.container1 {
+    height: 80vh; /* Set the container height to 100% of the viewport height */
+    display: flex;
+    flex-direction: column; /* Stack divs vertically */
+}
+.editDiv{
+    margin: 10px;
+}
+.top-div {
+    flex: 30%; /* Take up 30% of the container height */
+    background-color: #007bff; /* Set background color for the top div */
+    padding: 20px;
+    color: #fff; /* Set text color for better contrast */
+}
+
+.bottom-div {
+    flex: 70%; /* Take up 70% of the container height */
+    background-color: red; /* Set background color for the bottom div */
+    padding: 20px;
+    color: #fff; /* Set text color for better contrast */
+}
+.container {
+    display: flex;
+}
+
+.left-div {
+    flex: 30%;
+    background-color: #007bff; /* Set background color for the left div */
+    padding: 20px;
+    color: #fff; /* Set text color for better contrast */
+}
+
+.right-div {
+    flex: 70%;
+    background-color: #28a745; /* Set background color for the right div */
+    padding: 20px;
+    color: #fff; /* Set text color for better contrast */
 }
