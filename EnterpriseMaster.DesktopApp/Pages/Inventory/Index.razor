@@ -1,11 +1,63 @@
 ﻿@page "/inventory"
 @using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @inherits MainLayout
+@inject InventoryService inventoryService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Diagram3" /> Stock Management
+            <Icon Name="IconName.Diagram3" /> Products In Stock
+        </TitleTemplate>
+        <Content>
+            <br />
+            <Grid TItem="Products"
+                  @ref="gridProducts"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="ProductsDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="Products" HeaderText="Product Name" PropertyName="ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Product Code" PropertyName="ProductCode">
+                    @context.ProductCode
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Unit Price" PropertyName="Price">
+                    @context.Price
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Quantity Type" PropertyName="QuantityType.Type">
+                    @context.QuantityType.Type
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Category" PropertyName="Category.CategotyDescription">
+                    @context.Category.CategotyDescription
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Manufacturer" PropertyName="Manufacturer">
+                    @context.Manufacturer
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Units In Stock" PropertyName="UnitsInStock">
+                    @context.UnitsInStock
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Weight" PropertyName="Weight">
+                    @context.Weight
+                </GridColumn>
+            </Grid>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.Diagram3" /> Add Product to Stock
         </TitleTemplate>
         <Content>
             <p class="mt-2">
@@ -15,7 +67,7 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Braces" /> Product Variants
+            <Icon Name="IconName.Braces" /> Edit Product
         </TitleTemplate>
         <Content>
             <p class="mt-2">
@@ -46,5 +98,50 @@
 </Tabs>
 
 @code {
+
+    protected async override void OnInitialized()
+    {
+        products = await inventoryService.GetAllProductsAsync();
+        await gridProducts.RefreshDataAsync();
+    }
+
+    #region Stock List
+
+    private List<Products> products = new List<Products>();
+    private Grid<Products> gridProducts;
+
+    private async Task<GridDataProviderResult<Products>> ProductsDataProvider(GridDataProviderRequest<Products> request)
+    {
+        if (products is null) // pull employees only one time for client-side filtering, sorting, and paging
+            products = await inventoryService.GetAllProductsAsync(); // call a service or an API to pull the employees
+
+        return await Task.FromResult(request.ApplyTo(products));
+    }
+
+    #endregion
+
+    #region Add Product to Stock
+
+
+
+    #endregion
+
+    #region Edit Product
+
+
+
+    #endregion
+
+    #region Supplier Management
+
+
+
+    #endregion
+
+    #region Inventory Reports
+
+
+
+    #endregion
 
 }

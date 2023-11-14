@@ -4,6 +4,7 @@ using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
 using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
 using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
+using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<TaskServices>();
             builder.Services.AddSingleton<WhatsNewInfoService>();
             builder.Services.AddSingleton<EmployeeService>();
+            builder.Services.AddSingleton<InventoryService>();
 
             // Db injection
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();
