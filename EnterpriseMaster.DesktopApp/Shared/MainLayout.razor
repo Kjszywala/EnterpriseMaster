@@ -315,6 +315,7 @@ else
     {
         preloadService.Show(SpinnerColor.Dark);
         mainPagesModel = await mainLayoutService.GetMainPagesModel();
+        StateHasChanged();
         // Initialize arrows list here
         arrows.Add(new ArrowInfo { Text = "Dashboard", IsMenuVisible = false });
         arrows.Add(new ArrowInfo { Text = "Category", IsMenuVisible = false });

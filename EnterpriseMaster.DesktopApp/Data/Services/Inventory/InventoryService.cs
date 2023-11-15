@@ -38,27 +38,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             try
             {
                 var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
-                var quantityTypes = (await quantityTypesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
-                var categories = (await categoriesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
-
-                foreach (var product in products)
-                {
-                    foreach(var category in categories)
-                    {
-                        if(product.CategoryId == category.Id)
-                        {
-                            product.Category = category;
-                        }
-                    }
-
-                    foreach (var quantityType in quantityTypes)
-                    {
-                        if (product.QuantityTypeId == quantityType.Id)
-                        {
-                            product.QuantityType = quantityType;
-                        }
-                    }
-                }
 
                 return (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }
@@ -138,6 +117,19 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             }
         }
 
+        public async Task<QuantityTypes> GetQuantityTypesAsync(int id)
+        {
+            try
+            {
+                return (await quantityTypesServices.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
         #endregion
 
         #region Methods Categories
@@ -147,6 +139,19 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             try
             {
                 return (await categoriesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<Categories> GetCategoriesAsync(int id)
+        {
+            try
+            {
+                return (await categoriesServices.GetAsync(id));
             }
             catch (Exception e)
             {

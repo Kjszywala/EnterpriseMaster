@@ -34,7 +34,7 @@
                 <GridColumn TItem="Products" HeaderText="Product Code" PropertyName="ProductCode">
                     @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Unit Price" PropertyName="Price">
+                <GridColumn TItem="Products" HeaderText="Unit Price($)" PropertyName="Price">
                     @context.Price
                 </GridColumn>
                 <GridColumn TItem="Products" HeaderText="Quantity Type" PropertyName="QuantityType.Type">
@@ -62,27 +62,31 @@
         <Content>
             <br />
             <div class="container">
-                <!-- First Column -->
-                <div class="column left">
-                    <label for="productName">Product Name:</label>
-                    <input type="text" id="productName" name="productName" @bind="productNameAdd" />
+                <div class="left-panel">
+                    <div class="styled-form">
+                        <br />
+                        <label for="productName">Product Name:</label>
+                        <input type="text" id="productName" name="productName" @bind="productNameAdd" />
 
-                    <label for="description">Description:</label>
-                    <input type="text" id="description" name="description" @bind="descriptionAdd" />
+                        <br />
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" name="description" @bind="descriptionAdd" />
 
-                    <label for="manufacturer">Manufacturer:</label>
-                    <input type="text" id="manufacturer" name="manufacturer" @bind="manufacturerAdd" />
+                        <br />
+                        <label for="manufacturer">Manufacturer:</label>
+                        <input type="text" id="manufacturer" name="manufacturer" @bind="manufacturerAdd" />
 
-                    <label for="productCode">Product Code:</label>
-                    <input type="text" id="productCode" name="productCode" @bind="productCodeAdd" />
+                        <br />
+                        <label for="productCode">Product Code:</label>
+                        <input type="text" id="productCode" name="productCode" @bind="productCodeAdd" />
 
-                    <label for="price">Price:</label>
-                    <input type="number" id="price" name="price" step="0.01" @bind="priceAdd" />
+                        <br />
+                        <label for="price">Price ($):</label>
+                        <input type="number" id="price" name="price" step="0.01" @bind="priceAdd" />
+                    </div>
                 </div>
-
-                <!-- Second Column -->
-                <div class="column right">
-                    <div class="row">
+                <div class="right-panel">
+                    <div class="top-right">
                         @if (quantityTypes == null)
                         {
                             <p>Loading...</p>
@@ -98,8 +102,6 @@
                                 }
                             </select>
                         }
-                    </div>
-                    <div class="row">
                         @if (categories == null)
                         {
                             <p>Loading...</p>
@@ -116,12 +118,18 @@
                             </select>
                         }
                     </div>
-                    <div class="row">
-                        <label for="unitsInStock">Units In Stock:</label>
-                        <input type="number" id="unitsInStock" name="unitsInStock" step="1" @bind="unitsInStockAdd" />
+                    <div class="bottom-right">
+                        <div class="styled-form">
+                            <br />
+                            <label for="unitsInStock">Units In Stock:</label>
+                            <input type="number" id="unitsInStock" name="unitsInStock" step="1" @bind="unitsInStockAdd" />
 
-                        <label for="weight">Weight:</label>
-                        <input type="number" id="weight" name="weight" step="0.01" @bind="weightAdd" />
+                            <label for="weight">Weight:</label>
+                            <input type="number" id="weight" name="weight" step="0.01" @bind="weightAdd" />
+                        </div>
+                        <div>
+                            <button class="button-36" role="button" @onclick="AddProduct"> Add Product To Inventory </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,28 +140,109 @@
             <Icon Name="IconName.Braces" /> Edit Product
         </TitleTemplate>
         <Content>
-            <div class="editDiv">
-                <div class="container">
-                    <!-- Left Div (30%) -->
-                    <div class="left-div">
-                        <h1>Left Div</h1>
-                        <p>This div takes up 30% of the page width.</p>
+            <br />
+            <div class="row">
+                <div class="col col-dropdown">
+                    @if (products == null)
+                    {
+                        <p>Loading...</p>
+                    }
+                    else
+                    {
+                        <select id="employeeDropdown" class="dropdown-style" @onchange="OnProductSelected">
+                            <option>Select Product</option>
+                            @foreach (var access in products)
+                            {
+                                <option value="@access.Id">@access.ProductName (Code: @access.ProductCode, Manufacturer: @access.Manufacturer)</option>
+                            }
+                        </select>
+                    }
+                </div>
+            </div>
+            <div class="container">
+                <div class="left-panel">
+                    <div class="styled-form">
+                        <br />
+                        <label for="productName">Product Name:</label>
+                        <input type="text" id="productName" name="productName" @bind="productNameEdit" />
+
+                        <br />
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" name="description" @bind="descriptionEdit" />
+
+                        <br />
+                        <label for="manufacturer">Manufacturer:</label>
+                        <input type="text" id="manufacturer" name="manufacturer" @bind="manufacturerEdit" />
+
+                        <br />
+                        <label for="productCode">Product Code:</label>
+                        <input type="text" id="productCode" name="productCode" @bind="productCodeEdit" />
+
+                        <br />
+                        <label for="price">Price ($):</label>
+                        <input type="number" id="price" name="price" step="0.01" @bind="priceEdit" />
+
+                        <br />
+                        <label for="discontinued">Discontinued:</label>
+                        <input type="checkbox" id="discontinued" name="discontinued" @bind="discontinuedEdit" />
+
+                        <br />
+                        <label for="isActive">Is Active:</label>
+                        <input type="checkbox" id="isActive" name="isActive" @bind="isActiveEdit" />
                     </div>
+                </div>
+                <div class="right-panel">
+                    <div class="top-right">
+                        @if (quantityTypes == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <label for="quantityTypeId">Quantity Type:</label>
+                            <select class="styled-select" @onchange="OnQuantityTypeEditSelected">
+                                <option value="">Select a Quantity Type</option>
+                                @foreach (var quantityType in quantityTypes)
+                                {
+                                    if(quantityType.Id == selectedQuantityTypeEditId)
+                                    {
+                                        <option value="@quantityType.Id" selected>@quantityType.Type</option>
+                                    }
+                                    <option value="@quantityType.Id">@quantityType.Type</option>
+                                }
+                            </select>
+                        }
+                        @if (categories == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <label for="category">Category:</label>
+                            <select class="styled-select" @onchange="OnCategoryEditSelected">
+                                <option value="">Select a Category</option>
+                                @foreach (var category in categories)
+                                {
+                                    if (category.Id == selectedCategoryEditId)
+                                    {
+                                        <option value="@category.Id" selected>@category.CategotyDescription</option>
+                                    }
+                                    <option value="@category.Id">@category.CategotyDescription</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                    <div class="bottom-right">
+                        <div class="styled-form">
+                            <br />
+                            <label for="unitsInStock">Units In Stock:</label>
+                            <input type="number" id="unitsInStock" name="unitsInStock" step="1" @bind="unitsInStockEdit" />
 
-                    <!-- Right Div (70%) -->
-                    <div class="right-div">
-                        <div class="container1">
-                            <!-- Top Div (30%) -->
-                            <div class="top-div">
-                                <h1>Top Div</h1>
-                                <p>This div takes up 30% of the page height.</p>
-                            </div>
-
-                            <!-- Bottom Div (70%) -->
-                            <div class="bottom-div">
-                                <h1>Bottom Div</h1>
-                                <p>This div takes up 70% of the page height.</p>
-                            </div>
+                            <label for="weight">Weight:</label>
+                            <input type="number" id="weight" name="weight" step="0.01" @bind="weightEdit" />
+                        </div>
+                        <div>
+                            <button class="button-36" role="button" @onclick="UpdateProduct"> Update Product </button>
                         </div>
                     </div>
                 </div>
@@ -165,9 +254,14 @@
             <Icon Name="IconName.Diagram2" /> Supplier Management
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
         </Content>
     </Tab> 
     <Tab>
@@ -175,20 +269,46 @@
             <Icon Name="IconName.Flag" /> Inventory Reports
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
         </Content>
     </Tab>
 </Tabs>
 
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
+    [Inject] protected PreloadService preloadService { get; set; }
 
     protected async override void OnInitialized()
     {
         products = await inventoryService.GetAllProductsAsync();
         categories = await inventoryService.GetAllCategoriesAsync();
         quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
+        foreach (var product in products)
+        {
+            foreach (var category in categories)
+            {
+                if (product.CategoryId == category.Id)
+                {
+                    product.Category = category;
+                }
+            }
+
+            foreach (var quantityType in quantityTypes)
+            {
+                if (product.QuantityTypeId == quantityType.Id)
+                {
+                    product.QuantityType = quantityType;
+                }
+            }
+        }
         await gridProducts.RefreshDataAsync();
     }
 
@@ -211,8 +331,8 @@
 
     private List<QuantityTypes> quantityTypes;
     private List<Categories> categories;
-    private int selectedQuantityTypeAddId;
-    private int selectedCategoryAddId;
+    private int selectedQuantityTypeAddId = 0;
+    private int selectedCategoryAddId = 0;
     private string productNameAdd = "";
     private string descriptionAdd = "";
     private string manufacturerAdd = "";
@@ -237,11 +357,121 @@
         }
     }
 
+    private async Task AddProduct()
+    {
+        preloadService.Show(SpinnerColor.Dark);
+        if(!IsValid())
+        {
+            return;
+        }
+
+        var product = new Products()
+        {
+            CategoryId = selectedCategoryAddId,
+            QuantityTypeId = selectedQuantityTypeAddId,
+            CreationDate = DateTime.Now,
+            Description = descriptionAdd,
+            Discontinued = false,
+            IsActive = true,
+            Manufacturer = manufacturerAdd,
+            ModificationDate = DateTime.Now,
+            Price = priceAdd,
+            ProductCode = productCodeAdd,
+            ProductName = productNameAdd,
+            UnitsInStock = unitsInStockAdd,
+            Weight = weightAdd
+        };
+
+        if (await inventoryService.AddProductAsync(product))
+        {
+            ShowMessage(ToastType.Success, "Success!", "Product added successfully!");
+            preloadService.Hide();
+            await gridProducts.RefreshDataAsync();
+            return;
+        };
+        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a product!");
+        preloadService.Hide();
+        await gridProducts.RefreshDataAsync();
+    }
+
     #endregion
 
     #region Edit Product
 
+    private Products productEdit;
+    private QuantityTypes quantityTypesEdit;
+    private Categories categoryEdit;
+    private int selectedProductId;
+    private int selectedQuantityTypeEditId;
+    private int selectedCategoryEditId;
+    private string productNameEdit;
+    private string descriptionEdit;
+    private string manufacturerEdit;
+    private string productCodeEdit;
+    private decimal priceEdit;
+    private decimal unitsInStockEdit;
+    private decimal weightEdit;
+    private bool discontinuedEdit;
+    private bool isActiveEdit;
 
+    private async Task UpdateProduct()
+    {
+        preloadService.Show(SpinnerColor.Dark);
+        if (!IsValid())
+        {
+            return;
+        }
+
+        var productToUpdate = await inventoryService.GetProductAsync(selectedProductId);
+
+        productToUpdate.CategoryId = selectedCategoryEditId;
+        productToUpdate.QuantityTypeId = selectedQuantityTypeEditId;
+        productToUpdate.CreationDate = DateTime.Now;
+        productToUpdate.Description = descriptionEdit;
+        productToUpdate.Discontinued = discontinuedEdit;
+        productToUpdate.IsActive = isActiveEdit;
+        productToUpdate.Manufacturer = manufacturerEdit;
+        productToUpdate.ModificationDate = DateTime.Now;
+        productToUpdate.Price = priceEdit;
+        productToUpdate.ProductCode = productCodeEdit;
+        productToUpdate.ProductName = productNameEdit;
+        productToUpdate.UnitsInStock = unitsInStockEdit;
+        productToUpdate.Weight = weightEdit;
+        productToUpdate.ModificationDate = DateTime.Now;
+
+        if (await inventoryService.UpdateProductAsync(productToUpdate))
+        {
+            ShowMessage(ToastType.Success, "Success!", "Product added successfully!");
+            preloadService.Hide();
+            await gridProducts.RefreshDataAsync();
+            return;
+        };
+        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a product!");
+        preloadService.Hide();
+        await gridProducts.RefreshDataAsync();
+    }
+
+    private async void OnProductSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedProductId = selectedId;
+        }
+        productEdit = await inventoryService.GetProductAsync(selectedProductId);
+        quantityTypesEdit = await inventoryService.GetQuantityTypesAsync((int)productEdit.QuantityTypeId);
+        categoryEdit = await inventoryService.GetCategoriesAsync((int)productEdit.CategoryId);
+        productNameEdit = productEdit.ProductName;
+        descriptionEdit = productEdit.Description;
+        manufacturerEdit = productEdit.Manufacturer;
+        productCodeEdit = productEdit.ProductCode;
+        priceEdit = productEdit.Price;
+        unitsInStockEdit = productEdit.UnitsInStock;
+        weightEdit = productEdit.Weight;
+        discontinuedEdit = productEdit.Discontinued;
+        isActiveEdit = productEdit.IsActive;
+
+        StateHasChanged();
+    }
 
     #endregion
 
@@ -254,6 +484,70 @@
     #region Inventory Reports
 
 
+
+    #endregion
+
+    #region Helper
+
+    public bool IsValid()
+    {
+        if (selectedQuantityTypeAddId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Quantity Type is not selected or is invalid!");
+            return false;
+        }
+
+        if (selectedCategoryAddId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Category is not selected or is invalid!");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(productNameAdd))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Product name cannot be empty!");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(descriptionAdd))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(manufacturerAdd))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Manufacturer cannot be empty!");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(productCodeAdd))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Product Code cannot be empty!");
+            return false;
+        }
+
+        if (priceAdd <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Price must be greater than zero!");
+            return false;
+        }
+
+        if (unitsInStockAdd <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Units In Stock must be greater than zero!");
+            return false;
+        }
+
+        if (weightAdd <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Weight must be greater than zero!");
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
 
     #endregion
 
