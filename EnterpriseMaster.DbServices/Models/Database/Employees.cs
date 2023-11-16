@@ -21,5 +21,6 @@
         public int? EmployeeAccessId { get; set; }
         public EmployeeAccesses? EmployeeAccess { get; set; }
         public List<Tasks>? Tasks { get; set; }
+        public List<PurchaseOrders>? PurchaseOrders { get; set; }
     }
 }

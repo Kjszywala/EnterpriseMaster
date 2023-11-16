@@ -26,7 +26,9 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<FxRates> FxRates { get; set; }
         public virtual DbSet<Invoices> Invoices { get; set; }
         public virtual DbSet<InvoiceStatuses> InvoiceStatuses { get; set; }
-        public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<SalesOrders> SalesOrders { get; set; }
+        public virtual DbSet<PurchaseOrders> PurchaseOrders { get; set; }
+        public virtual DbSet<CustomerAddresses> CustomerAddresses { get; set; }
         public virtual DbSet<OrderStatuses> OrderStatuses { get; set; }
         public virtual DbSet<PaymentMethods> PaymentMethods { get; set; }
         public virtual DbSet<Products> Products { get; set; }

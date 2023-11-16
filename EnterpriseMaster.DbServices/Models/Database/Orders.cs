@@ -11,12 +11,12 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public decimal PricePaid { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Discount { get; set; }
-        public int? CustomerInformationId { get; set; }
-		public CustomerInformation? CustomerInformation { get; set; }
 		public int? EmployeeId { get; set; }
 		public Employees? Employee { get; set; }
 		public int? ProductId { get; set; }
 		public Products? Product { get; set; }
-		public List<Invoices>? Invoices { get; set; }
+        public int? CompanyId { get; set; }
+        public Companies? Companies { get; set; }
+        public List<Invoices>? Invoices { get; set; }
 	}
 }

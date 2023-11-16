@@ -94,7 +94,7 @@
                         else
                         {
                             <label for="quantityTypeId">Quantity Type:</label>
-                            <select class="styled-select" @onchange="OnQuantityTypeEditSelected">
+                            <select class="styled-select" @onchange="OnQuantityTypeAddSelected">
                                 <option value="">Select a Quantity Type</option>
                                 @foreach (var quantityType in quantityTypes)
                                 {
@@ -109,7 +109,7 @@
                         else
                         {
                             <label for="category">Category:</label>
-                            <select class="styled-select" @onchange="OnCategoryEditSelected">
+                            <select class="styled-select" @onchange="OnCategoryAddSelected">
                                 <option value="">Select a Category</option>
                                 @foreach (var category in categories)
                                 {
@@ -341,7 +341,7 @@
     private decimal unitsInStockAdd = 0.00m;
     private decimal weightAdd = 0.00m;
 
-    private void OnQuantityTypeEditSelected(ChangeEventArgs e)
+    private void OnQuantityTypeAddSelected(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int selectedId))
         {
@@ -349,7 +349,7 @@
         }
     }
 
-    private void OnCategoryEditSelected(ChangeEventArgs e)
+    private void OnCategoryAddSelected(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int selectedId))
         {
@@ -360,7 +360,7 @@
     private async Task AddProduct()
     {
         preloadService.Show(SpinnerColor.Dark);
-        if(!IsValid())
+        if (!IsValidAdd())
         {
             return;
         }
@@ -414,10 +414,26 @@
     private bool discontinuedEdit;
     private bool isActiveEdit;
 
+    private void OnQuantityTypeEditSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedQuantityTypeEditId = selectedId;
+        }
+    }
+
+    private void OnCategoryEditSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedCategoryEditId = selectedId;
+        }
+    }
+
     private async Task UpdateProduct()
     {
         preloadService.Show(SpinnerColor.Dark);
-        if (!IsValid())
+        if (!IsValidEdit())
         {
             return;
         }
@@ -441,12 +457,12 @@
 
         if (await inventoryService.UpdateProductAsync(productToUpdate))
         {
-            ShowMessage(ToastType.Success, "Success!", "Product added successfully!");
+            ShowMessage(ToastType.Success, "Success!", "Product updated successfully!");
             preloadService.Hide();
             await gridProducts.RefreshDataAsync();
             return;
         };
-        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a product!");
+        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a product!");
         preloadService.Hide();
         await gridProducts.RefreshDataAsync();
     }
@@ -489,59 +505,137 @@
 
     #region Helper
 
-    public bool IsValid()
+    public bool IsValidAdd()
     {
         if (selectedQuantityTypeAddId <= 0)
         {
             ShowMessage(ToastType.Info, "Warning!", "Quantity Type is not selected or is invalid!");
+            preloadService.Hide();
             return false;
         }
 
         if (selectedCategoryAddId <= 0)
         {
             ShowMessage(ToastType.Info, "Warning!", "Category is not selected or is invalid!");
+            preloadService.Hide();
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(productNameAdd))
         {
             ShowMessage(ToastType.Info, "Warning!", "Product name cannot be empty!");
+            preloadService.Hide();
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(descriptionAdd))
         {
             ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(manufacturerAdd))
         {
             ShowMessage(ToastType.Info, "Warning!", "Manufacturer cannot be empty!");
+            preloadService.Hide();
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(productCodeAdd))
         {
             ShowMessage(ToastType.Info, "Warning!", "Product Code cannot be empty!");
+            preloadService.Hide();
             return false;
         }
 
         if (priceAdd <= 0.00m)
         {
             ShowMessage(ToastType.Info, "Warning!", "Price must be greater than zero!");
+            preloadService.Hide();
             return false;
         }
 
         if (unitsInStockAdd <= 0.00m)
         {
             ShowMessage(ToastType.Info, "Warning!", "Units In Stock must be greater than zero!");
+            preloadService.Hide();
             return false;
         }
 
         if (weightAdd <= 0.00m)
         {
             ShowMessage(ToastType.Info, "Warning!", "Weight must be greater than zero!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
+
+    public bool IsValidEdit()
+    {
+        if (selectedQuantityTypeEditId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Quantity Type is not selected or is invalid!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (selectedCategoryEditId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Category is not selected or is invalid!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(productNameEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Product name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(descriptionEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(manufacturerEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Manufacturer cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(productCodeEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Product Code cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (priceEdit <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Price must be greater than zero!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (unitsInStockEdit <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Units In Stock must be greater than zero!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (weightEdit <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Weight must be greater than zero!");
+            preloadService.Hide();
             return false;
         }
 

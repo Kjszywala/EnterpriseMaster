@@ -2,6 +2,7 @@
 {
 	public class ShippingAddresses : Addresses
 	{
-		public List<CustomerInformation>? CustomerInformations { get; set; }
-	}
+        public List<PurchaseOrders>? PurchaseOrders { get; set; }
+        public List<SalesOrders>? SalesOrders { get; set; }
+    }
 }
