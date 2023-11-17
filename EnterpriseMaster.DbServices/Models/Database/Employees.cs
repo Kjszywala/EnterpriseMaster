@@ -11,7 +11,7 @@
         public byte[]? Image { get; set; }
         public DateTime? HireDate { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public List<Orders>? Orders { get; set; }
+        public List<SalesOrders>? SalesOrders { get; set; }
         public int? EmployeeAddressId { get; set; }
         public EmployeeAddresses? EmployeeAddress { get; set; }
         public int? CompanyId { get; set; }

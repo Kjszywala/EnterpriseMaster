@@ -35,6 +35,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<QuantityTypes> QuantityTypes { get; set; }
         public virtual DbSet<SaleCart> SaleCart { get; set; }
         public virtual DbSet<Shippers> Shippers { get; set; }
+        public virtual DbSet<ShippersAddresses> ShippersAddresses { get; set; }
         public virtual DbSet<ShippingAddresses> ShippingAddresses { get; set; }
         public virtual DbSet<SubscriptionOrders> SubscriptionOrders { get; set; }
         public virtual DbSet<SubscriptionTypes> SubscriptionTypes { get; set; }

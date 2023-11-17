@@ -16,7 +16,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
         private readonly ICompaniesServices companiesServices;
         private readonly ICompanyAddressServices companyAddressServices;
         private readonly ITasksServices taskServices;
-        private readonly IOrdersServices ordersServices;
+        private readonly ISalesOrdersServices ordersServices;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
            ICompaniesServices _companiesServices,
            ICompanyAddressServices _companyAddressServices,
            ITasksServices _taskServices,
-           IOrdersServices _ordersServices)
+           ISalesOrdersServices _ordersServices)
         {
             employeeService = _employeeService;
             errorLogsService = _errorLogsService;
@@ -91,7 +91,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
                         }
                     }
                     employee.Tasks = (await taskServices.GetAllAsync()).Where(item => item.EmployeeId == employee.Id).ToList();
-                    employee.Orders = (await ordersServices.GetAllAsync()).Where(item => item.EmployeeId == employee.Id).ToList();
+                    employee.SalesOrders = (await ordersServices.GetAllAsync()).Where(item => item.EmployeeId == employee.Id).ToList();
                 }
 
                 return employees;
