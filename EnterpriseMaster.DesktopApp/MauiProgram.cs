@@ -12,6 +12,7 @@ using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 using EnterpriseMaster.DesktopApp.Data.Services.OrdersService;
 using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
+using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 using Microsoft.Extensions.Logging;
 
 namespace EnterpriseMaster.DesktopApp
@@ -47,6 +48,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<OrderService>();
             builder.Services.AddSingleton<CustomerDataService>();
             builder.Services.AddSingleton<AnalyticsService>();
+            builder.Services.AddSingleton<SalesService>();
 
             // Db injection
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();
@@ -93,6 +95,9 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IInvoiceItemService, InvoiceItemService>();
             builder.Services.AddScoped<IProductionOrderService, ProductionOrderService>();
             builder.Services.AddScoped<IProductionOrderStatusService, ProductionOrderStatusService>();
+            builder.Services.AddScoped<IRefudsServices, RefundServices>();
+            builder.Services.AddScoped<IReturnServices, ReturnServices>();
+            builder.Services.AddScoped<IReturnStatusService, ReturnStatusService>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
