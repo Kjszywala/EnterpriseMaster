@@ -79,6 +79,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IPurchaseOrdersServices, PurchaseOrderServices>();
             builder.Services.AddScoped<ICustomerAddressesService, CustomerAddressesServices>();
             builder.Services.AddScoped<IOfferServices, OfferServices>();
+            builder.Services.AddScoped<IInvoiceItemService, InvoiceItemService>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
