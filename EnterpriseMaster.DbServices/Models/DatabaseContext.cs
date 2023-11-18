@@ -32,6 +32,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<OrderStatuses> OrderStatuses { get; set; }
         public virtual DbSet<PaymentMethods> PaymentMethods { get; set; }
         public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<Offers> Offers { get; set; }
         public virtual DbSet<QuantityTypes> QuantityTypes { get; set; }
         public virtual DbSet<SaleCart> SaleCart { get; set; }
         public virtual DbSet<Shippers> Shippers { get; set; }

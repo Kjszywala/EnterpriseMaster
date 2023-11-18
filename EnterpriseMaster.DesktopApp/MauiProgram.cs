@@ -78,6 +78,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<ISalesOrdersServices, SalesOrderServices>();
             builder.Services.AddScoped<IPurchaseOrdersServices, PurchaseOrderServices>();
             builder.Services.AddScoped<ICustomerAddressesService, CustomerAddressesServices>();
+            builder.Services.AddScoped<IOfferServices, OfferServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
