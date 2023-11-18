@@ -19,6 +19,8 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public Employees? Employee { get; set; }
         public int? ProductId { get; set; }
         public Products? Product { get; set; }
+        public int? ProductionOrderId { get; set; }
+        public ProductionOrders? ProductionOrder { get; set; }
         public int? CompanyId { get; set; }
         public Companies? Companies { get; set; }
         public string RejectedReason { get; set; }

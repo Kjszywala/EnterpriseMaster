@@ -29,6 +29,8 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<InvoiceStatuses> InvoiceStatuses { get; set; }
         public virtual DbSet<SalesOrders> SalesOrders { get; set; }
         public virtual DbSet<PurchaseOrders> PurchaseOrders { get; set; }
+        public virtual DbSet<ProductionOrders> ProductionOrders { get; set; }
+        public virtual DbSet<ProductionOrderStatus> ProductionOrderStatus { get; set; }
         public virtual DbSet<CustomerAddresses> CustomerAddresses { get; set; }
         public virtual DbSet<OrderStatuses> OrderStatuses { get; set; }
         public virtual DbSet<PaymentMethods> PaymentMethods { get; set; }
