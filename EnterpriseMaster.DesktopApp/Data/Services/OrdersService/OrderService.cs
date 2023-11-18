@@ -4,7 +4,7 @@ using EnterpriseMaster.DbServices.Services;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
 {
-    public class OrdersService
+    public class OrderService
     {
         #region Variables
 
@@ -20,7 +20,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
 
         #region Constructor
 
-        public OrdersService(
+        public OrderService(
             IErrorLogsServices _errorLogsServices, 
             IPurchaseOrdersServices _purchaseOrdersServices, 
             ISalesOrdersServices _salesOrdersServices, 

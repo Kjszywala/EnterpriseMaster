@@ -3,7 +3,7 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DbServices.Services
 {
-    internal class ProductionOrderStatusService :
+    public class ProductionOrderStatusService :
         BaseServices<ProductionOrderStatus>,
         IProductionOrderStatusService
     {
