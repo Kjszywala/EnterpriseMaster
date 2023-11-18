@@ -3,6 +3,7 @@ using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
 using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
+using EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices;
 using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
 using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
 using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
@@ -45,6 +46,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<OfferServices>();
             builder.Services.AddSingleton<OrderService>();
             builder.Services.AddSingleton<CustomerDataService>();
+            builder.Services.AddSingleton<AnalyticsService>();
 
             // Db injection
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();

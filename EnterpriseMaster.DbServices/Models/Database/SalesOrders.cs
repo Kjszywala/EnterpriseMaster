@@ -30,5 +30,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public int? BillingAddressId { get; set; }
         public BillingAddresses? BillingAddress { get; set; }
         public List<Invoices>? Invoices { get; set; }
+        public List<Returns>? Returns { get; set; }
     }
 }
