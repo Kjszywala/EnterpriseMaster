@@ -25,6 +25,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<ErrorLogs> ErrorLogs { get; set; }
         public virtual DbSet<FxRates> FxRates { get; set; }
         public virtual DbSet<Invoices> Invoices { get; set; }
+        public virtual DbSet<InvoiceItem> InvoiceItem { get; set; }
         public virtual DbSet<InvoiceStatuses> InvoiceStatuses { get; set; }
         public virtual DbSet<SalesOrders> SalesOrders { get; set; }
         public virtual DbSet<PurchaseOrders> PurchaseOrders { get; set; }

@@ -16,5 +16,6 @@
         public int? CustomerAddressId { get; set; }
         public CustomerAddresses? CustomerAddress { get; set; }
         public List<SalesOrders>? SalesOrders { get; set; }
+        public List<Invoices>? Invoices { get; set; }
 	}
 }
