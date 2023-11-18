@@ -3,10 +3,14 @@ using EnterpriseMaster.BusinessLogic.Interfaces;
 using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Services;
 using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
+using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
 using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
 using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
+using EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices;
 using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
+using EnterpriseMaster.DesktopApp.Data.Services.OrdersService;
+using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
 using Microsoft.Extensions.Logging;
 
 namespace EnterpriseMaster.DesktopApp
@@ -36,6 +40,11 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<WhatsNewInfoService>();
             builder.Services.AddSingleton<EmployeeService>();
             builder.Services.AddSingleton<InventoryService>();
+            builder.Services.AddSingleton<ProductionService>();
+            builder.Services.AddSingleton<InvoicesMenuService>();
+            builder.Services.AddSingleton<OfferServices>();
+            builder.Services.AddSingleton<OrderService>();
+            builder.Services.AddSingleton<CustomerDataService>();
 
             // Db injection
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();
@@ -81,6 +90,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IOfferServices, OfferServices>();
             builder.Services.AddScoped<IInvoiceItemService, InvoiceItemService>();
             builder.Services.AddScoped<IProductionOrderService, ProductionOrderService>();
+            builder.Services.AddScoped<IProductionOrderStatusService, ProductionOrderStatusService>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

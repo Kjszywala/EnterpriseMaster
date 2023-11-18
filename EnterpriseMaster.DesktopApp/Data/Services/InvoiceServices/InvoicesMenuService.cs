@@ -3,7 +3,7 @@ using EnterpriseMaster.DbServices.Models.Database;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
 {
-    public class InvoiceService
+    public class InvoicesMenuService
     {
         #region Variables
 
@@ -22,7 +22,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
 
         #region Constructor
 
-        public InvoiceService(
+        public InvoicesMenuService(
             IErrorLogsServices _errorLogsServices,
             IInvoicesServices _invoicesServices,
             IInvoiceItemService _invoiceItemService,

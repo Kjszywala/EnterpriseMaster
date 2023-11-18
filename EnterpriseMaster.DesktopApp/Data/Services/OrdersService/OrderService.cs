@@ -15,6 +15,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
         private readonly IBillingAddressesServices billingAddressesServices;
         private readonly IShippersServices shippersServices;
         private readonly IShippingAddressesServices shippingAddressServices;
+        private readonly IProductionOrderService productionOrderService;
 
         #endregion
 
@@ -27,7 +28,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
             IEmployeesServices _employeeService, 
             IBillingAddressesServices _billingAddressesServices, 
             IShippersServices _shippersServices, 
-            IShippingAddressesServices _shippingAddressServices)
+            IShippingAddressesServices _shippingAddressServices,
+            IProductionOrderService _productionOrderService)
         {
             errorLogsServices = _errorLogsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -36,6 +38,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
             billingAddressesServices = _billingAddressesServices;
             shippersServices = _shippersServices;
             shippingAddressServices = _shippingAddressServices;
+            productionOrderService = _productionOrderService;
         }
 
         #endregion
@@ -382,6 +385,89 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
                 var address = (await shippingAddressServices.EditAsync(billingAddress.Id, billingAddress));
 
                 return address;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
+        #region Shippers
+
+        public async Task<List<Shippers>> GetAllShippersAsync()
+        {
+            try
+            {
+                var shippers = (await shippersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                return shippers;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<Shippers> GetShipperAsync(int id)
+        {
+            try
+            {
+                var shipper = (await shippersServices.GetAsync(id));
+
+                return shipper;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
+        #region ProductionOrders
+
+        public async Task<List<ProductionOrders>> GetAllProductionOrdersAsync()
+        {
+            try
+            {
+                var productionOrder = (await productionOrderService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                return productionOrder;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<ProductionOrders> GetProductionOrderAsync(int id)
+        {
+            try
+            {
+                var productionOrder = (await productionOrderService.GetAsync(id));
+
+                return productionOrder;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> AddProductionOrderAsync(ProductionOrders order)
+        {
+            try
+            {
+                var productionOrder = (await productionOrderService.AddAsync(order));
+
+                return productionOrder;
             }
             catch (Exception e)
             {
