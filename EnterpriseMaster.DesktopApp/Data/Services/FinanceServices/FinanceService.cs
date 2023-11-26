@@ -1,5 +1,7 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DesktopApp.Data.Models;
+using Microsoft.CodeAnalysis;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
 {
@@ -13,6 +15,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         private readonly IInvoicesServices invoicesServices;
         private readonly IPaymentServices paymentServices;
         private readonly IErrorLogsServices errorLogsServices;
+        private readonly IProductsServices productsServices;
 
         #endregion
 
@@ -24,7 +27,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             ISalesOrdersServices _salesOrdersServices, 
             IInvoicesServices _invoicesServices,
             IPaymentServices _paymentServices,
-            IErrorLogsServices _errorLogsServices)
+            IErrorLogsServices _errorLogsServices,
+            IProductsServices _productsServices)
         {
             paymentMethodsServices = _paymentMethodsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -32,6 +36,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             invoicesServices = _invoicesServices;
             paymentServices = _paymentServices;
             errorLogsServices = _errorLogsServices;
+            productsServices = _productsServices;
         }
 
         #endregion
@@ -39,6 +44,38 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         #region Variables
 
         #region paymentServices
+
+        public async Task<List<PaymentViewModel>> GetAllPaymentsForGridAsync()
+        {
+            try
+            {
+                var paymentList = (await paymentServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var paymentListViewModel = new List<PaymentViewModel>();
+
+                foreach (var item in paymentList)
+                {
+                    var salesOrder = (await salesOrdersServices.GetAsync(item.SalesOrdersId.Value));
+                    paymentListViewModel.Add(new PaymentViewModel
+                    {
+                        PaymentId = item.Id,
+                        InvoicesCode = (await invoicesServices.GetAsync(item.InvoicesId.Value)).InvoiceNumber,
+                        PaymentMethod = (await paymentMethodsServices.GetAsync(item.PaymentMethodId.Value)).PaymentType,
+                        PurchaseOrderCode = (await purchaseOrdersServices.GetAsync(item.PurchaseOrderId.Value)).PurchaseOrderNumber,
+                        SalesOrdersCode = salesOrder.SalesOrderNumber,
+                        TotalAmount = salesOrder.PricePaid,
+                        Product = (await productsServices.GetAsync( salesOrder.ProductId.Value)).ProductName,
+                        Quantity = salesOrder.Quantity
+                    });
+                }
+
+                return paymentListViewModel;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<List<Payments>> GetAllPaymentsAsync()
         {

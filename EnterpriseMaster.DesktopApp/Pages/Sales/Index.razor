@@ -1,9 +1,11 @@
 ﻿@page "/sales"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 @inherits MainLayout
-@inject OrderService orderService
+@inject SalesService orderService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -12,13 +14,13 @@
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="SalesOrders"
-                  @ref="gridSalesOrders"
+            <Grid TItem="OrderViewModel"
+                  @ref="gridOrderViewModel"
                   AllowFiltering="true"
                   AllowPaging="true"
                   AllowSorting="true"
                   AllowRowClick="true"
-                  DataProvider="SalesOrdersDataProvider"
+                  DataProvider="OrderViewModelDataProvider"
                   Class="table table-hover table-bordered table-striped"
                   FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                   HeaderRowCssClass="bg-dark text-white border-bottom-0"
@@ -28,29 +30,29 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="SalesOrders" HeaderText="Product Name" PropertyName="Product.ProductName">
-                    @context.Product.ProductName
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                    @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Product Code" PropertyName="Product.ProductCode">
-                    @context.Product.ProductCode
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                    @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Price Paid($)" PropertyName="PricePaid">
+                <GridColumn TItem="OrderViewModel" HeaderText="Price Paid($)" PropertyName="PricePaid">
                     @context.PricePaid
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Order Number" PropertyName="SalesOrderNumber">
-                    @context.SalesOrderNumber
+                <GridColumn TItem="OrderViewModel" HeaderText="Order Number" PropertyName="OrderNumber">
+                    @context.OrderNumber
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Payment Term" PropertyName="PaymentTerm">
+                <GridColumn TItem="OrderViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm">
                     @context.PaymentTerm
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity" PropertyName="Quantity">
                     @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Quantity Type" PropertyName="QuantityType">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity Type" PropertyName="QuantityType">
                     @context.QuantityType
                 </GridColumn>
-                <GridColumn TItem="SalesOrders" HeaderText="Delivery Date" PropertyName="DeliveryDate">
-                    @context.DeliveryDate
+                <GridColumn TItem="OrderViewModel" HeaderText="Delivery Date" PropertyName="Deliverydate">
+                    @context.Deliverydate
                 </GridColumn>
             </Grid>
         </Content>
@@ -80,19 +82,19 @@
 @code {
     protected async override void OnInitialized()
     {
-        salesOrders = await orderService.GetAllSalesOrdersAsync();
+        salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
 
-        await gridSalesOrders.RefreshDataAsync();
+        await gridOrderViewModel.RefreshDataAsync();
     }
 
-    #region SalesOrders
+    #region OrderViewModel
 
-    private List<SalesOrders> salesOrders = new List<SalesOrders>();
-    private Grid<SalesOrders> gridSalesOrders;
-    private async Task<GridDataProviderResult<SalesOrders>> SalesOrdersDataProvider(GridDataProviderRequest<SalesOrders> request)
+    private List<OrderViewModel> salesOrders = new List<OrderViewModel>();
+    private Grid<OrderViewModel> gridOrderViewModel;
+    private async Task<GridDataProviderResult<OrderViewModel>> OrderViewModelDataProvider(GridDataProviderRequest<OrderViewModel> request)
     {
         if (salesOrders is null) // pull employees only one time for client-side filtering, sorting, and paging
-            salesOrders = await orderService.GetAllSalesOrdersAsync(); // call a service or an API to pull the employees
+            salesOrders = await orderService.GetAllSalesOrdersForGridAsync(); // call a service or an API to pull the employees
 
         return await Task.FromResult(request.ApplyTo(salesOrders));
     }

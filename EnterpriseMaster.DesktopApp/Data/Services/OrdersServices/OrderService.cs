@@ -1,6 +1,7 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
 using EnterpriseMaster.DbServices.Services;
+using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
 {
@@ -16,6 +17,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         private readonly IShippersServices shippersServices;
         private readonly IShippingAddressesServices shippingAddressServices;
         private readonly IProductionOrderService productionOrderService;
+        private readonly IProductsServices productsServices;
+        private readonly IQuantityTypesServices quantityTypesServices;
 
         #endregion
 
@@ -29,7 +32,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             IBillingAddressesServices _billingAddressesServices, 
             IShippersServices _shippersServices, 
             IShippingAddressesServices _shippingAddressServices,
-            IProductionOrderService _productionOrderService)
+            IProductionOrderService _productionOrderService,
+            IQuantityTypesServices _quantityTypesServices,
+            IProductsServices _productsServices)
         {
             errorLogsServices = _errorLogsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -39,6 +44,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             shippersServices = _shippersServices;
             shippingAddressServices = _shippingAddressServices;
             productionOrderService = _productionOrderService;
+            productsServices = _productsServices;
+            quantityTypesServices = _quantityTypesServices;
         }
 
         #endregion
@@ -46,6 +53,37 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         #region Methods
 
         #region Purchase Orders
+
+        public async Task<List<OrderViewModel>> GetAllPurchaseOrdersForGridAsync()
+        {
+            try
+            {
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                var orderViewModelList = new List<OrderViewModel>();
+                foreach (var item in purchaseOrders)
+                {
+                    orderViewModelList.Add(new OrderViewModel
+                    {
+                        Deliverydate = item.DeliveryDate,
+                        OrderNumber = item.PurchaseOrderNumber,
+                        PaymentTerm = item.PaymentTerm,
+                        PricePaid = item.PricePaid,
+                        ProductCode = (await productsServices.GetAsync(item.ProductId.Value)).ProductCode,
+                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName,
+                        Quantity = item.Quantity,
+                        QuantityType = (await quantityTypesServices.GetAsync(item.QuantityTypeId.Value)).Type
+                    });
+                }
+
+                return orderViewModelList;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<List<PurchaseOrders>> GetAllPurchaseOrdersAsync()
         {

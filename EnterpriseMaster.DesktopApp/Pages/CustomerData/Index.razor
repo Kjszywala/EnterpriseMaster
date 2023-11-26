@@ -1,6 +1,7 @@
 ﻿@page "/customerdata"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
 @inherits MainLayout
 
@@ -13,13 +14,13 @@
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="CustomerInformation"
-                  @ref="gridCustomerInformation"
+            <Grid TItem="CustomerDataViewModel"
+                  @ref="gridCustomerDataViewModel"
                   AllowFiltering="true"
                   AllowPaging="true"
                   AllowSorting="true"
                   AllowRowClick="true"
-                  DataProvider="CustomerInformationDataProvider"
+                  DataProvider="CustomerDataViewModelDataProvider"
                   Class="table table-hover table-bordered table-striped"
                   FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                   HeaderRowCssClass="bg-dark text-white border-bottom-0"
@@ -29,20 +30,20 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="CustomerInformation" HeaderText="First Name" PropertyName="FirstName">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="First Name" PropertyName="FirstName">
                     @context.FirstName
                 </GridColumn>
-                <GridColumn TItem="CustomerInformation" HeaderText="Last Name" PropertyName="LastName">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Last Name" PropertyName="LastName">
                     @context.LastName
                 </GridColumn>
-                <GridColumn TItem="CustomerInformation" HeaderText="Email" PropertyName="Email">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Email" PropertyName="Email">
                     @context.Email
                 </GridColumn>
-                <GridColumn TItem="CustomerInformation" HeaderText="Phone" PropertyName="Phone">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Phone" PropertyName="Phone">
                     @context.Phone
                 </GridColumn>
-                <GridColumn TItem="CustomerInformation" HeaderText="Company Name" PropertyName="Name">
-                    @context.Company.Name
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Company Name" PropertyName="ComapnyName">
+                    @context.ComapnyName
                 </GridColumn>
             </Grid>
         </Content>
@@ -71,19 +72,19 @@
 @code {
     protected async override void OnInitialized()
     {
-        customerInformation = await customerService.GetAllCustomerInformationAsync();
+        customerInformation = await customerService.GetAllCustomerInformationForGridAsync();
 
-        await gridCustomerInformation.RefreshDataAsync();
+        await gridCustomerDataViewModel.RefreshDataAsync();
     }
 
-    #region CustomerInformation
+    #region CustomerDataViewModel
 
-    private List<CustomerInformation> customerInformation = new List<CustomerInformation>();
-    private Grid<CustomerInformation> gridCustomerInformation;
-    private async Task<GridDataProviderResult<CustomerInformation>> CustomerInformationDataProvider(GridDataProviderRequest<CustomerInformation> request)
+    private List<CustomerDataViewModel> customerInformation = new List<CustomerDataViewModel>();
+    private Grid<CustomerDataViewModel> gridCustomerDataViewModel;
+    private async Task<GridDataProviderResult<CustomerDataViewModel>> CustomerDataViewModelDataProvider(GridDataProviderRequest<CustomerDataViewModel> request)
     {
         if (customerInformation is null)
-            customerInformation = await customerService.GetAllCustomerInformationAsync();
+            customerInformation = await customerService.GetAllCustomerInformationForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(customerInformation));
     }

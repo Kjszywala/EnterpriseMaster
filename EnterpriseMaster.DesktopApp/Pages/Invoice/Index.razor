@@ -1,6 +1,7 @@
 ﻿@page "/invoices"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices;
 @inherits MainLayout
 @inject InvoicesMenuService invoiceService
@@ -8,17 +9,17 @@
 <Tabs EnableFadeEffect="true">
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Diagram3" /> Invoices
+            <Icon Name="IconName.Diagram3" /> InvoiceViewModel
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="Invoices"
-                  @ref="gridInvoices"
+            <Grid TItem="InvoiceViewModel"
+                  @ref="gridInvoiceViewModel"
                   AllowFiltering="true"
                   AllowPaging="true"
                   AllowSorting="true"
                   AllowRowClick="true"
-                  DataProvider="InvoicesDataProvider"
+                  DataProvider="InvoiceViewModelDataProvider"
                   Class="table table-hover table-bordered table-striped"
                   FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                   HeaderRowCssClass="bg-dark text-white border-bottom-0"
@@ -28,26 +29,26 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="Invoices" HeaderText="CustomerInformation.Email" PropertyName="CustomerInformation.Email">
-                    @context.CustomerInformation.Email
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                    @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="Invoices" HeaderText="Product Name" PropertyName="ProductName">
-                    @context.SalesOrder.Product.ProductName
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                    @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="Invoices" HeaderText="Product Code" PropertyName="ProductCode">
-                    @context.SalesOrder.Product.ProductCode
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Email" PropertyName="Email">
+                    @context.Email
                 </GridColumn>
-                <GridColumn TItem="Invoices" HeaderText="Quantity" PropertyName="Quantity">
-                    @context.SalesOrder.Quantity
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Quantity" PropertyName="Quantity">
+                    @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="Invoices" HeaderText="Total Amount" PropertyName="TotalAmount">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Order Date" PropertyName="OrderDate">
+                    @context.OrderDate
+                </GridColumn>
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Discount" PropertyName="Discount">
+                    @context.Discount
+                </GridColumn>
+                <GridColumn TItem="InvoiceViewModel" HeaderText="TotalAmount" PropertyName="TotalAmount">
                     @context.TotalAmount
-                </GridColumn>
-                <GridColumn TItem="Invoices" HeaderText="Discount" PropertyName="Discount">
-                    @context.SalesOrder.Discount
-                </GridColumn>
-                <GridColumn TItem="Invoices" HeaderText="Order Date" PropertyName="OrderDate">
-                    @context.SalesOrder.OrderDate
                 </GridColumn>
             </Grid>
         </Content>
@@ -77,19 +78,19 @@
 @code {
     protected async override void OnInitialized()
     {
-        invoices = await invoiceService.GetAllInvoicesAsync();
+        invoices = await invoiceService.GetAllInvoicesForGridAsync();
 
-        await gridInvoices.RefreshDataAsync();
+        await gridInvoiceViewModel.RefreshDataAsync();
     }
 
-    #region InvoicesRegion
+    #region InvoiceViewModelRegion
 
-    private List<Invoices> invoices = new List<Invoices>();
-    private Grid<Invoices> gridInvoices;
-    private async Task<GridDataProviderResult<Invoices>> InvoicesDataProvider(GridDataProviderRequest<Invoices> request)
+    private List<InvoiceViewModel> invoices = new List<InvoiceViewModel>();
+    private Grid<InvoiceViewModel> gridInvoiceViewModel;
+    private async Task<GridDataProviderResult<InvoiceViewModel>> InvoiceViewModelDataProvider(GridDataProviderRequest<InvoiceViewModel> request)
     {
         if (invoices is null)
-            invoices = await invoiceService.GetAllInvoicesAsync();
+            invoices = await invoiceService.GetAllInvoicesForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(invoices));
     }

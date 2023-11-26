@@ -1,5 +1,6 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices
 {
@@ -45,6 +46,33 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices
         #region Methods
 
         #region informationServices
+
+        public async Task<List<CustomerDataViewModel>> GetAllCustomerInformationForGridAsync()
+        {
+            try
+            {
+                var customers = (await informationServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var list = new List<CustomerDataViewModel>();
+                foreach (var customer in customers)
+                {
+                    list.Add(new CustomerDataViewModel
+                    {
+                        ComapnyName = customer.CompanyName,
+                        Email = customer.Email,
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        Phone = customer.Phone
+                    });
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
 
         public async Task<List<CustomerInformation>> GetAllCustomerInformationAsync()
         {

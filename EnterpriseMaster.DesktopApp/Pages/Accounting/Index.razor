@@ -28,7 +28,7 @@
                 PaginationItemsTextFormat="{0} - {1} of {2} pages"
                 ItemsPerPageText="Items per page"
                 Responsive="true">
-                <GridColumn TItem="Employees" HeaderText="First Name" Filterable="false">
+                <GridColumn TItem="Employees" HeaderText="First Name" PropertyName="FirstName">
                     @context.FirstName
                 </GridColumn>
                 <GridColumn TItem="Employees" HeaderText="Last Name" PropertyName="LastName">

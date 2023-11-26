@@ -1,5 +1,7 @@
-﻿using EnterpriseMaster.DbServices.Interfaces;
+﻿using BlazorBootstrap;
+using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
 {
@@ -17,6 +19,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         private readonly ISalesOrdersServices salesOrdersServices;
         private readonly IBillingAddressesServices billingAddressesServices;
         private readonly IShippingAddressesServices shippingAddressesServices;
+        private readonly IProductsServices productsServices;
 
         #endregion
 
@@ -32,7 +35,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
             IPurchaseOrdersServices _purchaseOrdersServices,
             ISalesOrdersServices _salesOrdersServices,
             IBillingAddressesServices _billingAddressesServices,
-            IShippingAddressesServices _shippingAddressesServices)
+            IShippingAddressesServices _shippingAddressesServices,
+            IProductsServices _productsServices)
         {
             errorLogsServices = _errorLogsServices;
             invoicesServices = _invoicesServices;
@@ -44,13 +48,47 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
             salesOrdersServices = _salesOrdersServices;
             billingAddressesServices = _billingAddressesServices;
             shippingAddressesServices = _shippingAddressesServices;
+            productsServices = _productsServices;
         }
 
         #endregion
 
         #region Methods
-
+      
         #region invoicesServices
+
+        public async Task<List<InvoiceViewModel>> GetAllInvoicesForGridAsync()
+        {
+            try
+            {
+                var invoices = (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                var invoiceViewModel = new List<InvoiceViewModel>();
+
+                foreach (var invoice in invoices)
+                {
+                    var item = (await invoiceItemService.GetAsync(invoice.InvoiceItemId.Value));
+                    invoiceViewModel.Add(new InvoiceViewModel
+                    {
+                        Email = (await customerInformationsServices.GetAsync(invoice.CustomerInformationId.Value)).Email,
+                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName,
+                        ProductCode = (await productsServices.GetAsync(item.ProductId.Value)).ProductCode,
+                        Discount = (await salesOrdersServices.GetAsync(invoice.SalesOrderId.Value)).Discount,
+                        Quantity = (await salesOrdersServices.GetAsync(invoice.SalesOrderId.Value)).Quantity,
+                        OrderDate = (await salesOrdersServices.GetAsync(invoice.SalesOrderId.Value)).OrderDate,
+                        TotalAmount = (await salesOrdersServices.GetAsync(invoice.SalesOrderId.Value)).PricePaid
+                    });
+
+                }
+
+                return invoiceViewModel;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<List<Invoices>> GetAllInvoicesAsync()
         {

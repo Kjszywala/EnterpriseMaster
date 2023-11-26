@@ -1,6 +1,7 @@
 ﻿@page "/orders"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @inherits MainLayout
 @inject OrderService orderService
@@ -12,13 +13,13 @@
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="PurchaseOrders"
-                  @ref="gridPurchaseOrders"
+            <Grid TItem="OrderViewModel"
+                  @ref="gridOrderViewModel"
                   AllowFiltering="true"
                   AllowPaging="true"
                   AllowSorting="true"
                   AllowRowClick="true"
-                  DataProvider="PurchaseOrdersDataProvider"
+                  DataProvider="OrderViewModelDataProvider"
                   Class="table table-hover table-bordered table-striped"
                   FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                   HeaderRowCssClass="bg-dark text-white border-bottom-0"
@@ -28,29 +29,29 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="PurchaseOrders" HeaderText="Product Name" PropertyName="Product.ProductName">
-                    @context.Product.ProductName
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                    @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Product Code" PropertyName="Product.ProductCode">
-                    @context.Product.ProductCode
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                    @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Price Paid($)" PropertyName="PricePaid">
+                <GridColumn TItem="OrderViewModel" HeaderText="Price Paid($)" PropertyName="PricePaid">
                     @context.PricePaid
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Order Number" PropertyName="PurchaseOrderNumber">
-                    @context.PurchaseOrderNumber
+                <GridColumn TItem="OrderViewModel" HeaderText="Order Number" PropertyName="OrderNumber">
+                    @context.OrderNumber
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Payment Term" PropertyName="PaymentTerm">
+                <GridColumn TItem="OrderViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm">
                     @context.PaymentTerm
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity" PropertyName="Quantity">
                     @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Quantity Type" PropertyName="QuantityType">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity Type" PropertyName="QuantityType">
                     @context.QuantityType
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrders" HeaderText="Delivery Date" PropertyName="DeliveryDate">
-                    @context.DeliveryDate
+                <GridColumn TItem="OrderViewModel" HeaderText="Delivery Date" PropertyName="Deliverydate">
+                    @context.Deliverydate
                 </GridColumn>
             </Grid>
         </Content>
@@ -81,19 +82,19 @@
 
     protected async override void OnInitialized()
     {
-        purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+        purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
 
-        await gridPurchaseOrders.RefreshDataAsync();
+        await gridOrderViewModel.RefreshDataAsync();
     }
 
-    #region PurchaseOrders
+    #region OrderViewModel
 
-    private List<PurchaseOrders> purchaseOrders = new List<PurchaseOrders>();
-    private Grid<PurchaseOrders> gridPurchaseOrders;
-    private async Task<GridDataProviderResult<PurchaseOrders>> PurchaseOrdersDataProvider(GridDataProviderRequest<PurchaseOrders> request)
+    private List<OrderViewModel> purchaseOrders = new List<OrderViewModel>();
+    private Grid<OrderViewModel> gridOrderViewModel;
+    private async Task<GridDataProviderResult<OrderViewModel>> OrderViewModelDataProvider(GridDataProviderRequest<OrderViewModel> request)
     {
-        if (purchaseOrders is null) // pull employees only one time for client-side filtering, sorting, and paging
-            purchaseOrders = await orderService.GetAllPurchaseOrdersAsync(); // call a service or an API to pull the employees
+        if (purchaseOrders is null) 
+            purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync(); 
 
         return await Task.FromResult(request.ApplyTo(purchaseOrders));
     }

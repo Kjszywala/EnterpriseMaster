@@ -1,6 +1,7 @@
 ﻿@page "/finance"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
 @inherits MainLayout
 @inject FinanceService financeService
@@ -12,7 +13,7 @@
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="Payments"
+            <Grid TItem="PaymentViewModel"
                   @ref="gridPayments"
                   AllowFiltering="true"
                   AllowPaging="true"
@@ -28,26 +29,23 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="Payments" HeaderText="Payment Method" PropertyName="PaymentType">
-                    @context.PaymentMethod.PaymentType
+                <GridColumn TItem="PaymentViewModel" HeaderText="Payment Method" PropertyName="PaymentMethod">
+                    @context.PaymentMethod
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Product Name" PropertyName="ProductName">
-                    @context.SalesOrder.Product.ProductName
+                <GridColumn TItem="PaymentViewModel" HeaderText="Product" PropertyName="Product">
+                    @context.Product
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Product Code" PropertyName="ProductCode">
-                    @context.SalesOrder.Product.ProductCode
+                <GridColumn TItem="PaymentViewModel" HeaderText="Order Code" PropertyName="SalesOrdersCode">
+                    @context.SalesOrdersCode
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Quantity" PropertyName="Quantity">
-                    @context.SalesOrder.Quantity
+                <GridColumn TItem="PaymentViewModel" HeaderText="Invoices Code" PropertyName="InvoicesCode">
+                    @context.InvoicesCode
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Total Amount" PropertyName="TotalAmount">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Quantity" PropertyName="Quantity">
+                    @context.Quantity
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Price Paid" PropertyName="TotalAmount">
                     @context.TotalAmount
-                </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Discount" PropertyName="Discount">
-                    @context.SalesOrder.Discount
-                </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Order Date" PropertyName="OrderDate">
-                    @context.SalesOrder.OrderDate
                 </GridColumn>
             </Grid>
         </Content>
@@ -77,19 +75,19 @@
 @code {
     protected async override void OnInitialized()
     {
-        payments = await financeService.GetAllPaymentsAsync();
+        payments = await financeService.GetAllPaymentsForGridAsync();
 
         await gridPayments.RefreshDataAsync();
     }
 
     #region Payments
 
-    private List<Payments> payments = new List<Payments>();
-    private Grid<Payments> gridPayments;
-    private async Task<GridDataProviderResult<Payments>> PaymentsDataProvider(GridDataProviderRequest<Payments> request)
+    private List<PaymentViewModel> payments = new List<PaymentViewModel>();
+    private Grid<PaymentViewModel> gridPayments;
+    private async Task<GridDataProviderResult<PaymentViewModel>> PaymentsDataProvider(GridDataProviderRequest<PaymentViewModel> request)
     {
         if (payments is null) 
-            payments = await financeService.GetAllPaymentsAsync();
+            payments = await financeService.GetAllPaymentsForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(payments));
     }
