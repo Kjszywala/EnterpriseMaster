@@ -13,5 +13,6 @@
         public static string Company;
         public static string EmployeeAccess;
         public static int? CompanyId;
+        public static byte[] UserImage;
     }
 }

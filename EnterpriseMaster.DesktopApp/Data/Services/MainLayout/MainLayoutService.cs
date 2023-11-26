@@ -1,5 +1,6 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
 {
@@ -26,11 +27,34 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.MainLayout
 
         #region Methods
 
-        public async Task<MainPages> GetMainPagesModel()
+        public async Task<MainPageViewModel> GetMainPagesModel()
         {
             try
             {
-                return (await mainPageServices.GetAllAsync()).FirstOrDefault();
+                var mainModel = (await mainPageServices.GetAllAsync()).FirstOrDefault();
+
+                var model = new MainPageViewModel
+                {
+                    Analytics = mainModel.Analytics,
+                    BasicPlan = mainModel.BasicPlan,
+                    EnterprisePlan = mainModel.EnterprisePlan,
+                    Logo = mainModel.Logo,
+                    MainImage = mainModel.MainImage,
+                    ProPlan = mainModel.ProPlan,
+                    Sales = mainModel.Sales,
+                    Warehouse = mainModel.Warehouse
+                };
+
+                if(Config.UserImage != null)
+                {
+                    model.UserImage = Config.UserImage;
+                }
+                else
+                {
+                    model.UserImage = model.BasicPlan;
+                }
+
+                return model;
             }
             catch (Exception e)
             {

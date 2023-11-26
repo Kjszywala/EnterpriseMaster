@@ -1,5 +1,6 @@
 ﻿@using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 @using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
 @inherits LayoutComponentBase
@@ -220,13 +221,16 @@ else
             <li>
                 <div class="profile-details">
                     <div class="profile-content">
-                        <!--<img src="image/profile.jpg" alt="profileImg">-->
+                        @if (mainPagesModel.UserImage != null)
+                        {
+                            <img src="data:image;base64,@Convert.ToBase64String(mainPagesModel.UserImage)">
+                        }
                     </div>
                     <div class="name-job">
                         <div class="profile_name">@Config.FirstName @Config.LastName</div>
                         <div class="job">@Config.Position</div>
                     </div>
-                    <i class='bx bx-log-out' @onclick="Logout"></i>
+                    <i class='bx bx-log-out' style="margin-right:15px;" @onclick="Logout"></i>
                 </div>
             </li>
         </ul>
@@ -252,7 +256,7 @@ else
     private string sidebarClass => isSidebarClosed ? "close" : "";
 
     private List<ArrowInfo> arrows = new List<ArrowInfo>();
-    private MainPages? mainPagesModel { get; set; } = new MainPages();
+    private MainPageViewModel? mainPagesModel { get; set; } = new MainPageViewModel();
 
     [Inject] protected PreloadService preloadService { get; set; }
 

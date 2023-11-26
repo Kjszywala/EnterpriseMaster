@@ -59,6 +59,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                     Config.Company = users.Where(item => item.Email == user.Email).FirstOrDefault().CompanyName;
                     Config.CompanyId = users.Where(item => item.Email == user.Email).FirstOrDefault().CompaniesId;
                     Config.EmployeeAccess = (await employeeAccessesServices.GetAllAsync()).Where(item => item.Id == currentEmployee.EmployeeAccessId).FirstOrDefault().Access;
+                    Config.UserImage = users.Where(item => item.Email == user.Email).FirstOrDefault().Image;
                 }
                 return isAuthenticated;
             }
