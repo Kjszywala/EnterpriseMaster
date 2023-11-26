@@ -172,6 +172,38 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
 
         #endregion
 
+        #region customerInformationsServices
+
+        public async Task<List<CustomerInformation>> GetAllCustomerInformatioAsync()
+        {
+            try
+            {
+                var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                return (await customerInformationsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<CustomerInformation> GetCustomerInformatioAsync(int id)
+        {
+            try
+            {
+                return (await customerInformationsServices.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
         #endregion
     }
 }

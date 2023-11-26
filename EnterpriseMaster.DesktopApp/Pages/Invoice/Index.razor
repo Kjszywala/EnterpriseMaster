@@ -1,24 +1,24 @@
-﻿@page "/finance"
+﻿@page "/invoices"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
-@using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices;
 @inherits MainLayout
-@inject FinanceService financeService
+@inject InvoicesMenuService invoiceService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.CurrencyDollar" /> Payments
+            <Icon Name="IconName.Diagram3" /> Invoices
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="Payments"
-                  @ref="gridPayments"
+            <Grid TItem="Invoices"
+                  @ref="gridInvoices"
                   AllowFiltering="true"
                   AllowPaging="true"
                   AllowSorting="true"
                   AllowRowClick="true"
-                  DataProvider="PaymentsDataProvider"
+                  DataProvider="InvoicesDataProvider"
                   Class="table table-hover table-bordered table-striped"
                   FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                   HeaderRowCssClass="bg-dark text-white border-bottom-0"
@@ -28,25 +28,25 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="Payments" HeaderText="Payment Method" PropertyName="PaymentType">
-                    @context.PaymentMethod.PaymentType
+                <GridColumn TItem="Invoices" HeaderText="CustomerInformation.Email" PropertyName="CustomerInformation.Email">
+                    @context.CustomerInformation.Email
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Product Name" PropertyName="ProductName">
+                <GridColumn TItem="Invoices" HeaderText="Product Name" PropertyName="ProductName">
                     @context.SalesOrder.Product.ProductName
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Product Code" PropertyName="ProductCode">
+                <GridColumn TItem="Invoices" HeaderText="Product Code" PropertyName="ProductCode">
                     @context.SalesOrder.Product.ProductCode
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="Invoices" HeaderText="Quantity" PropertyName="Quantity">
                     @context.SalesOrder.Quantity
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Total Amount" PropertyName="TotalAmount">
+                <GridColumn TItem="Invoices" HeaderText="Total Amount" PropertyName="TotalAmount">
                     @context.TotalAmount
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Discount" PropertyName="Discount">
+                <GridColumn TItem="Invoices" HeaderText="Discount" PropertyName="Discount">
                     @context.SalesOrder.Discount
                 </GridColumn>
-                <GridColumn TItem="Payments" HeaderText="Order Date" PropertyName="OrderDate">
+                <GridColumn TItem="Invoices" HeaderText="Order Date" PropertyName="OrderDate">
                     @context.SalesOrder.OrderDate
                 </GridColumn>
             </Grid>
@@ -54,17 +54,17 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Kanban" /> Expense Management
+            <Icon Name="IconName.Braces" /> Invoice Generation
         </TitleTemplate>
         <Content>
             <p class="mt-2">
                 <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
             </p>
         </Content>
-    </Tab> 
+    </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Flag" /> Financial Report
+            <Icon Name="IconName.Diagram2" /> Automated Invoicing
         </TitleTemplate>
         <Content>
             <p class="mt-2">
@@ -77,21 +77,21 @@
 @code {
     protected async override void OnInitialized()
     {
-        payments = await financeService.GetAllPaymentsAsync();
+        invoices = await invoiceService.GetAllInvoicesAsync();
 
-        await gridPayments.RefreshDataAsync();
+        await gridInvoices.RefreshDataAsync();
     }
 
-    #region Payments
+    #region InvoicesRegion
 
-    private List<Payments> payments = new List<Payments>();
-    private Grid<Payments> gridPayments;
-    private async Task<GridDataProviderResult<Payments>> PaymentsDataProvider(GridDataProviderRequest<Payments> request)
+    private List<Invoices> invoices = new List<Invoices>();
+    private Grid<Invoices> gridInvoices;
+    private async Task<GridDataProviderResult<Invoices>> InvoicesDataProvider(GridDataProviderRequest<Invoices> request)
     {
-        if (payments is null) 
-            payments = await financeService.GetAllPaymentsAsync();
+        if (invoices is null)
+            invoices = await invoiceService.GetAllInvoicesAsync();
 
-        return await Task.FromResult(request.ApplyTo(payments));
+        return await Task.FromResult(request.ApplyTo(invoices));
     }
 
     #endregion
