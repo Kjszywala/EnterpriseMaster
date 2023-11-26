@@ -23,8 +23,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public ProductionOrders? ProductionOrder { get; set; }
         public int? CompanyId { get; set; }
         public Companies? Companies { get; set; }
-        public int? PaymentId { get; set; }
-        public Payments? Payments { get; set; }
         public string RejectedReason { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }
@@ -33,5 +31,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public BillingAddresses? BillingAddress { get; set; }
         public List<Invoices>? Invoices { get; set; }
         public List<Returns>? Returns { get; set; }
+        public List<Payments>? Payments { get; set; }
     }
 }

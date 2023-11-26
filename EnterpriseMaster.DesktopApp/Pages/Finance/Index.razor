@@ -1,5 +1,6 @@
 ﻿@page "/finance"
 @using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
 @inherits MainLayout
 
 <Tabs EnableFadeEffect="true">
@@ -8,9 +9,48 @@
             <Icon Name="IconName.CurrencyDollar" /> Payments
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+          @*  <br />
+            <Grid TItem="Payments"
+                  @ref="gridPayments"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="PaymentsDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="Payments" HeaderText="Payment Method" PropertyName="PaymentMethod.PaymentType">
+                    @context.PaymentMethod.PaymentType
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Product Code" PropertyName="Product.ProductCode">
+                    @context.SalesOrders
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Price Paid($)" PropertyName="PricePaid">
+                    @context.PricePaid
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Order Number" PropertyName="PurchaseOrderNumber">
+                    @context.PurchaseOrderNumber
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Payment Term" PropertyName="PaymentTerm">
+                    @context.PaymentTerm
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Quantity" PropertyName="Quantity">
+                    @context.Quantity
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Quantity Type" PropertyName="QuantityType">
+                    @context.QuantityType
+                </GridColumn>
+                <GridColumn TItem="Payments" HeaderText="Delivery Date" PropertyName="DeliveryDate">
+                    @context.DeliveryDate
+                </GridColumn>
+            </Grid>*@
         </Content>
     </Tab>
     <Tab>

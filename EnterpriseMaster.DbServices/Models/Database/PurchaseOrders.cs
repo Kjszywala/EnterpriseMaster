@@ -23,12 +23,11 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public Companies? Companies { get; set; }
         public int? SupplierId { get; set; }
         public Suppliers? Supplier { get; set; }
-        public int? PaymentId { get; set; }
-        public Payments? Payments { get; set; }
         public string RejectedReason { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }
         public DateTime PaymentTerm { get; set; }
         public List<Invoices>? Invoices { get; set; }
+        public List<Payments>? Payments { get; set; }
     }
 }

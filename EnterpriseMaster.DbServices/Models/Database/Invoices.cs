@@ -21,8 +21,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public InvoiceStatuses? InvoiceStatus { get; set; }
         public int? CustomerInformationId { get; set; }
         public CustomerInformation? CustomerInformation { get; set; }
-        public int? PaymentId { get; set; }
-        public Payments? Payments { get; set; }
         public int? BillingAddressId { get; set; }
         public BillingAddresses? BillingAddress { get; set; }
         public int? ShippingAddressId { get; set; }
@@ -30,5 +28,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public DateTime DueDate { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalAmount { get; set; }
+        public List<Payments>? Payments { get; set; }
     }
 }

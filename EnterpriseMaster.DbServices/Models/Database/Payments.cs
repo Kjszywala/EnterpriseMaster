@@ -9,8 +9,11 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public decimal TotalAmount { get; set; }
         public int? PaymentMethodId { get; set; }
         public PaymentMethods? PaymentMethod { get; set; }
-        public List<PurchaseOrders>? PurchaseOrders { get; set;}
-        public List<Invoices>? Invoices { get; set;}
-        public List<SalesOrders>? SalesOrders { get; set;}
+        public int? PurchaseOrderId { get; set; }
+        public PurchaseOrders? PurchaseOrder { get; set; }
+        public int? InvoicesId { get; set; }
+        public Invoices? Invoice { get; set; }
+        public int? SalesOrdersId { get; set; }
+        public SalesOrders? SalesOrder { get; set; }
     }
 }
