@@ -21,6 +21,8 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public InvoiceStatuses? InvoiceStatus { get; set; }
         public int? CustomerInformationId { get; set; }
         public CustomerInformation? CustomerInformation { get; set; }
+        public int? PaymentId { get; set; }
+        public Payments? Payments { get; set; }
         public int? BillingAddressId { get; set; }
         public BillingAddresses? BillingAddress { get; set; }
         public int? ShippingAddressId { get; set; }

@@ -59,6 +59,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<DbServices.Models.Database.TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<Companies> Companies { get; set; }
         public virtual DbSet<CompanyAddress> CompanyAddress { get; set; }
+        public virtual DbSet<Payments> Payments { get; set; }
         public virtual DbSet<Refunds> Refunds { get; set; }
         public virtual DbSet<Returns> Returns { get; set; }
         public virtual DbSet<ReturnsStatuses> ReturnsStatuses { get; set; }

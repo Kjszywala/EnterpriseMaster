@@ -2,7 +2,7 @@
 using EnterpriseMaster.DbServices.Models.Database;
 using EnterpriseMaster.DbServices.Services;
 
-namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersService
+namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
 {
     public class OrderService
     {

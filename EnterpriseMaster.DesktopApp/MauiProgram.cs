@@ -10,7 +10,7 @@ using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 using EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices;
 using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
-using EnterpriseMaster.DesktopApp.Data.Services.OrdersService;
+using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
 using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 using Microsoft.Extensions.Logging;
@@ -98,6 +98,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IRefudsServices, RefundServices>();
             builder.Services.AddScoped<IReturnServices, ReturnServices>();
             builder.Services.AddScoped<IReturnStatusService, ReturnStatusService>();
+            builder.Services.AddScoped<IPaymentServices, PaymentServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
