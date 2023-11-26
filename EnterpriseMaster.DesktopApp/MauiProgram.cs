@@ -45,7 +45,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<InventoryService>();
             builder.Services.AddSingleton<ProductionService>();
             builder.Services.AddSingleton<InvoicesMenuService>();
-            builder.Services.AddSingleton<OfferServices>();
+            builder.Services.AddSingleton<EnterpriseMaster.DesktopApp.Data.Services.OffersServices.OfferServices>();
             builder.Services.AddSingleton<OrderService>();
             builder.Services.AddSingleton<CustomerDataService>();
             builder.Services.AddSingleton<AnalyticsService>();

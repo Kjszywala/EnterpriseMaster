@@ -1,5 +1,6 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
 {
@@ -33,6 +34,36 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         #region Methods
 
         #region Offers
+
+        public async Task<List<OffersViewModel>> GetAllOffersForGridAsync()
+        {
+            try
+            {
+                var offers = (await offerServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                var list = new List<OffersViewModel>();
+
+                foreach (var item in offers)
+                {
+                    list.Add(new OffersViewModel
+                    {
+                        AvailableFrom = item.AvailableFrom,
+                        AvailableTo = item.AvailableTo,
+                        Discount = item.Discount,
+                        OfferDescrition = item.OfferDescrition,
+                        OfferName = item.OfferName,
+                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName
+                    });
+                }
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<List<Offers>> GetAllOffersAsync()
         {

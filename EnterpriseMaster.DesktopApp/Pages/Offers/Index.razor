@@ -1,16 +1,67 @@
 ﻿@page "/offers"
 @using BlazorBootstrap
+@using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.OffersServices;
 @inherits MainLayout
+@inject OfferServices offerServices
 
 <Tabs EnableFadeEffect="true">
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.BuildingAdd" /> Create Offers
+            <Icon Name="IconName.BuildingAdd" /> Offers
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <Grid TItem="OffersViewModel"
+                  @ref="gridOffersViewModel"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="OffersViewModelDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="OffersViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="OffersViewModel" HeaderText="Offer Name" PropertyName="OfferName">
+                    @context.OfferName
+                </GridColumn>
+                <GridColumn TItem="OffersViewModel" HeaderText="Available From" PropertyName="AvailableFrom">
+                    @context.AvailableFrom
+                </GridColumn>
+                <GridColumn TItem="OffersViewModel" HeaderText="Available To" PropertyName="AvailableTo">
+                    @context.AvailableTo
+                </GridColumn>
+                <GridColumn TItem="OffersViewModel" HeaderText="Descrition" PropertyName="OfferDescrition">
+                    @context.OfferDescrition
+                </GridColumn>
+                <GridColumn TItem="OffersViewModel" HeaderText="Discount" PropertyName="Discount">
+                    @context.Discount
+                </GridColumn>
+            </Grid>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.People" /> Create Offers
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -18,22 +69,36 @@
             <Icon Name="IconName.BuildingExclamation" /> Offer Approval Workflow
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.People" /> Offer Collaboration
-        </TitleTemplate>
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
         </Content>
     </Tab>
 </Tabs>
 @code {
+    protected async override void OnInitialized()
+    {
+        customerInformation = await offerServices.GetAllOffersForGridAsync();
 
+        await gridOffersViewModel.RefreshDataAsync();
+    }
+
+    #region OffersViewModel
+
+    private List<OffersViewModel> customerInformation = new List<OffersViewModel>();
+    private Grid<OffersViewModel> gridOffersViewModel;
+    private async Task<GridDataProviderResult<OffersViewModel>> OffersViewModelDataProvider(GridDataProviderRequest<OffersViewModel> request)
+    {
+        if (customerInformation is null)
+            customerInformation = await offerServices.GetAllOffersForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(customerInformation));
+    }
+
+    #endregion
 }
