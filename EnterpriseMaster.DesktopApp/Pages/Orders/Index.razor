@@ -58,6 +58,94 @@
     </Tab>
     <Tab>
         <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Parts In Stock
+        </TitleTemplate>
+        <Content>
+            <br />
+            <Grid TItem="PartsViewModel"
+                  @ref="gridPartsViewModel"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="PartsViewModelDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="PartsViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="PartsViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                    @context.ProductCode
+                </GridColumn>
+                <GridColumn TItem="PartsViewModel" HeaderText="Description" PropertyName="Description">
+                    @context.Description
+                </GridColumn>
+                <GridColumn TItem="PartsViewModel" HeaderText="Part Name" PropertyName="PartName">
+                    @context.PartName
+                </GridColumn>
+                <GridColumn TItem="PartsViewModel" HeaderText="Quantity In Stock" PropertyName="QuantityInStock">
+                    @context.QuantityInStock
+                </GridColumn>
+                <GridColumn TItem="PartsViewModel" HeaderText="Unit Cost" PropertyName="UnitCost">
+                    @context.UnitCost
+                </GridColumn>
+            </Grid>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Parts Orders
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Add Parts
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Edit Parts
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
             <Icon Name="IconName.Kanban" /> Order Management
         </TitleTemplate>
         <Content>
@@ -107,6 +195,20 @@
             purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync(); 
 
         return await Task.FromResult(request.ApplyTo(purchaseOrders));
+    }
+
+    #endregion
+
+    #region Order Management
+
+    private List<PartsViewModel> parts = new List<PartsViewModel>();
+    private Grid<PartsViewModel> gridPartsViewModel;
+    private async Task<GridDataProviderResult<PartsViewModel>> PartsViewModelDataProvider(GridDataProviderRequest<PartsViewModel> request)
+    {
+        if (parts is null)
+            parts = await orderService.GetAllPartsForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(parts));
     }
 
     #endregion

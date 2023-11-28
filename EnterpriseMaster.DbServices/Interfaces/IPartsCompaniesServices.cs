@@ -2,7 +2,7 @@
 
 namespace EnterpriseMaster.DbServices.Interfaces
 {
-    public interface IProductPartsServices : IBaseServices<ProductParts>
+    public interface IPartsCompaniesServices : IBaseServices<PartsCompanies>
     {
     }
 }

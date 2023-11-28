@@ -102,6 +102,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IReturnServices, ReturnServices>();
             builder.Services.AddScoped<IReturnStatusService, ReturnStatusService>();
             builder.Services.AddScoped<IPaymentServices, PaymentServices>();
+            builder.Services.AddScoped<IPartsServices, PartsServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

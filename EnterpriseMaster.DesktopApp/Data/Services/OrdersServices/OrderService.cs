@@ -1,6 +1,5 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
-using EnterpriseMaster.DbServices.Services;
 using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
@@ -18,6 +17,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         private readonly IShippingAddressesServices shippingAddressServices;
         private readonly IProductionOrderService productionOrderService;
         private readonly IProductsServices productsServices;
+        private readonly IPartsServices partsServices;
         private readonly IQuantityTypesServices quantityTypesServices;
 
         #endregion
@@ -34,7 +34,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             IShippingAddressesServices _shippingAddressServices,
             IProductionOrderService _productionOrderService,
             IQuantityTypesServices _quantityTypesServices,
-            IProductsServices _productsServices)
+            IProductsServices _productsServices,
+            IPartsServices _partsServices)
         {
             errorLogsServices = _errorLogsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -46,11 +47,123 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             productionOrderService = _productionOrderService;
             productsServices = _productsServices;
             quantityTypesServices = _quantityTypesServices;
+            partsServices = _partsServices;
         }
 
         #endregion
 
         #region Methods
+
+        #region PartsServices
+
+        public async Task<List<PartsViewModel>> GetAllPartsForGridAsync()
+        {
+            try
+            {
+                var parts = (await partsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                var partsViewModel = new List<PartsViewModel>();
+                foreach (var item in parts)
+                {
+                    partsViewModel.Add(new PartsViewModel
+                    {
+                        Description = item.Description,
+                        PartName = item.PartName,
+                        ProductCode = (await productsServices.GetAsync(item.ProductsId.Value)).ProductCode,
+                        ProductName = (await productsServices.GetAsync(item.ProductsId.Value)).ProductName,
+                        QuantityInStock = item.QuantityInStock,
+                        UnitCost = item.UnitCost,
+                        NeedToBuild = (await partsServices.GetAllAsync())
+                                        .Where(item2 => item2.ProductsId == item.ProductsId)
+                                        .Sum(item2 => item2.ProductsId)
+                    });
+                }
+
+                return partsViewModel;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<Parts>> GetAllPartsAsync()
+        {
+            try
+            {
+                var parts = (await partsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+                return parts;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<Parts> GetPartsAsync(int id)
+        {
+            try
+            {
+                var parts = (await partsServices.GetAsync(id));
+
+                return parts;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> RemovePartsAsync(int id)
+        {
+            try
+            {
+                var parts = (await partsServices.RemoveAsync(id));
+
+                return parts;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> AddPartsAsync(Parts part)
+        {
+            try
+            {
+                var parts = (await partsServices.AddAsync(part));
+
+                return parts;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> UpdatePartsAsync(Parts part)
+        {
+            try
+            {
+                var parts = (await partsServices.EditAsync(part.Id, part));
+
+                return parts;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
 
         #region Purchase Orders
 

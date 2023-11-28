@@ -4,6 +4,7 @@ using EnterpriseMaster.DbServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriseMaster.DbServices.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231128200555_PartsCorrections")]
+    partial class PartsCorrections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1183,9 +1186,6 @@ namespace EnterpriseMaster.DbServices.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PartsCompaniesId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ProductsId")
                         .HasColumnType("int");
 
@@ -1200,52 +1200,9 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartsCompaniesId");
-
                     b.HasIndex("ProductsId");
 
                     b.ToTable("Parts");
-                });
-
-            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.PartsCompanies", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PartsCompanies");
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.PaymentMethods", b =>
@@ -2700,15 +2657,9 @@ namespace EnterpriseMaster.DbServices.Migrations
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Parts", b =>
                 {
-                    b.HasOne("EnterpriseMaster.DbServices.Models.Database.PartsCompanies", "PartsCompanies")
-                        .WithMany("Parts")
-                        .HasForeignKey("PartsCompaniesId");
-
                     b.HasOne("EnterpriseMaster.DbServices.Models.Database.Products", "Products")
                         .WithMany("Parts")
                         .HasForeignKey("ProductsId");
-
-                    b.Navigation("PartsCompanies");
 
                     b.Navigation("Products");
                 });
@@ -3058,11 +3009,6 @@ namespace EnterpriseMaster.DbServices.Migrations
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Orders", b =>
                 {
                     b.Navigation("Invoices");
-                });
-
-            modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.PartsCompanies", b =>
-                {
-                    b.Navigation("Parts");
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.PaymentMethods", b =>
