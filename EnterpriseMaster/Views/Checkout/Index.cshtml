@@ -256,10 +256,12 @@
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
+                    alert('@(TempData["Success"] = "Congratulations! You can now download software from the Downloads section.")');
                     // Request was successful, you can handle the response here if needed
                     window.location.href = "@Url.Action("Index", "Downloads")";
                 }
                 else {
+                    alert('@(TempData["Danger"] = "Something went wrong!")');
                     // Handle error responses
                     window.location.href = "@Url.Action("Index", "Home")";
                 }

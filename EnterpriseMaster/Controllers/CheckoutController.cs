@@ -119,7 +119,7 @@ namespace EnterpriseMaster.Controllers
                     TempData["Danger"] = "Something went wrong. Please try again.";
                 }
 
-                return RedirectToAction("Index", "Home");
+                return View("Index", "Home");
             }
             catch (Exception e)
             {
