@@ -19,6 +19,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         private readonly IProductsServices productsServices;
         private readonly IPartsServices partsServices;
         private readonly IQuantityTypesServices quantityTypesServices;
+        private readonly ISuppliersServices suppliersServices;
+        private readonly ISuppliersAddressesServices suppliersAddressesServices;
 
         #endregion
 
@@ -35,7 +37,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             IProductionOrderService _productionOrderService,
             IQuantityTypesServices _quantityTypesServices,
             IProductsServices _productsServices,
-            IPartsServices _partsServices)
+            IPartsServices _partsServices,
+            ISuppliersAddressesServices _suppliersAddressesServices,
+            ISuppliersServices _suppliersServices)
         {
             errorLogsServices = _errorLogsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -48,6 +52,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             productsServices = _productsServices;
             quantityTypesServices = _quantityTypesServices;
             partsServices = _partsServices;
+            suppliersAddressesServices = _suppliersAddressesServices;
+            suppliersServices = _suppliersServices;
         }
 
         #endregion
@@ -579,6 +585,119 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         }
 
         #endregion
+
+        //#region Supplier Address
+
+        //public async Task<List<ShippingAddresses>> GetAllShippingAddressesAsync()
+        //{
+        //    try
+        //    {
+        //        var addresses = (await shippingAddressServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+        //        return addresses;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //public async Task<ShippingAddresses> GetShippingAddressAsync(int id)
+        //{
+        //    try
+        //    {
+        //        var address = (await shippingAddressServices.GetAsync(id));
+
+        //        return address;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //public async Task<bool> RemoveShippingAddressAsync(int id)
+        //{
+        //    try
+        //    {
+        //        var salesOrder = (await shippingAddressServices.RemoveAsync(id));
+
+        //        return salesOrder;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //public async Task<bool> AddShippingAddressAsync(ShippingAddresses billingAddress)
+        //{
+        //    try
+        //    {
+        //        var address = (await shippingAddressServices.AddAsync(billingAddress));
+
+        //        return address;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //public async Task<bool> UpdateShippingAddressAsync(ShippingAddresses billingAddress)
+        //{
+        //    try
+        //    {
+        //        var address = (await shippingAddressServices.EditAsync(billingAddress.Id, billingAddress));
+
+        //        return address;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //#endregion
+
+        //#region Suppliers
+
+        //public async Task<List<Shippers>> GetAllShippersAsync()
+        //{
+        //    try
+        //    {
+        //        var shippers = (await shippersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+
+        //        return shippers;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //public async Task<Shippers> GetShipperAsync(int id)
+        //{
+        //    try
+        //    {
+        //        var shipper = (await shippersServices.GetAsync(id));
+
+        //        return shipper;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+        //        throw new Exception(e.Message, e);
+        //    }
+        //}
+
+        //#endregion
 
         #region ProductionOrders
 

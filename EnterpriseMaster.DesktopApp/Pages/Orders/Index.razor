@@ -146,6 +146,36 @@
     </Tab>
     <Tab>
         <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Add Supplier
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Edit Supplier
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
             <Icon Name="IconName.Kanban" /> Order Management
         </TitleTemplate>
         <Content>
@@ -211,6 +241,21 @@
         return await Task.FromResult(request.ApplyTo(parts));
     }
 
+    #endregion
+
+    #region Parts Orders
+    #endregion
+
+    #region Add Parts
+    #endregion
+
+    #region Edit Parts
+    #endregion
+
+    #region Add Supplier
+    #endregion
+
+    #region Edit Supplier
     #endregion
 
     #region Order Management

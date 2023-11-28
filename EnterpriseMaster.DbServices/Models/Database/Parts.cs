@@ -8,7 +8,7 @@
         public int QuantityInStock { get; set; }
         public int? ProductsId { get; set; }
         public Products? Products { get; set; }
-        public int? PartsCompaniesId { get; set; }
-        public PartsCompanies? PartsCompanies { get; set; }
+        public int? SuppliersId { get; set; }
+        public Suppliers? Suppliers { get; set; }
     }
 }
