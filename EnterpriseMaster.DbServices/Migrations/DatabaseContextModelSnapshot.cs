@@ -59,7 +59,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AboutPage");
+                    b.ToTable("AboutPage", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ApplicationBookmarks", b =>
@@ -96,7 +96,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationBookmarks");
+                    b.ToTable("ApplicationBookmarks", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ApplicationFeatures", b =>
@@ -139,7 +139,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SubscriptionTypeId");
 
-                    b.ToTable("ApplicationFeatures");
+                    b.ToTable("ApplicationFeatures", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.BasicPlanPage", b =>
@@ -191,7 +191,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BasicPlanPage");
+                    b.ToTable("BasicPlanPage", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.BillingAddresses", b =>
@@ -240,7 +240,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BillingAddresses");
+                    b.ToTable("BillingAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.CaseStatus", b =>
@@ -272,7 +272,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CaseStatus");
+                    b.ToTable("CaseStatus", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Categories", b =>
@@ -307,7 +307,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Companies", b =>
@@ -355,7 +355,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("CompanyAddressId");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.CompanyAddress", b =>
@@ -404,7 +404,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CompanyAddress");
+                    b.ToTable("CompanyAddress", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.CustomerAddresses", b =>
@@ -453,7 +453,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomerAddresses");
+                    b.ToTable("CustomerAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.CustomerInformation", b =>
@@ -521,7 +521,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ShippingAddressId");
 
-                    b.ToTable("CustomerInformation");
+                    b.ToTable("CustomerInformation", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.EmployeeAccesses", b =>
@@ -553,7 +553,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmployeeAccesses");
+                    b.ToTable("EmployeeAccesses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.EmployeeAddresses", b =>
@@ -602,7 +602,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmployeeAddresses");
+                    b.ToTable("EmployeeAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Employees", b =>
@@ -682,7 +682,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.EnterprisePlan", b =>
@@ -726,7 +726,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EnterprisePlan");
+                    b.ToTable("EnterprisePlan", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ErrorLogs", b =>
@@ -748,7 +748,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ErrorLogs");
+                    b.ToTable("ErrorLogs", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.FxRates", b =>
@@ -791,7 +791,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FxRates");
+                    b.ToTable("FxRates", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.InvoiceItem", b =>
@@ -830,7 +830,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("InvoiceItem");
+                    b.ToTable("InvoiceItem", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.InvoiceStatuses", b =>
@@ -862,7 +862,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InvoiceStatuses");
+                    b.ToTable("InvoiceStatuses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Invoices", b =>
@@ -948,7 +948,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ShippingAddressId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.MainPages", b =>
@@ -1008,7 +1008,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MainPages");
+                    b.ToTable("MainPages", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Offers", b =>
@@ -1058,7 +1058,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.OrderStatuses", b =>
@@ -1092,7 +1092,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatuses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Orders", b =>
@@ -1152,7 +1152,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("QuantityTypeId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Parts", b =>
@@ -1204,7 +1204,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SuppliersId");
 
-                    b.ToTable("Parts");
+                    b.ToTable("Parts", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.PaymentMethods", b =>
@@ -1239,7 +1239,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Payments", b =>
@@ -1290,7 +1290,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SalesOrdersId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ProductionOrderStatus", b =>
@@ -1322,7 +1322,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductionOrderStatus");
+                    b.ToTable("ProductionOrderStatus", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ProductionOrders", b =>
@@ -1369,7 +1369,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ProductionOrderStatusId");
 
-                    b.ToTable("ProductionOrders");
+                    b.ToTable("ProductionOrders", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Products", b =>
@@ -1438,7 +1438,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("QuantityTypeId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ProfessionalPlanPage", b =>
@@ -1482,7 +1482,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProfessionalPlanPage");
+                    b.ToTable("ProfessionalPlanPage", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.PurchaseOrders", b =>
@@ -1579,7 +1579,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("PurchaseOrders");
+                    b.ToTable("PurchaseOrders", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.QuantityTypes", b =>
@@ -1611,7 +1611,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QuantityTypes");
+                    b.ToTable("QuantityTypes", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Refunds", b =>
@@ -1659,7 +1659,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ReturnId");
 
-                    b.ToTable("Refunds");
+                    b.ToTable("Refunds", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Returns", b =>
@@ -1704,7 +1704,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SalesOrdersId");
 
-                    b.ToTable("Returns");
+                    b.ToTable("Returns", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ReturnsStatuses", b =>
@@ -1736,7 +1736,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReturnsStatuses");
+                    b.ToTable("ReturnsStatuses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.SaleCart", b =>
@@ -1764,7 +1764,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SubscriptionTypesId");
 
-                    b.ToTable("SaleCart");
+                    b.ToTable("SaleCart", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.SalesOrders", b =>
@@ -1866,7 +1866,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ShippingAddressesId");
 
-                    b.ToTable("SalesOrders");
+                    b.ToTable("SalesOrders", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Shippers", b =>
@@ -1916,7 +1916,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("ShippersAddressId");
 
-                    b.ToTable("Shippers");
+                    b.ToTable("Shippers", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ShippersAddresses", b =>
@@ -1965,7 +1965,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippersAddresses");
+                    b.ToTable("ShippersAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ShippingAddresses", b =>
@@ -2014,7 +2014,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingAddresses");
+                    b.ToTable("ShippingAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.SubscriptionOrders", b =>
@@ -2047,7 +2047,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("SubscriptionOrders");
+                    b.ToTable("SubscriptionOrders", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.SubscriptionTypes", b =>
@@ -2088,7 +2088,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionTypes");
+                    b.ToTable("SubscriptionTypes", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Suppliers", b =>
@@ -2138,7 +2138,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("SupplierAddressId");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.SuppliersAddresses", b =>
@@ -2187,7 +2187,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SuppliersAddresses");
+                    b.ToTable("SuppliersAddresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.SupportCases", b =>
@@ -2229,7 +2229,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SupportCases");
+                    b.ToTable("SupportCases", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.TaskStatus", b =>
@@ -2261,7 +2261,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskStatus");
+                    b.ToTable("TaskStatus", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Tasks", b =>
@@ -2316,7 +2316,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("TaskStatusId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.Users", b =>
@@ -2394,7 +2394,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasIndex("UserAddressId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.UsersAdresses", b =>
@@ -2449,7 +2449,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UsersAdresses");
+                    b.ToTable("UsersAdresses", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.WhatsNew", b =>
@@ -2483,7 +2483,7 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WhatsNew");
+                    b.ToTable("WhatsNew", (string)null);
                 });
 
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.ApplicationFeatures", b =>

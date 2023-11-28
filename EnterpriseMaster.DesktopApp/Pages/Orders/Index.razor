@@ -58,6 +58,21 @@
     </Tab>
     <Tab>
         <TitleTemplate>
+            <Icon Name="IconName.Kanban" /> Parts Orders
+        </TitleTemplate>
+        <Content>
+            <br />
+            <div class="container">
+                <div class="left-panel">1</div>
+                <div class="right-panel">
+                    <div class="top-right">2</div>
+                    <div class="bottom-right">3</div>
+                </div>
+            </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
             <Icon Name="IconName.Kanban" /> Parts In Stock
         </TitleTemplate>
         <Content>
@@ -101,21 +116,6 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Kanban" /> Parts Orders
-        </TitleTemplate>
-        <Content>
-            <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
-                </div>
-            </div>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
             <Icon Name="IconName.Kanban" /> Add Parts
         </TitleTemplate>
         <Content>
@@ -146,30 +146,58 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Kanban" /> Add Supplier
+            <Icon Name="IconName.Kanban" /> Suppliers
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+            <div class="containerPanel">
+                <div class="topPanel-panel">
+                    <br />
+                    <Grid TItem="SuppliersViewModel"
+                          @ref="gridSupplierViewModel"
+                          AllowFiltering="true"
+                          AllowPaging="true"
+                          AllowSorting="true"
+                          AllowRowClick="true"
+                          DataProvider="SuppliersViewModelDataProvider"
+                          Class="table table-hover table-bordered table-striped"
+                          FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                          HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                          PageSize="5"
+                          PageSizeSelectorVisible="true"
+                          PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                          PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                          ItemsPerPageText="Items per page"
+                          Responsive="true">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Company Name" PropertyName="CompanyName">
+                            @context.CompanyName
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Contact Name" PropertyName="ContactName">
+                            @context.ContactName
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Email" PropertyName="Email">
+                            @context.Email
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Phone" PropertyName="Phone">
+                            @context.Phone
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="House Number" PropertyName="HouseNumber">
+                            @context.HouseNumber
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Street" PropertyName="Street">
+                            @context.Street
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Post Code" PropertyName="PostCode">
+                            @context.PostCode
+                        </GridColumn>
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="City" PropertyName="City">
+                            @context.City
+                        </GridColumn>
+                    </Grid>
                 </div>
-            </div>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.Kanban" /> Edit Supplier
-        </TitleTemplate>
-        <Content>
-            <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+                <div class="bottomPanel-panel">
+                    <div class="bottomPanel-left">2</div>
+                    <div class="bottomPanel-right">3</div>
                 </div>
             </div>
         </Content>
@@ -250,6 +278,20 @@
     #endregion
 
     #region Edit Parts
+    #endregion
+
+    #region Suppliers
+
+    private List<SuppliersViewModel> suppliers = new List<SuppliersViewModel>();
+    private Grid<SuppliersViewModel> gridSupplierViewModel;
+    private async Task<GridDataProviderResult<SuppliersViewModel>> SuppliersViewModelDataProvider(GridDataProviderRequest<SuppliersViewModel> request)
+    {
+        if (suppliers is null)
+            suppliers = await orderService.GetAllSupplierForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(suppliers));
+    }
+
     #endregion
 
     #region Add Supplier
