@@ -132,10 +132,9 @@ namespace EnterpriseMaster.Controllers
             {
                 var currentUserId = Int32.Parse(HttpContext.Session.GetString("id"));
                 var currentUser = await usersService.GetAsync(currentUserId);
-
-                if (model.ProfileImage != null)
+                var file = Request.Form.Files.FirstOrDefault();
+                if (file != null)
                 {
-                    var file = Request.Form.Files.FirstOrDefault();
                     if (file != null && file.Length > 0)
                     {
                         using (var stream = file.OpenReadStream())
