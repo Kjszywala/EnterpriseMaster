@@ -702,9 +702,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var shippers = (await suppliersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var sup = (await suppliersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
 
-                return shippers;
+                return sup;
             }
             catch (Exception e)
             {
@@ -717,9 +717,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var shipper = (await suppliersServices.GetAsync(id));
+                var sup = (await suppliersServices.GetAsync(id));
 
-                return shipper;
+                return sup;
             }
             catch (Exception e)
             {
@@ -732,9 +732,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var salesOrder = (await shippingAddressServices.RemoveAsync(id));
+                var sup = (await suppliersServices.RemoveAsync(id));
 
-                return salesOrder;
+                return sup;
             }
             catch (Exception e)
             {
@@ -743,13 +743,13 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
-        public async Task<bool> AddSupplierAsync(ShippingAddresses billingAddress)
+        public async Task<bool> AddSupplierAsync(Suppliers supplier)
         {
             try
             {
-                var address = (await shippingAddressServices.AddAsync(billingAddress));
+                var sup = (await suppliersServices.AddAsync(supplier));
 
-                return address;
+                return sup;
             }
             catch (Exception e)
             {
@@ -758,13 +758,13 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
-        public async Task<bool> UpdateSupplierAsync(ShippingAddresses billingAddress)
+        public async Task<bool> UpdateSupplierAsync(Suppliers supplier)
         {
             try
             {
-                var address = (await shippingAddressServices.EditAsync(billingAddress.Id, billingAddress));
+                var sup = (await suppliersServices.EditAsync(supplier.Id, supplier));
 
-                return address;
+                return sup;
             }
             catch (Exception e)
             {

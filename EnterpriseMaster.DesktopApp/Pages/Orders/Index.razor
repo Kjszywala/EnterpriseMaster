@@ -236,7 +236,7 @@
                                 </div>
                             </div>
                             <div class="bottomSupplierAdd">
-                                <button class="button-36">Add New Supplier</button>
+                                <button class="button-36" @onclick="AddSupplier">Add New Supplier</button>
                             </div>
                         </div>
                     </div>
@@ -304,7 +304,7 @@
                                 </div>
                             </div>
                             <div class="bottomSupplierAdd">
-                                <button class="button-36">Edit Supplier</button>
+                                <button class="button-36" @onclick="editSupplier">Edit Supplier</button>
                             </div>
                         </div>
                     </div>
@@ -343,13 +343,17 @@
         </Content>
     </Tab>
 </Tabs>
-
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
     protected async override void OnInitialized()
     {
+        suppliers = await orderService.GetAllSupplierForGridAsync();
         purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
         suppliersList = await orderService.GetAllSupplierAsync();
         await gridOrderViewModel.RefreshDataAsync();
+        await gridSupplierViewModel.RefreshDataAsync();
+        await gridPartsViewModel.RefreshDataAsync();
     }
 
     #region OrderViewModel
@@ -424,7 +428,7 @@
         var address = await orderService.GetSupplierAddressAsync(supplierEdit.SupplierAddressId.Value);
         companyNameEdit = supplierEdit.CompanyName;
         contactNameEdit = supplierEdit.ContactName;
-        descriptionEdit = supplierEdit.Notes;
+        descriptionEdit = supplierEdit.Description;
         phoneEdit = supplierEdit.Phone;
         emailEdit = supplierEdit.Email;
         houseNumberEdit = address.HouseNumber;
@@ -447,12 +451,286 @@
         return await Task.FromResult(request.ApplyTo(suppliers));
     }
 
-    #endregion
+    private async Task AddSupplier()
+    {
+        preloadService.Show(SpinnerColor.Dark);
+        if (!IsValidSupplier())
+        {
+            return;
+        }
 
-    #region Add Supplier
-    #endregion
+        var address = new SuppliersAddresses()
+        {
+            City = city,
+            Country = country,
+            CreationDate = DateTime.Now,
+            ModificationDate = DateTime.Now,
+            IsActive = true,
+            HouseNumber = houseNumber,
+            PostCode = postalCode,
+            Street = street,
+        };
 
-    #region Edit Supplier
+        var added = await orderService.AddSupplierAddressAsync(address);
+        int supplierAddressId;
+        if (added)
+        {
+            supplierAddressId = (await orderService.GetAllSupplierAddressesAsync()).Where(item =>
+                item.HouseNumber == houseNumber &&
+                item.Country == country &&
+                item.CreationDate == address.CreationDate &&
+                item.PostCode == postalCode &&
+                item.Street == street)
+                .FirstOrDefault().Id;
+        }
+        else
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+            return;
+        }
+
+        var supplier = new Suppliers()
+        {
+            CompanyName = companyName,
+            ContactName = contactName,
+            CreationDate = DateTime.Now,
+            Description = description,
+            Email = email,
+            IsActive = true,
+            ModificationDate = DateTime.Now,
+            Phone = phone,
+            SupplierAddressId = supplierAddressId
+        };
+
+        if (await orderService.AddSupplierAsync(supplier))
+        {
+            ShowMessage(ToastType.Success, "Success!", "Supplier added successfully!");
+            preloadService.Hide();
+            suppliersList = await orderService.GetAllSupplierAsync();
+            StateHasChanged();
+            companyName = "";
+            contactName = "";
+            description = "";
+            phone = "";
+            email = "";
+            houseNumber = "";
+            street = "";
+            city = "";
+            postalCode = "";
+            country = "";
+            suppliers = await orderService.GetAllSupplierForGridAsync();
+            await gridSupplierViewModel.RefreshDataAsync();
+            return;
+        };
+        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a supplier!");
+        preloadService.Hide();
+        StateHasChanged();
+        await gridSupplierViewModel.RefreshDataAsync();
+    }
+
+    private async Task editSupplier()
+    {
+        preloadService.Show(SpinnerColor.Dark);
+        if (!IsValidSupplierEdit())
+        {
+            return;
+        }
+        var supplier = await orderService.GetSupplierAsync(selectedSupplierId);
+        var address = await orderService.GetSupplierAddressAsync(supplier.SupplierAddressId.Value);
+
+        address.Street = streetEdit;
+        address.City = cityEdit;
+        address.HouseNumber = houseNumberEdit;
+        address.Country = countryEdit;
+        address.PostCode = postalCodeEdit;
+        address.ModificationDate = DateTime.Now;
+
+        var added = await orderService.UpdateSupplierAddressAsync(address);
+
+        if (!added)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a supplier!");
+            preloadService.Hide();
+            return;
+        }
+
+        supplier.Description = descriptionEdit;
+        supplier.Email = emailEdit;
+        supplier.IsActive = true;
+        supplier.ModificationDate = DateTime.Now;
+        supplier.Phone = phoneEdit;
+        supplier.SupplierAddressId = supplier.SupplierAddressId;
+        supplier.ModificationDate = DateTime.Now;
+
+        if (await orderService.UpdateSupplierAsync(supplier))
+        {
+            ShowMessage(ToastType.Success, "Success!", "Supplier updated successfully!");
+            preloadService.Hide();
+            suppliersList = await orderService.GetAllSupplierAsync();
+            StateHasChanged();
+            suppliers = await orderService.GetAllSupplierForGridAsync();
+            await gridSupplierViewModel.RefreshDataAsync();
+            return;
+        };
+        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a supplier!");
+        preloadService.Hide();
+        StateHasChanged();
+        await gridSupplierViewModel.RefreshDataAsync();
+    }
+
+    public bool IsValidSupplier()
+    {
+        if (string.IsNullOrWhiteSpace(companyName))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(contactName))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Contact Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phone))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Phone cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Email cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(houseNumber))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "House Number cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(street))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Street cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "City cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(postalCode))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Postal Code cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(country))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Country cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
+    
+    public bool IsValidSupplierEdit()
+    {
+        if (string.IsNullOrWhiteSpace(companyNameEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(contactNameEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Contact Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(descriptionEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phoneEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Phone cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(emailEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Email cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(houseNumberEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "House Number cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(streetEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Street cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(cityEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "City cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(postalCodeEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Postal Code cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(countryEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Country cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
+
     #endregion
 
     #region Order Management

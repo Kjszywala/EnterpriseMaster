@@ -386,6 +386,7 @@
         {
             ShowMessage(ToastType.Success, "Success!", "Product added successfully!");
             preloadService.Hide();
+            products = await inventoryService.GetAllProductsAsync();
             await gridProducts.RefreshDataAsync();
             return;
         };
@@ -459,6 +460,7 @@
         {
             ShowMessage(ToastType.Success, "Success!", "Product updated successfully!");
             preloadService.Hide();
+            products = await inventoryService.GetAllProductsAsync();
             await gridProducts.RefreshDataAsync();
             return;
         };

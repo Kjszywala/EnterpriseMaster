@@ -66,7 +66,6 @@
 
 .topPanel-panel {
     background-color: #f0f0f0;
-    color: #fff;
     padding: 20px;
     text-align: center;
     margin: 5px;
@@ -219,4 +218,12 @@ h3{
     margin: 10px;
     font-size: 14px;
     color: #777;
+}
+p {
+    color: #888;
+    margin: 0;
+    text-align: center;
+}
+bb-grid-pagination-text{
+    color:black;
 }
