@@ -698,11 +698,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
-        public async Task<List<Shippers>> GetAllSupplierAsync()
+        public async Task<List<Suppliers>> GetAllSupplierAsync()
         {
             try
             {
-                var shippers = (await shippersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var shippers = (await suppliersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
 
                 return shippers;
             }
@@ -713,11 +713,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
-        public async Task<Shippers> GetSupplierAsync(int id)
+        public async Task<Suppliers> GetSupplierAsync(int id)
         {
             try
             {
-                var shipper = (await shippersServices.GetAsync(id));
+                var shipper = (await suppliersServices.GetAsync(id));
 
                 return shipper;
             }
