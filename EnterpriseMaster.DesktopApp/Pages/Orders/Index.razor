@@ -2,9 +2,11 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @inherits MainLayout
 @inject OrderService orderService
+@inject InventoryService inventoryService
 
 <Tabs EnableFadeEffect="true">
     <Tab IsActive="true">
@@ -73,73 +75,204 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.AspectRatio" /> Parts In Stock
+            <Icon Name="IconName.AspectRatio" /> Parts Management
         </TitleTemplate>
         <Content>
             <br />
-            <Grid TItem="PartsViewModel"
-                  @ref="gridPartsViewModel"
-                  AllowFiltering="true"
-                  AllowPaging="true"
-                  AllowSorting="true"
-                  AllowRowClick="true"
-                  DataProvider="PartsViewModelDataProvider"
-                  Class="table table-hover table-bordered table-striped"
-                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
-                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
-                  PageSize="5"
-                  PageSizeSelectorVisible="true"
-                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
-                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
-                  ItemsPerPageText="Items per page"
-                  Responsive="true">
-                <GridColumn TItem="PartsViewModel" HeaderText="Product Name" PropertyName="ProductName">
-                    @context.ProductName
-                </GridColumn>
-                <GridColumn TItem="PartsViewModel" HeaderText="Product Code" PropertyName="ProductCode">
-                    @context.ProductCode
-                </GridColumn>
-                <GridColumn TItem="PartsViewModel" HeaderText="Description" PropertyName="Description">
-                    @context.Description
-                </GridColumn>
-                <GridColumn TItem="PartsViewModel" HeaderText="Part Name" PropertyName="PartName">
-                    @context.PartName
-                </GridColumn>
-                <GridColumn TItem="PartsViewModel" HeaderText="Quantity In Stock" PropertyName="QuantityInStock">
-                    @context.QuantityInStock
-                </GridColumn>
-                <GridColumn TItem="PartsViewModel" HeaderText="Unit Cost" PropertyName="UnitCost">
-                    @context.UnitCost
-                </GridColumn>
-            </Grid>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.BookmarkPlus" /> Add Parts
-        </TitleTemplate>
-        <Content>
-            <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+            <div class="containerPanel">
+                <div class="topPanel-panel">
+                    <br />
+                    <Grid TItem="PartsViewModel"
+                            @ref="gridPartsViewModel"
+                            AllowFiltering="true"
+                            AllowPaging="true"
+                            AllowSorting="true"
+                            AllowRowClick="true"
+                            DataProvider="PartsViewModelDataProvider"
+                            Class="table table-hover table-bordered table-striped"
+                            FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                            HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                            PageSize="5"
+                            PageSizeSelectorVisible="true"
+                            PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                            PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                            ItemsPerPageText="Items per page"
+                            Responsive="true">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                            @context.ProductName
+                        </GridColumn>
+                        <GridColumn TItem="PartsViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                            @context.ProductCode
+                        </GridColumn>
+                        <GridColumn TItem="PartsViewModel" HeaderText="Description" PropertyName="Description">
+                            @context.Description
+                        </GridColumn>
+                        <GridColumn TItem="PartsViewModel" HeaderText="Part Name" PropertyName="PartName">
+                            @context.PartName
+                        </GridColumn>
+                        <GridColumn TItem="PartsViewModel" HeaderText="Quantity In Stock" PropertyName="QuantityInStock">
+                            @context.QuantityInStock
+                        </GridColumn>
+                        <GridColumn TItem="PartsViewModel" HeaderText="Unit Cost" PropertyName="UnitCost">
+                            @context.UnitCost
+                        </GridColumn>
+                    </Grid>
                 </div>
-            </div>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.BookmarkCheck" /> Edit Parts
-        </TitleTemplate>
-        <Content>
-            <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+                <div class="bottomPanel-panel">
+                    <div class="bottomPanel-left">
+                        <h3>Add New Part</h3>
+                        <hr />
+                        <div class="containerSupplierAdd">
+                            <div class="topSupplierAdd">
+                                <div class="top-leftSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="partName" Placeholder="Enter Part Name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="descriptionPart" Placeholder="Enter Description" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="unitCostEdit">Unit Cost:</label>
+                                        <input type="number" id="unitCostEdit" @bind="unitCost" placeholder="Enter Unit Cost" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="quantityInStockEdit">Quantity In Stock:</label>
+                                        <input type="number" id="quantityInStockEdit" @bind="quantityInStock" placeholder="Enter Quantity In Stock" />
+                                    </div>
+                                    <div class="mb-3">
+                                    </div>
+                                </div>
+                                <div class="top-rightSupplierAdd">
+                                    <div class="mb-3">
+                                        @if (productsAvailable == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartProductSelected">
+                                                <option>Select Product</option>
+                                                @foreach (var access in productsAvailable)
+                                                {
+                                                    <option value="@access.Id">@access.ProductName (@access.ProductCode)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                    <div class="mb-3">
+
+                                        @if (suppliersList == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartSupplierSelected">
+                                                <option>Select Supplier</option>
+                                                @foreach (var access in suppliersList)
+                                                {
+                                                    <option value="@access.Id">@access.ContactName (@access.CompanyName)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottomSupplierAdd">
+                                <button class="button-36" @onclick="AddPart">Add New Supplier</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottomPanel-right">
+                        <div class="column-containerSupplierAdd">
+                            <div class="columnSupplierAdd">
+                                <h3>Edit Part</h3>
+                            </div>
+                            <div class="columnSupplierAdd">
+                                <div class="row">
+                                    <div class="col col-dropdown">
+                                        @if (partsAvailable == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartSelected">
+                                                <option>Select Part</option>
+                                                @foreach (var access in partsAvailable)
+                                                {
+                                                    <option value="@access.Id">@access.PartName (@access.Products.ProductName)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="containerSupplierAdd">
+                            <div class="topSupplierAdd">
+                                <div class="top-leftSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="partNameEdit" Placeholder="Enter Part Name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="descriptionPartEdit" Placeholder="Enter Description" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="unitCostEdit">Unit Cost:</label>
+                                        <input type="number" id="unitCostEdit" @bind="unitCostEdit" placeholder="Enter Unit Cost" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="quantityInStockEdit">Quantity In Stock:</label>
+                                        <input type="number" id="quantityInStockEdit" @bind="quantityInStockEdit" placeholder="Enter Quantity In Stock" />
+                                    </div>
+                                    <div class="mb-3">
+                                    </div>
+                                </div>
+                                <div class="top-rightSupplierAdd">
+                                    <div class="mb-3">
+                                        @if (productsAvailable == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartProductSelectedEdit">
+                                                <option>Select Product</option>
+                                                @foreach (var access in productsAvailable)
+                                                {
+                                                    <option value="@access.Id">@access.ProductName (@access.ProductCode)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                    <div class="mb-3">
+
+                                        @if (suppliersList == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartSupplierSelectedEdit">
+                                                <option>Select Supplier</option>
+                                                @foreach (var access in suppliersList)
+                                                {
+                                                    <option value="@access.Id">@access.ContactName (@access.CompanyName)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottomSupplierAdd">
+                                <button class="button-36" @onclick="EditPart">Edit Supplier</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Content>
@@ -198,6 +331,7 @@
                 <div class="bottomPanel-panel">
                     <div class="bottomPanel-left">
                         <h3>Add New Supplier</h3>
+                        <hr />
                         <div class="containerSupplierAdd">
                             <div class="topSupplierAdd">
                                 <div class="top-leftSupplierAdd">
@@ -266,6 +400,7 @@
                                 </div>
                             </div>
                         </div>
+                        <hr />
                         <div class="containerSupplierAdd">
                             <div class="topSupplierAdd">
                                 <div class="top-leftSupplierAdd">
@@ -351,6 +486,13 @@
         suppliers = await orderService.GetAllSupplierForGridAsync();
         purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
         suppliersList = await orderService.GetAllSupplierAsync();
+        productsAvailable = await inventoryService.GetAllProductsAsync();
+        partsAvailable = await orderService.GetAllPartsAsync();
+        parts = await orderService.GetAllPartsForGridAsync();
+        foreach(var part in partsAvailable)
+        {
+            part.Products = await inventoryService.GetProductAsync(part.ProductsId.Value);
+        }
         await gridOrderViewModel.RefreshDataAsync();
         await gridSupplierViewModel.RefreshDataAsync();
         await gridPartsViewModel.RefreshDataAsync();
@@ -372,6 +514,14 @@
 
     #region Order Management
 
+    #endregion
+
+    #region Parts Orders
+
+    #endregion
+
+    #region Parts Management
+
     private List<PartsViewModel> parts = new List<PartsViewModel>();
     private Grid<PartsViewModel> gridPartsViewModel;
     private async Task<GridDataProviderResult<PartsViewModel>> PartsViewModelDataProvider(GridDataProviderRequest<PartsViewModel> request)
@@ -382,15 +532,266 @@
         return await Task.FromResult(request.ApplyTo(parts));
     }
 
-    #endregion
+    private string partName = "";
+    private string descriptionPart = "";
+    private decimal unitCost = 0m;
+    private int quantityInStock = 0;
+    private int selectedPartSupplierId;
+    private int selectedPartProductId;
 
-    #region Parts Orders
-    #endregion
+    private string partNameEdit = "";
+    private string descriptionPartEdit = "";
+    private decimal unitCostEdit = 0m;
+    private int quantityInStockEdit = 0;
+    private int selectedPartId;
+    private int selectedPartSupplierIdEdit;
+    private int selectedPartProductIdEdit;
+    private List<Parts> partsAvailable = new List<Parts>();
+    private List<Products> productsAvailable = new List<Products>();
 
-    #region Add Parts
-    #endregion
 
-    #region Edit Parts
+    private async void OnPartSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPartId = selectedId;
+        }
+        var part = await orderService.GetPartsAsync(selectedPartId);
+
+        partNameEdit = part.PartName;
+        descriptionPartEdit = part.Description;
+        unitCostEdit = part.UnitCost;
+        quantityInStockEdit = part.QuantityInStock;
+        StateHasChanged();
+    }
+
+    private async void OnPartProductSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPartProductId = selectedId;
+        }
+        StateHasChanged();
+    }
+
+    private async void OnPartSupplierSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPartSupplierId = selectedId;
+        }
+        StateHasChanged();
+    } 
+
+    private async void OnPartProductSelectedEdit(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPartProductIdEdit = selectedId;
+        }
+        StateHasChanged();
+    } 
+
+    private async void OnPartSupplierSelectedEdit(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPartSupplierIdEdit = selectedId;
+        }
+        StateHasChanged();
+    }
+
+    private async Task AddPart()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidPart())
+            {
+                return;
+            }
+
+            var part = new Parts()
+            {
+                CreationDate = DateTime.Now,
+                Description = descriptionPart,
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                PartName = partName,
+                ProductsId = selectedPartProductId,
+                SuppliersId = selectedPartSupplierId,
+                QuantityInStock = quantityInStock,
+                UnitCost = unitCost
+            };
+
+            if (await orderService.AddPartsAsync(part))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Part added successfully!");
+                preloadService.Hide();
+                parts = await orderService.GetAllPartsForGridAsync();
+                partsAvailable = await orderService.GetAllPartsAsync();
+                foreach (var item in partsAvailable)
+                {
+                    item.Products = await inventoryService.GetProductAsync(item.ProductsId.Value);
+                }
+                StateHasChanged();
+                partName = "";
+                descriptionPart = "";
+                unitCost = 0m;
+                quantityInStock = 0;
+                await gridPartsViewModel.RefreshDataAsync();
+                return;
+            };
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a part!");
+            preloadService.Hide();
+            StateHasChanged();
+            await gridPartsViewModel.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a part!");
+            preloadService.Hide();
+        }
+    }
+
+    private async Task EditPart()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidPartEdit())
+            {
+                return;
+            }
+
+            var part = await orderService.GetPartsAsync(selectedPartId);
+
+            part.ModificationDate = DateTime.Now;
+            part.QuantityInStock = quantityInStockEdit;
+            part.PartName = partNameEdit;
+            part.UnitCost = unitCostEdit;
+            part.Description = descriptionPartEdit;
+            part.ProductsId = selectedPartProductIdEdit;
+            part.SuppliersId = selectedPartSupplierIdEdit;
+
+            if (await orderService.UpdatePartsAsync(part))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Part updated successfully!");
+                preloadService.Hide();
+                partsAvailable = await orderService.GetAllPartsAsync();
+                foreach (var item in partsAvailable)
+                {
+                    item.Products = await inventoryService.GetProductAsync(item.ProductsId.Value);
+                }
+                parts = await orderService.GetAllPartsForGridAsync();
+                StateHasChanged();
+                await gridPartsViewModel.RefreshDataAsync();
+                return;
+            };
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a part!");
+            preloadService.Hide();
+            StateHasChanged();
+            await gridPartsViewModel.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while editing a part!");
+            preloadService.Hide();
+        }
+    }
+
+    public bool IsValidPart()
+    {
+        if (string.IsNullOrWhiteSpace(partName))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Part Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(descriptionPart))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (unitCost <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Unit Cost must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (quantityInStock <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Quantity in Stock must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (selectedPartSupplierId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Supplier ID must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (selectedPartProductId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Product ID must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+        return true;
+    }
+
+    public bool IsValidPartEdit()
+    {
+        if (string.IsNullOrWhiteSpace(partNameEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Part Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(descriptionPartEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (unitCostEdit <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Unit Cost must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (quantityInStockEdit <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Quantity in Stock must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (selectedPartSupplierIdEdit <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Supplier ID must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (selectedPartProductIdEdit <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Product ID must be greater than 0!");
+            preloadService.Hide();
+            return false;
+        }
+        return true;
+    }
+
     #endregion
 
     #region Suppliers
@@ -453,130 +854,147 @@
 
     private async Task AddSupplier()
     {
-        preloadService.Show(SpinnerColor.Dark);
-        if (!IsValidSupplier())
+        try
         {
-            return;
-        }
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidSupplier())
+            {
+                return;
+            }
 
-        var address = new SuppliersAddresses()
-        {
-            City = city,
-            Country = country,
-            CreationDate = DateTime.Now,
-            ModificationDate = DateTime.Now,
-            IsActive = true,
-            HouseNumber = houseNumber,
-            PostCode = postalCode,
-            Street = street,
-        };
+            var address = new SuppliersAddresses()
+                {
+                    City = city,
+                    Country = country,
+                    CreationDate = DateTime.Now,
+                    ModificationDate = DateTime.Now,
+                    IsActive = true,
+                    HouseNumber = houseNumber,
+                    PostCode = postalCode,
+                    Street = street,
+                };
 
-        var added = await orderService.AddSupplierAddressAsync(address);
-        int supplierAddressId;
-        if (added)
-        {
-            supplierAddressId = (await orderService.GetAllSupplierAddressesAsync()).Where(item =>
-                item.HouseNumber == houseNumber &&
-                item.Country == country &&
-                item.CreationDate == address.CreationDate &&
-                item.PostCode == postalCode &&
-                item.Street == street)
-                .FirstOrDefault().Id;
-        }
-        else
-        {
-            ShowMessage(ToastType.Info, "Warning!", "Something went wrong!");
+            var added = await orderService.AddSupplierAddressAsync(address);
+            int supplierAddressId;
+            if (added)
+            {
+                supplierAddressId = (await orderService.GetAllSupplierAddressesAsync()).Where(item =>
+                    item.HouseNumber == houseNumber &&
+                    item.Country == country &&
+                    item.CreationDate == address.CreationDate &&
+                    item.PostCode == postalCode &&
+                    item.Street == street)
+                    .FirstOrDefault().Id;
+            }
+            else
+            {
+                ShowMessage(ToastType.Info, "Warning!", "Something went wrong!");
+                preloadService.Hide();
+                return;
+            }
+
+            var supplier = new Suppliers()
+                {
+                    CompanyName = companyName,
+                    ContactName = contactName,
+                    CreationDate = DateTime.Now,
+                    Description = description,
+                    Email = email,
+                    IsActive = true,
+                    ModificationDate = DateTime.Now,
+                    Phone = phone,
+                    SupplierAddressId = supplierAddressId
+                };
+
+            if (await orderService.AddSupplierAsync(supplier))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Supplier added successfully!");
+                preloadService.Hide();
+                suppliersList = await orderService.GetAllSupplierAsync();
+                StateHasChanged();
+                companyName = "";
+                contactName = "";
+                description = "";
+                phone = "";
+                email = "";
+                houseNumber = "";
+                street = "";
+                city = "";
+                postalCode = "";
+                country = "";
+                suppliers = await orderService.GetAllSupplierForGridAsync();
+                await gridSupplierViewModel.RefreshDataAsync();
+                return;
+            };
+
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a supplier!");
             preloadService.Hide();
-            return;
-        }
-
-        var supplier = new Suppliers()
-        {
-            CompanyName = companyName,
-            ContactName = contactName,
-            CreationDate = DateTime.Now,
-            Description = description,
-            Email = email,
-            IsActive = true,
-            ModificationDate = DateTime.Now,
-            Phone = phone,
-            SupplierAddressId = supplierAddressId
-        };
-
-        if (await orderService.AddSupplierAsync(supplier))
-        {
-            ShowMessage(ToastType.Success, "Success!", "Supplier added successfully!");
-            preloadService.Hide();
-            suppliersList = await orderService.GetAllSupplierAsync();
             StateHasChanged();
-            companyName = "";
-            contactName = "";
-            description = "";
-            phone = "";
-            email = "";
-            houseNumber = "";
-            street = "";
-            city = "";
-            postalCode = "";
-            country = "";
-            suppliers = await orderService.GetAllSupplierForGridAsync();
             await gridSupplierViewModel.RefreshDataAsync();
-            return;
-        };
-        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a supplier!");
-        preloadService.Hide();
-        StateHasChanged();
-        await gridSupplierViewModel.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a supplier!");
+            preloadService.Hide();
+        }
     }
 
     private async Task editSupplier()
     {
-        preloadService.Show(SpinnerColor.Dark);
-        if (!IsValidSupplierEdit())
+        try
         {
-            return;
-        }
-        var supplier = await orderService.GetSupplierAsync(selectedSupplierId);
-        var address = await orderService.GetSupplierAddressAsync(supplier.SupplierAddressId.Value);
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidSupplierEdit())
+            {
+                return;
+            }
+            var supplier = await orderService.GetSupplierAsync(selectedSupplierId);
+            var address = await orderService.GetSupplierAddressAsync(supplier.SupplierAddressId.Value);
 
-        address.Street = streetEdit;
-        address.City = cityEdit;
-        address.HouseNumber = houseNumberEdit;
-        address.Country = countryEdit;
-        address.PostCode = postalCodeEdit;
-        address.ModificationDate = DateTime.Now;
+            address.Street = streetEdit;
+            address.City = cityEdit;
+            address.HouseNumber = houseNumberEdit;
+            address.Country = countryEdit;
+            address.PostCode = postalCodeEdit;
+            address.ModificationDate = DateTime.Now;
 
-        var added = await orderService.UpdateSupplierAddressAsync(address);
+            var added = await orderService.UpdateSupplierAddressAsync(address);
 
-        if (!added)
-        {
+            if (!added)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a supplier!");
+                preloadService.Hide();
+                return;
+            }
+
+            supplier.Description = descriptionEdit;
+            supplier.Email = emailEdit;
+            supplier.IsActive = true;
+            supplier.ModificationDate = DateTime.Now;
+            supplier.Phone = phoneEdit;
+            supplier.SupplierAddressId = supplier.SupplierAddressId;
+            supplier.ModificationDate = DateTime.Now;
+
+            if (await orderService.UpdateSupplierAsync(supplier))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Supplier updated successfully!");
+                preloadService.Hide();
+                suppliersList = await orderService.GetAllSupplierAsync();
+                StateHasChanged();
+                suppliers = await orderService.GetAllSupplierForGridAsync();
+                await gridSupplierViewModel.RefreshDataAsync();
+                return;
+            };
             ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a supplier!");
             preloadService.Hide();
-            return;
-        }
-
-        supplier.Description = descriptionEdit;
-        supplier.Email = emailEdit;
-        supplier.IsActive = true;
-        supplier.ModificationDate = DateTime.Now;
-        supplier.Phone = phoneEdit;
-        supplier.SupplierAddressId = supplier.SupplierAddressId;
-        supplier.ModificationDate = DateTime.Now;
-
-        if (await orderService.UpdateSupplierAsync(supplier))
-        {
-            ShowMessage(ToastType.Success, "Success!", "Supplier updated successfully!");
-            preloadService.Hide();
-            suppliersList = await orderService.GetAllSupplierAsync();
             StateHasChanged();
-            suppliers = await orderService.GetAllSupplierForGridAsync();
             await gridSupplierViewModel.RefreshDataAsync();
-            return;
-        };
-        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a supplier!");
-        preloadService.Hide();
-        StateHasChanged();
-        await gridSupplierViewModel.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a supplier!");
+            preloadService.Hide();
+        }
     }
 
     public bool IsValidSupplier()
