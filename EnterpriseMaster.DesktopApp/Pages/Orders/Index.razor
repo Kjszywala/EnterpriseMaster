@@ -64,13 +64,25 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
-                </div>
-            </div>
+            <Accordion Class="container">
+                @foreach (var item in partsOrders)
+                {
+                    <AccordionItem Title=@item.PartName>
+                        <Content>
+                            <b>@item.Description</b>
+                            <br />
+                            <div>
+                                <div class="mb-3">
+                                    <label class="form-label">Amount</label>
+                                    <NumberInput TValue="int" @bind-Value="@item.QuantityInStock" Placeholder="Enter amount" />
+                                    <br>
+                                    <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => MakeAnOrder(item.Id, item.QuantityInStock)"> Make Purchase Order </Button>
+                                </div>
+                            </div>
+                        </Content>
+                    </AccordionItem>
+                }
+            </Accordion>
         </Content>
     </Tab>
     <Tab>
@@ -177,6 +189,22 @@
                                             </select>
                                         }
                                     </div>
+                                    <div class="mb-3">
+                                        @if (quantityTypesAvailable == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartQuantityTypesSelected">
+                                                <option>Select Quantity Type</option>
+                                                @foreach (var access in quantityTypesAvailable)
+                                                {
+                                                    <option value="@access.Id">@access.Type</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div class="bottomSupplierAdd">
@@ -250,7 +278,6 @@
                                         }
                                     </div>
                                     <div class="mb-3">
-
                                         @if (suppliersList == null)
                                         {
                                             <p>Loading...</p>
@@ -262,6 +289,22 @@
                                                 @foreach (var access in suppliersList)
                                                 {
                                                     <option value="@access.Id">@access.ContactName (@access.CompanyName)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                    <div class="mb-3">
+                                        @if (quantityTypesAvailable == null)
+                                        {
+                                            <p>Loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnPartQuantityTypesSelectedEdit">
+                                                <option>Select Quantity Type</option>
+                                                @foreach (var access in quantityTypesAvailable)
+                                                {
+                                                    <option value="@access.Id">@access.Type</option>
                                                 }
                                             </select>
                                         }
@@ -483,40 +526,102 @@
 @code {
     protected async override void OnInitialized()
     {
-        suppliers = await orderService.GetAllSupplierForGridAsync();
-        purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
-        suppliersList = await orderService.GetAllSupplierAsync();
-        productsAvailable = await inventoryService.GetAllProductsAsync();
-        partsAvailable = await orderService.GetAllPartsAsync();
-        parts = await orderService.GetAllPartsForGridAsync();
-        foreach(var part in partsAvailable)
+        try
         {
-            part.Products = await inventoryService.GetProductAsync(part.ProductsId.Value);
+            suppliers = await orderService.GetAllSupplierForGridAsync();
+            purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
+            suppliersList = await orderService.GetAllSupplierAsync();
+            quantityTypesAvailable = await inventoryService.GetAllQuantityTypesAsync();
+            productsAvailable = await inventoryService.GetAllProductsAsync();
+            partsAvailable = await orderService.GetAllPartsAsync();
+            parts = await orderService.GetAllPartsForGridAsync();
+            partsOrders = await orderService.GetAllPartsAsync();
+            foreach (var part in partsAvailable)
+            {
+                part.Products = await inventoryService.GetProductAsync(part.ProductsId.Value);
+            }
+            await gridOrderViewModel.RefreshDataAsync();
+            await gridSupplierViewModel.RefreshDataAsync();
+            await gridPartsViewModel.RefreshDataAsync();
         }
-        await gridOrderViewModel.RefreshDataAsync();
-        await gridSupplierViewModel.RefreshDataAsync();
-        await gridPartsViewModel.RefreshDataAsync();
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
+       
     }
 
     #region OrderViewModel
+
+
+    #endregion
+
+    #region PurchaseOrders
 
     private List<OrderViewModel> purchaseOrders = new List<OrderViewModel>();
     private Grid<OrderViewModel> gridOrderViewModel;
     private async Task<GridDataProviderResult<OrderViewModel>> OrderViewModelDataProvider(GridDataProviderRequest<OrderViewModel> request)
     {
-        if (purchaseOrders is null) 
-            purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync(); 
+        if (purchaseOrders is null)
+            purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(purchaseOrders));
     }
 
     #endregion
 
-    #region Order Management
-
-    #endregion
-
     #region Parts Orders
+
+    private List<Parts> partsOrders = new List<Parts>();
+
+    private async Task MakeAnOrder(int id, int count)
+    {
+        try
+        {
+            var part = await orderService.GetPartsAsync(id);
+
+            var order = new PurchaseOrders()
+            {
+                DeliveryDate = DateTime.Now.AddDays(7),
+                CreationDate = DateTime.Now,
+                IsActive = true,
+                EmployeeId = Config.UserId,
+                OrderDate = DateTime.Now,
+                ModificationDate = DateTime.Now,
+                PricePaid = count * part.UnitCost + (part.UnitCost * 0.23m),
+                PaymentTerm = DateTime.Now.AddDays(3),
+                PurchaseOrderNumber = Guid.NewGuid().ToString(),
+                Quantity = count,
+                SupplierId = part.SuppliersId,
+                PartId = part.Id,
+                CompanyId = Config.CompanyId,
+                Discount = 0,
+                QuantityTypeId = part.QuantityTypeId,
+                RejectedReason = ""
+            };
+
+            if(await orderService.AddPurchaseOrderAsync(order))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Order added successfully!");
+                purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
+                preloadService.Hide();
+                StateHasChanged();
+                await gridOrderViewModel.RefreshDataAsync();
+                return;
+            };
+
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a Order!");
+            preloadService.Hide();
+            StateHasChanged();
+            await gridPartsViewModel.RefreshDataAsync();
+
+        }
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
 
     #endregion
 
@@ -538,6 +643,7 @@
     private int quantityInStock = 0;
     private int selectedPartSupplierId;
     private int selectedPartProductId;
+    private int selectedPartQuantityTypesId;
 
     private string partNameEdit = "";
     private string descriptionPartEdit = "";
@@ -546,8 +652,10 @@
     private int selectedPartId;
     private int selectedPartSupplierIdEdit;
     private int selectedPartProductIdEdit;
+    private int selectedQuantityTypesIdEdit;
     private List<Parts> partsAvailable = new List<Parts>();
     private List<Products> productsAvailable = new List<Products>();
+    private List<QuantityTypes> quantityTypesAvailable = new List<QuantityTypes>();
 
 
     private async void OnPartSelected(ChangeEventArgs e)
@@ -583,6 +691,15 @@
         StateHasChanged();
     } 
 
+    private async void OnPartQuantityTypesSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPartQuantityTypesId = selectedId;
+        }
+        StateHasChanged();
+    }
+
     private async void OnPartProductSelectedEdit(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int selectedId))
@@ -597,6 +714,15 @@
         if (int.TryParse(e.Value.ToString(), out int selectedId))
         {
             selectedPartSupplierIdEdit = selectedId;
+        }
+        StateHasChanged();
+    }
+
+    private async void OnPartQuantityTypesSelectedEdit(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedQuantityTypesIdEdit = selectedId;
         }
         StateHasChanged();
     }
@@ -621,7 +747,8 @@
                 ProductsId = selectedPartProductId,
                 SuppliersId = selectedPartSupplierId,
                 QuantityInStock = quantityInStock,
-                UnitCost = unitCost
+                UnitCost = unitCost,
+                    QuantityTypeId = selectedPartQuantityTypesId
             };
 
             if (await orderService.AddPartsAsync(part))
@@ -631,6 +758,11 @@
                 parts = await orderService.GetAllPartsForGridAsync();
                 partsAvailable = await orderService.GetAllPartsAsync();
                 foreach (var item in partsAvailable)
+                {
+                    item.Products = await inventoryService.GetProductAsync(item.ProductsId.Value);
+                }
+                partsOrders = await orderService.GetAllPartsAsync();
+                foreach (var item in partsOrders)
                 {
                     item.Products = await inventoryService.GetProductAsync(item.ProductsId.Value);
                 }
@@ -673,6 +805,7 @@
             part.Description = descriptionPartEdit;
             part.ProductsId = selectedPartProductIdEdit;
             part.SuppliersId = selectedPartSupplierIdEdit;
+            part.QuantityTypeId = selectedQuantityTypesIdEdit;
 
             if (await orderService.UpdatePartsAsync(part))
             {
@@ -680,6 +813,11 @@
                 preloadService.Hide();
                 partsAvailable = await orderService.GetAllPartsAsync();
                 foreach (var item in partsAvailable)
+                {
+                    item.Products = await inventoryService.GetProductAsync(item.ProductsId.Value);
+                }
+                partsOrders = await orderService.GetAllPartsAsync();
+                foreach (var item in partsOrders)
                 {
                     item.Products = await inventoryService.GetProductAsync(item.ProductsId.Value);
                 }

@@ -10,5 +10,8 @@
         public Products? Products { get; set; }
         public int? SuppliersId { get; set; }
         public Suppliers? Suppliers { get; set; }
+        public int? QuantityTypeId { get; set; }
+        public QuantityTypes? QuantityTypes { get; set; }
+        public List<PurchaseOrders>? PurchaseOrders { get; set; }
     }
 }

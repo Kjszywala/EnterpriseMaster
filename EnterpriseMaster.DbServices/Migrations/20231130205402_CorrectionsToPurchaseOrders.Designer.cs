@@ -4,6 +4,7 @@ using EnterpriseMaster.DbServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriseMaster.DbServices.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20231130205402_CorrectionsToPurchaseOrders")]
+    partial class CorrectionsToPurchaseOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1189,12 +1192,6 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("int");
 
-                    b.Property<int?>("QuantityTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("QuantityTypesId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("SuppliersId")
                         .HasColumnType("int");
 
@@ -1207,8 +1204,6 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductsId");
-
-                    b.HasIndex("QuantityTypesId");
 
                     b.HasIndex("SuppliersId");
 
@@ -2679,17 +2674,11 @@ namespace EnterpriseMaster.DbServices.Migrations
                         .WithMany("Parts")
                         .HasForeignKey("ProductsId");
 
-                    b.HasOne("EnterpriseMaster.DbServices.Models.Database.QuantityTypes", "QuantityTypes")
-                        .WithMany("Parts")
-                        .HasForeignKey("QuantityTypesId");
-
                     b.HasOne("EnterpriseMaster.DbServices.Models.Database.Suppliers", "Suppliers")
                         .WithMany("Parts")
                         .HasForeignKey("SuppliersId");
 
                     b.Navigation("Products");
-
-                    b.Navigation("QuantityTypes");
 
                     b.Navigation("Suppliers");
                 });
@@ -3096,8 +3085,6 @@ namespace EnterpriseMaster.DbServices.Migrations
             modelBuilder.Entity("EnterpriseMaster.DbServices.Models.Database.QuantityTypes", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("Parts");
 
                     b.Navigation("Products");
                 });

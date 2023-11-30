@@ -14,11 +14,13 @@ namespace EnterpriseMaster.DbServices.Models.Database
         [Column(TypeName = "decimal(18, 2)")]
         public decimal PricePaid { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Discount { get; set; }
+        public decimal? Discount { get; set; }
         public int? EmployeeId { get; set; }
         public Employees? Employee { get; set; }
         public int? ProductId { get; set; }
         public Products? Product { get; set; }
+        public int? PartId { get; set; }
+        public Parts? Part { get; set; }
         public int? CompanyId { get; set; }
         public Companies? Companies { get; set; }
         public int? SupplierId { get; set; }

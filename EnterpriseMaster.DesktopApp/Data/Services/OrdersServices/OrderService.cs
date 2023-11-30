@@ -178,7 +178,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             try
             {
                 var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
-
+                foreach (var purchaseOrder in purchaseOrders)
+                {
+                    purchaseOrder.Part = await partsServices.GetAsync(purchaseOrder.PartId.Value);
+                }
                 var orderViewModelList = new List<OrderViewModel>();
                 foreach (var item in purchaseOrders)
                 {
@@ -188,8 +191,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
                         OrderNumber = item.PurchaseOrderNumber,
                         PaymentTerm = item.PaymentTerm,
                         PricePaid = item.PricePaid,
-                        ProductCode = (await productsServices.GetAsync(item.ProductId.Value)).ProductCode,
-                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName,
+                        ProductCode = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductCode,
+                        ProductName = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductName,
                         Quantity = item.Quantity,
                         QuantityType = (await quantityTypesServices.GetAsync(item.QuantityTypeId.Value)).Type
                     });

@@ -13,6 +13,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
         private IUsersServices usersServices;
         private IEmployeesServices employeesServices;
         private IEmployeeAccessesServices employeeAccessesServices;
+        private ICompaniesServices companiesServices;
 
         #endregion
 
@@ -23,13 +24,15 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
             IErrorLogsServices _errorLogsServices, 
             IUsersServices _usersServices,
             IEmployeesServices _employeesServices,
-            IEmployeeAccessesServices _employeeAccessesServices)
+            IEmployeeAccessesServices _employeeAccessesServices,
+            ICompaniesServices _companiesServices)
         {
             authenticationLogic = _authenticationLogic;
             errorLogsServices = _errorLogsServices;
             usersServices = _usersServices;
             employeesServices = _employeesServices;
             employeeAccessesServices = _employeeAccessesServices;
+            companiesServices = _companiesServices;
         }
 
         #endregion
@@ -57,7 +60,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                     var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
                     Config.SubscriptionId = users.Where(item => item.Email == user.Email).FirstOrDefault().SubscriptionTypeId;
                     Config.Company = users.Where(item => item.Email == user.Email).FirstOrDefault().CompanyName;
-                    Config.CompanyId = users.Where(item => item.Email == user.Email).FirstOrDefault().CompaniesId;
+                    Config.CompanyId = (await companiesServices.GetAllAsync()).Where(item => item.Name == Config.Company).FirstOrDefault().Id;
                     Config.EmployeeAccess = (await employeeAccessesServices.GetAllAsync()).Where(item => item.Id == currentEmployee.EmployeeAccessId).FirstOrDefault().Access;
                     Config.UserImage = users.Where(item => item.Email == user.Email).FirstOrDefault().Image;
                 }
