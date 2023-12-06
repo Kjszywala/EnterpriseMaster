@@ -346,28 +346,28 @@
                           PaginationItemsTextFormat="{0} - {1} of {2} pages"
                           ItemsPerPageText="Items per page"
                           Responsive="true">
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="Company Name" PropertyName="CompanyName">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Company Name" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
                             @context.CompanyName
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="Contact Name" PropertyName="ContactName">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Contact Name" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
                             @context.ContactName
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="Email" PropertyName="Email">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
                             @context.Email
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="Phone" PropertyName="Phone">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
                             @context.Phone
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="House Number" PropertyName="HouseNumber">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="House Number" PropertyName="HouseNumber" SortKeySelector="item => item.HouseNumber">
                             @context.HouseNumber
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="Street" PropertyName="Street">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Street" PropertyName="Street" SortKeySelector="item => item.Street">
                             @context.Street
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="Post Code" PropertyName="PostCode">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="Post Code" PropertyName="PostCode" SortKeySelector="item => item.PostCode">
                             @context.PostCode
                         </GridColumn>
-                        <GridColumn TItem="SuppliersViewModel" HeaderText="City" PropertyName="City">
+                        <GridColumn TItem="SuppliersViewModel" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
                             @context.City
                         </GridColumn>
                     </Grid>
