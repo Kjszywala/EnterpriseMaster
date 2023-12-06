@@ -4,6 +4,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @inherits MainLayout
 @inject OrderService orderService
 @inject InventoryService inventoryService
@@ -31,28 +32,28 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="OrderViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                <GridColumn TItem="OrderViewModel" HeaderText="Part Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
                     @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Price To Pay($)" PropertyName="PricePaid">
+                <GridColumn TItem="OrderViewModel" HeaderText="Price To Pay($)" PropertyName="PricePaid" SortKeySelector="item => item.PricePaid">
                     @context.PricePaid
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Order Number" PropertyName="OrderNumber">
+                <GridColumn TItem="OrderViewModel" HeaderText="Order Number" PropertyName="OrderNumber" SortKeySelector="item => item.OrderNumber">
                     @context.OrderNumber
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm">
+                <GridColumn TItem="OrderViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm" SortKeySelector="item => item.PaymentTerm">
                     @context.PaymentTerm
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
                     @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Quantity Type" PropertyName="QuantityType">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity Type" PropertyName="QuantityType" SortKeySelector="item => item.QuantityType">
                     @context.QuantityType
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Order Status" PropertyName="OrderStatus">
+                <GridColumn TItem="OrderViewModel" HeaderText="Order Status" PropertyName="OrderStatus" SortKeySelector="item => item.OrderStatus">
                     @context.OrderStatus
                 </GridColumn>
             </Grid>
@@ -110,22 +111,22 @@
                             PaginationItemsTextFormat="{0} - {1} of {2} pages"
                             ItemsPerPageText="Items per page"
                             Responsive="true">
-                        <GridColumn TItem="PartsViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                             @context.ProductName
                         </GridColumn>
-                        <GridColumn TItem="PartsViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
                             @context.ProductCode
                         </GridColumn>
-                        <GridColumn TItem="PartsViewModel" HeaderText="Description" PropertyName="Description">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description">
                             @context.Description
                         </GridColumn>
-                        <GridColumn TItem="PartsViewModel" HeaderText="Part Name" PropertyName="PartName">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Part Name" PropertyName="PartName" SortKeySelector="item => item.PartName">
                             @context.PartName
                         </GridColumn>
-                        <GridColumn TItem="PartsViewModel" HeaderText="Quantity In Stock" PropertyName="QuantityInStock">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Quantity In Stock" PropertyName="QuantityInStock" SortKeySelector="item => item.QuantityInStock">
                             @context.QuantityInStock
                         </GridColumn>
-                        <GridColumn TItem="PartsViewModel" HeaderText="Unit Cost" PropertyName="UnitCost">
+                        <GridColumn TItem="PartsViewModel" HeaderText="Unit Cost" PropertyName="UnitCost" SortKeySelector="item => item.UnitCost">
                             @context.UnitCost
                         </GridColumn>
                     </Grid>
@@ -597,7 +598,8 @@
                 CompanyId = Config.CompanyId,
                 Discount = 0,
                 QuantityTypeId = part.QuantityTypeId,
-                RejectedReason = ""
+                RejectedReason = "",
+                OrderStatuseId = (int)StatusForOrder.Open
             };
 
             if(await orderService.AddPurchaseOrderAsync(order))

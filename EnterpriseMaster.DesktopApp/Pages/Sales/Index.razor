@@ -30,28 +30,28 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="OrderViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                <GridColumn TItem="OrderViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
                     @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Price Paid($)" PropertyName="PricePaid">
+                <GridColumn TItem="OrderViewModel" HeaderText="Price Paid($)" PropertyName="PricePaid" SortKeySelector="item => item.PricePaid">
                     @context.PricePaid
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Order Number" PropertyName="OrderNumber">
+                <GridColumn TItem="OrderViewModel" HeaderText="Order Number" PropertyName="OrderNumber" SortKeySelector="item => item.OrderNumber">
                     @context.OrderNumber
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm">
+                <GridColumn TItem="OrderViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm" SortKeySelector="item => item.PaymentTerm">
                     @context.PaymentTerm
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
                     @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Quantity Type" PropertyName="QuantityType">
+                <GridColumn TItem="OrderViewModel" HeaderText="Quantity Type" PropertyName="QuantityType" SortKeySelector="item => item.QuantityType">
                     @context.QuantityType
                 </GridColumn>
-                <GridColumn TItem="OrderViewModel" HeaderText="Order Status" PropertyName="OrderStatus">
+                <GridColumn TItem="OrderViewModel" HeaderText="Order Status" PropertyName="OrderStatus" SortKeySelector="item => item.OrderStatus">
                     @context.OrderStatus
                 </GridColumn>
             </Grid>

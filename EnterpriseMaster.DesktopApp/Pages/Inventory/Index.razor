@@ -28,28 +28,28 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="Products" HeaderText="Product Name" PropertyName="ProductName">
+                <GridColumn TItem="Products" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Product Code" PropertyName="ProductCode">
+                <GridColumn TItem="Products" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
                     @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Unit Price($)" PropertyName="Price">
+                <GridColumn TItem="Products" HeaderText="Unit Price($)" PropertyName="Price" SortKeySelector="item => item.Price">
                     @context.Price
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Weight" PropertyName="Weight">
+                <GridColumn TItem="Products" HeaderText="Weight" PropertyName="Weight" SortKeySelector="item => item.Weight">
                     @context.Weight
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Description" PropertyName="Description">
+                <GridColumn TItem="Products" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description">
                     @context.Description
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Manufacturer" PropertyName="Manufacturer">
+                <GridColumn TItem="Products" HeaderText="Manufacturer" PropertyName="Manufacturer" SortKeySelector="item => item.Manufacturer">
                     @context.Manufacturer
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Units In Stock" PropertyName="UnitsInStock">
+                <GridColumn TItem="Products" HeaderText="Units In Stock" PropertyName="UnitsInStock" SortKeySelector="item => item.UnitsInStock">
                     @context.UnitsInStock
                 </GridColumn>
-                <GridColumn TItem="Products" HeaderText="Weight" PropertyName="Weight">
+                <GridColumn TItem="Products" HeaderText="Weight" PropertyName="Weight" SortKeySelector="item => item.Weight">
                     @context.Weight
                 </GridColumn>
             </Grid>

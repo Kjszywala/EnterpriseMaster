@@ -29,25 +29,25 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="InvoiceViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="InvoiceViewModel" HeaderText="Product Code" PropertyName="ProductCode">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
                     @context.ProductCode
                 </GridColumn>
-                <GridColumn TItem="InvoiceViewModel" HeaderText="Email" PropertyName="Email">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
                     @context.Email
                 </GridColumn>
-                <GridColumn TItem="InvoiceViewModel" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
                     @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="InvoiceViewModel" HeaderText="Order Date" PropertyName="OrderDate">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Order Date" PropertyName="OrderDate" SortKeySelector="item => item.OrderDate">
                     @context.OrderDate
                 </GridColumn>
-                <GridColumn TItem="InvoiceViewModel" HeaderText="Discount" PropertyName="Discount">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="Discount" PropertyName="Discount" SortKeySelector="item => item.Discount">
                     @context.Discount
                 </GridColumn>
-                <GridColumn TItem="InvoiceViewModel" HeaderText="TotalAmount" PropertyName="TotalAmount">
+                <GridColumn TItem="InvoiceViewModel" HeaderText="TotalAmount" PropertyName="TotalAmount" SortKeySelector="item => item.TotalAmount">
                     @context.TotalAmount
                 </GridColumn>
             </Grid>

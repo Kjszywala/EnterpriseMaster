@@ -28,16 +28,16 @@
                 PaginationItemsTextFormat="{0} - {1} of {2} pages"
                 ItemsPerPageText="Items per page"
                 Responsive="true">
-                <GridColumn TItem="Employees" HeaderText="First Name" PropertyName="FirstName">
+                <GridColumn TItem="Employees" HeaderText="First Name" PropertyName="FirstName" SortKeySelector="item => item.FirstName">
                     @context.FirstName
                 </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="Last Name" PropertyName="LastName">
+                <GridColumn TItem="Employees" HeaderText="Last Name" PropertyName="LastName" SortKeySelector="item => item.LastName">
                     @context.LastName
                 </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="E-mail" PropertyName="Email">
+                <GridColumn TItem="Employees" HeaderText="E-mail" PropertyName="Email" SortKeySelector="item => item.Email">
                     @context.Email
                 </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="Hire Date" PropertyName="HireDate">
+                <GridColumn TItem="Employees" HeaderText="Hire Date" PropertyName="HireDate" SortKeySelector="item => item.HireDate">
                     @if (@context.HireDate != null)
                     {
                         @context.HireDate.Value.ToString("dd/MM/yyyy")
@@ -47,7 +47,7 @@
                         @context.HireDate
                     }
                 </GridColumn>
-                <GridColumn TItem="Employees" HeaderText="Position" PropertyName="Position">
+                <GridColumn TItem="Employees" HeaderText="Position" PropertyName="Position" SortKeySelector="item => item.Position">
                     @context.Position
                 </GridColumn>
             </Grid>

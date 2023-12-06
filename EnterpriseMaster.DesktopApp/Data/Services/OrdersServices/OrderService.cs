@@ -1,6 +1,7 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
 using EnterpriseMaster.DesktopApp.Data.Models;
+using EnterpriseMaster.DesktopApp.Helpers.Enums;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
 {
@@ -195,7 +196,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
                         PaymentTerm = item.PaymentTerm,
                         PricePaid = item.PricePaid,
                         ProductCode = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductCode,
-                        ProductName = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductName,
+                        ProductName = (await partsServices.GetAsync(item.PartId.Value)).PartName,
                         Quantity = item.Quantity,
                         QuantityType = (await quantityTypesServices.GetAsync(item.QuantityTypeId.Value)).Type,
                     });
@@ -214,7 +215,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.OrderStatuseId == (int)StatusForOrder.Open).ToList();
 
                 return purchaseOrders;
             }

@@ -28,22 +28,22 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="OffersViewModel" HeaderText="Product Name" PropertyName="ProductName">
+                <GridColumn TItem="OffersViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="OffersViewModel" HeaderText="Offer Name" PropertyName="OfferName">
+                <GridColumn TItem="OffersViewModel" HeaderText="Offer Name" PropertyName="OfferName" SortKeySelector="item => item.OfferName">
                     @context.OfferName
                 </GridColumn>
-                <GridColumn TItem="OffersViewModel" HeaderText="Available From" PropertyName="AvailableFrom">
+                <GridColumn TItem="OffersViewModel" HeaderText="Available From" PropertyName="AvailableFrom" SortKeySelector="item => item.AvailableFrom">
                     @context.AvailableFrom
                 </GridColumn>
-                <GridColumn TItem="OffersViewModel" HeaderText="Available To" PropertyName="AvailableTo">
+                <GridColumn TItem="OffersViewModel" HeaderText="Available To" PropertyName="AvailableTo" SortKeySelector="item => item.AvailableTo">
                     @context.AvailableTo
                 </GridColumn>
-                <GridColumn TItem="OffersViewModel" HeaderText="Descrition" PropertyName="OfferDescrition">
+                <GridColumn TItem="OffersViewModel" HeaderText="Descrition" PropertyName="OfferDescrition" SortKeySelector="item => item.OfferDescrition">
                     @context.OfferDescrition
                 </GridColumn>
-                <GridColumn TItem="OffersViewModel" HeaderText="Discount" PropertyName="Discount">
+                <GridColumn TItem="OffersViewModel" HeaderText="Discount" PropertyName="Discount" SortKeySelector="item => item.Discount">
                     @context.Discount
                 </GridColumn>
             </Grid>

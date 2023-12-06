@@ -368,6 +368,7 @@
         await gridTasks.RefreshDataAsync();
         await gridTasksCompleted.RefreshDataAsync();
         await gridTasksInProgress.RefreshDataAsync();
+        StateHasChanged();
     }
 
     #region News

@@ -17,10 +17,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         private readonly IErrorLogsServices errorLogsServices;
         private readonly IProductsServices productsServices;
         private readonly IPaymentStatusService paymentStatusService;
+        private readonly IPartsServices partsServices;
 
         #endregion
 
-        #region Variables
+        #region Constructor
 
         public FinanceService(
             IPaymentMethodsServices _paymentMethodsServices, 
@@ -30,7 +31,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             IPaymentServices _paymentServices,
             IErrorLogsServices _errorLogsServices,
             IProductsServices _productsServices,
-            IPaymentStatusService _paymentStatusService)
+            IPaymentStatusService _paymentStatusService,
+            IPartsServices _partsServices)
         {
             paymentMethodsServices = _paymentMethodsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -40,11 +42,29 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             errorLogsServices = _errorLogsServices;
             productsServices = _productsServices;
             paymentStatusService = _paymentStatusService;
+            partsServices = _partsServices;
         }
 
         #endregion
 
-        #region Variables
+        #region Methods
+
+        #region PaymentStatus
+
+        public async Task<PaymentStatus> GetPaymentStatusAsync(int id)
+        {
+            try
+            {
+                return (await paymentStatusService.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
 
         #region paymentServices
 
@@ -57,16 +77,16 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
 
                 foreach (var item in paymentList)
                 {
-                    var salesOrder = (await salesOrdersServices.GetAsync(item.SalesOrdersId.Value));
+                    var salesOrder = (await purchaseOrdersServices.GetAsync(item.PurchaseOrderId.Value));
                     paymentListViewModel.Add(new PaymentViewModel
                     {
                         PaymentId = item.Id,
-                        InvoicesCode = (await invoicesServices.GetAsync(item.InvoicesId.Value)).InvoiceNumber,
+                        InvoicesCode = item.InvoicesId != null ? (await invoicesServices.GetAsync(item.InvoicesId.Value)).InvoiceNumber : "None",
                         PaymentMethod = (await paymentMethodsServices.GetAsync(item.PaymentMethodId.Value)).PaymentType,
                         PurchaseOrderCode = (await purchaseOrdersServices.GetAsync(item.PurchaseOrderId.Value)).PurchaseOrderNumber,
-                        SalesOrdersCode = salesOrder.SalesOrderNumber,
+                        SalesOrdersCode = salesOrder.PurchaseOrderNumber,
                         TotalAmount = salesOrder.PricePaid,
-                        Product = (await productsServices.GetAsync( salesOrder.ProductId.Value)).ProductName,
+                        Product = (await partsServices.GetAsync( salesOrder.PartId.Value)).PartName,
                         Quantity = salesOrder.Quantity,
                         PaymentStatus = (await paymentStatusService.GetAsync(item.PaymentStatuId.Value)).Status
                     });

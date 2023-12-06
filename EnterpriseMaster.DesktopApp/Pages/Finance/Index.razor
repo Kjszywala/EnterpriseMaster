@@ -4,6 +4,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @inherits MainLayout
 @inject FinanceService financeService
 @inject OrderService orderService
@@ -31,55 +32,72 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="PaymentViewModel" HeaderText="Payment Method" PropertyName="PaymentMethod">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Payment Method" PropertyName="PaymentMethod" SortKeySelector="item => item.PaymentMethod">
                     @context.PaymentMethod
                 </GridColumn>
-                <GridColumn TItem="PaymentViewModel" HeaderText="Product" PropertyName="Product">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Product" PropertyName="Product" SortKeySelector="item => item.Product">
                     @context.Product
                 </GridColumn>
-                <GridColumn TItem="PaymentViewModel" HeaderText="Order Code" PropertyName="SalesOrdersCode">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Order Code" PropertyName="SalesOrdersCode" SortKeySelector="item => item.SalesOrdersCode">
                     @context.SalesOrdersCode
                 </GridColumn>
-                <GridColumn TItem="PaymentViewModel" HeaderText="Invoices Code" PropertyName="InvoicesCode">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Invoices Code" PropertyName="InvoicesCode" SortKeySelector="item => item.InvoicesCode">
                     @context.InvoicesCode
                 </GridColumn>
-                <GridColumn TItem="PaymentViewModel" HeaderText="Quantity" PropertyName="Quantity">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
                     @context.Quantity
                 </GridColumn>
-                <GridColumn TItem="PaymentViewModel" HeaderText="Price Paid" PropertyName="TotalAmount">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Price Paid" PropertyName="TotalAmount" SortKeySelector="item => item.TotalAmount">
                     @context.TotalAmount
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Payment Status" PropertyName="PaymentStatus" SortKeySelector="item => item.PaymentStatus">
+                    @context.PaymentStatus
                 </GridColumn>
             </Grid>
         </Content>
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Kanban" /> Payment Approvals
+            <Icon Name="IconName.Check" /> Payment Approvals
         </TitleTemplate>
         <Content>
             <br />
-            <Accordion Class="container">
-                @foreach (var item in purchaseOrders)
-                {
-                    <AccordionItem Title=@item.Part.PartName>
-                        <Content>
-                            <b>Quantity in purchase order: @item.Quantity</b>
-                            <b>Quantity in stock: @item.Part.QuantityInStock</b>
-                            <b>Description: @item.Part.Description</b>
-                            <br />
-                            <div>
-                                <div class="mb-3">
-                                    <label class="form-label">Amount to pay:</label>
-                                    <NumberInput TValue="decimal" @bind-Value="@item.PricePaid" Placeholder="Enter amount" Disabled/>
-                                    <br>
-                                    <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => ApprovePayment(item.Id)"> Accept Purchase Order </Button>
-                                    <Button Color="ButtonColor.Danger" Size="Size.Medium" @onclick="() => DeclinePayment(item.Id)"> Decline Purchase Order </Button>
+            @if (purchaseOrders.Count > 0)
+            {
+                <Accordion Class="container">
+                    @foreach (var item in purchaseOrders)
+                    {
+                        <AccordionItem Title=@item.Part.PartName>
+                            <Content>
+                                <b>Quantity in purchase order: @item.Quantity</b>
+                                <br />
+                                <b>Quantity in stock: @item.Part.QuantityInStock</b>
+                                <br />
+                                <b>Description: @item.Part.Description</b>
+                                <br />
+                                <div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Amount to pay:</label>
+                                        <NumberInput TValue="decimal" @bind-Value="@item.PricePaid" Placeholder="Enter amount" Disabled />
+                                        <br>
+                                        <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => ApprovePayment(item.Id)"> Accept Purchase Order </Button>
+                                        <Button Color="ButtonColor.Danger" Size="Size.Medium" @onclick="() => OnShowModalClick(item.Id)"> Decline Purchase Order </Button>
+                                    </div>
                                 </div>
-                            </div>
-                        </Content>
-                    </AccordionItem>
-                }
-            </Accordion>
+                            </Content>
+                        </AccordionItem>
+                    }
+                </Accordion>
+            }
+            else
+            {
+                <Alert Color="AlertColor.Info" Class="container">
+                    <h4 class="alert-heading">No Purchase Orders to Approve</h4>
+                    <p>There are currently no pending purchase orders for approval. You're all caught up!</p>
+                    <hr>
+                    <p class="mb-0">Feel free to check back later or contact the relevant department for more information.</p>
+                </Alert>
+            }
         </Content>
     </Tab>
     <Tab>
@@ -115,6 +133,16 @@
 </Tabs>
 <Preload />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+<Modal @ref="modal" Title="Reject Reason">
+    <BodyTemplate>
+        Specify the reject reason here:
+        <textarea class="form-control" id="exampleTextarea" @bind="rejectReason" rows="5"></textarea>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="DeclinePayment">Save changes</Button>
+    </FooterTemplate>
+</Modal>
 @code {
     protected async override void OnInitialized()
     {
@@ -130,7 +158,7 @@
         }
         catch(Exception e)
         {
-            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a part!");
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
 
@@ -151,15 +179,103 @@
     #region Payment approval
 
     private List<PurchaseOrders> purchaseOrders = new List<PurchaseOrders>();
+    private string rejectReason = "";
+    private Modal modal = default!;
+    private int currentModalId;
 
     private async Task ApprovePayment(int id)
     {
+        try
+        {
+            var purchaseOrder = await orderService.GetPurchaseOrderAsync(id);
+            var paymentMethod = (await financeService.GetAllPaymentMetdhodsAsync()).FirstOrDefault();
 
+            purchaseOrder.ModificationDate = DateTime.Now;
+            purchaseOrder.OrderStatuseId = (int)StatusForOrder.InProgress;
+
+            if (!await orderService.UpdatePurchaseOrderAsync(purchaseOrder))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating an order!");
+                return;
+            };
+
+            var payment = new Payments()
+            {
+                CreationDate = DateTime.Now,
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                PaymentMethodId = (int)StatusForPaymentMethod.Visa,
+                PaymentStatuId = (int)StatusForPayment.Completed,
+                PurchaseOrderId = id,
+                TotalAmount = purchaseOrder.PricePaid
+            };
+            if(await financeService.AddPaymentsAsync(payment))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Payment accepted successfully");
+                payments = await financeService.GetAllPaymentsForGridAsync();
+                purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+                foreach (var item in purchaseOrders)
+                {
+                    item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
+                }
+                await gridPayments.RefreshDataAsync();
+                StateHasChanged();
+                await modal.HideAsync();
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            await modal.HideAsync();
+        }
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
-    private async Task DeclinePayment(int id)
+    private async Task DeclinePayment()
     {
-        
+        try
+        {
+            var purchaseOrder = await orderService.GetPurchaseOrderAsync(currentModalId);
+            var paymentMethod = (await financeService.GetAllPaymentMetdhodsAsync()).FirstOrDefault();
+
+            purchaseOrder.RejectedReason = rejectReason;
+            purchaseOrder.ModificationDate = DateTime.Now;
+            purchaseOrder.OrderStatuseId = (int)StatusForOrder.Rejected;
+            purchaseOrder.IsActive = false;
+
+            if (await orderService.UpdatePurchaseOrderAsync(purchaseOrder))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Payment declined!");
+                payments = await financeService.GetAllPaymentsForGridAsync();
+                purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+                foreach (var item in purchaseOrders)
+                {
+                    item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
+                }
+                await gridPayments.RefreshDataAsync();
+                StateHasChanged();
+                return;
+            }
+
+            ShowMessage(ToastType.Warning, "Success!", "Something went wrong!");
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
+
+    private async Task OnShowModalClick(int id)
+    {
+        currentModalId = id;
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+    }
+
     #endregion
 }

@@ -30,19 +30,19 @@
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
                   Responsive="true">
-                <GridColumn TItem="CustomerDataViewModel" HeaderText="First Name" PropertyName="FirstName">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="First Name" PropertyName="FirstName" SortKeySelector="item => item.FirstName">
                     @context.FirstName
                 </GridColumn>
-                <GridColumn TItem="CustomerDataViewModel" HeaderText="Last Name" PropertyName="LastName">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Last Name" PropertyName="LastName" SortKeySelector="item => item.LastName">
                     @context.LastName
                 </GridColumn>
-                <GridColumn TItem="CustomerDataViewModel" HeaderText="Email" PropertyName="Email">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
                     @context.Email
                 </GridColumn>
-                <GridColumn TItem="CustomerDataViewModel" HeaderText="Phone" PropertyName="Phone">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
                     @context.Phone
                 </GridColumn>
-                <GridColumn TItem="CustomerDataViewModel" HeaderText="Company Name" PropertyName="ComapnyName">
+                <GridColumn TItem="CustomerDataViewModel" HeaderText="Company Name" PropertyName="ComapnyName" SortKeySelector="item => item.ComapnyName">
                     @context.ComapnyName
                 </GridColumn>
             </Grid>
