@@ -5,69 +5,64 @@ namespace EnterpriseMaster.UnitTests.DbServicesUnitTests
 {
     public class PaymentStatusUnitTests
     {
-        Payment orderStatusService = new OrderStatusesServices();
+        PaymentStatusService paymentStatusService = new PaymentStatusService();
 
         [Test]
-        public async Task CreateMultipleOrderStatuses_TestAsync()
+        public async Task CreateMultiplePaymentStatuses_TestAsync()
         {
-            var orderStatuses = new List<OrderStatuses>
+            var orderStatuses = new List<PaymentStatus>
             {
-                new OrderStatuses
+                new PaymentStatus
                 {
                     CreationDate = DateTime.Now,
                     ModificationDate = DateTime.Now,
                     IsActive = true,
-                    Notes = "Status 1 notes",
-                    Title = "Status 1",
-                    Discription = "Open",
-                    Status = 1
+                    Notes = "Payment Pending notes",
+                    Title = "Payment Pending",
+                    Status = "Pending"
                 },
-                new OrderStatuses
+                new PaymentStatus
                 {
                     CreationDate = DateTime.Now,
                     ModificationDate = DateTime.Now,
                     IsActive = true,
-                    Notes = "Status 2 notes",
-                    Title = "Status 2",
-                    Discription = "In Progress",
-                    Status = 2
+                    Notes = "Payment Received notes",
+                    Title = "Payment Received",
+                    Status = "Received"
                 },
-                new OrderStatuses
+                new PaymentStatus
                 {
                     CreationDate = DateTime.Now,
                     ModificationDate = DateTime.Now,
                     IsActive = true,
-                    Notes = "Status 3 notes",
-                    Title = "Status 3",
-                    Discription = "Completed",
-                    Status = 3
+                    Notes = "Payment Failed notes",
+                    Title = "Payment Failed",
+                    Status = "Failed"
                 },
-                new OrderStatuses
+                new PaymentStatus
                 {
                     CreationDate = DateTime.Now,
                     ModificationDate = DateTime.Now,
                     IsActive = true,
-                    Notes = "Status 4 notes",
-                    Title = "Status 4",
-                    Discription = "Shipped",
-                    Status = 4
+                    Notes = "Payment Refunded notes",
+                    Title = "Payment Refunded",
+                    Status = "Refunded"
                 },
-                new OrderStatuses
+                new PaymentStatus
                 {
                     CreationDate = DateTime.Now,
                     ModificationDate = DateTime.Now,
                     IsActive = true,
-                    Notes = "Status 5 notes",
-                    Title = "Status 5",
-                    Discription = "On Hold",
-                    Status = 5
-                }
+                    Notes = "Payment Completed notes",
+                    Title = "Payment Completed",
+                    Status = "Completed"
+                },
             };
 
             // Add more task statuses as needed
             foreach (var order in orderStatuses)
             {
-                await orderStatusService.AddAsync(order);
+                await paymentStatusService.AddAsync(order);
             }
         }
     }

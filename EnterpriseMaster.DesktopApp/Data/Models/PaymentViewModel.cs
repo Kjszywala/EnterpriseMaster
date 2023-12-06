@@ -1,5 +1,4 @@
-﻿using EnterpriseMaster.DbServices.Models.Database;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EnterpriseMaster.DesktopApp.Data.Models
@@ -16,5 +15,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Models
         public string? PurchaseOrderCode { get; set; }
         public string? InvoicesCode { get; set; }
         public string? SalesOrdersCode { get; set; }
+        public string? PaymentStatus { get; set; }
     }
 }

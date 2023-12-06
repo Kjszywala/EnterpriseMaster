@@ -115,10 +115,17 @@
 @code {
     protected async override void OnInitialized()
     {
-        payments = await financeService.GetAllPaymentsForGridAsync();
-        partsOrders = await orderService.GetAllPartsAsync();
+        try
+        {
+            payments = await financeService.GetAllPaymentsForGridAsync();
+            partsOrders = await orderService.GetAllPartsAsync();
 
-        await gridPayments.RefreshDataAsync();
+            await gridPayments.RefreshDataAsync();
+        }
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a part!");
+        }
     }
 
     #region Payments

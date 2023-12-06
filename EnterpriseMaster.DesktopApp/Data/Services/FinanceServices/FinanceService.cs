@@ -16,6 +16,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         private readonly IPaymentServices paymentServices;
         private readonly IErrorLogsServices errorLogsServices;
         private readonly IProductsServices productsServices;
+        private readonly IPaymentStatusService paymentStatusService;
 
         #endregion
 
@@ -28,7 +29,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             IInvoicesServices _invoicesServices,
             IPaymentServices _paymentServices,
             IErrorLogsServices _errorLogsServices,
-            IProductsServices _productsServices)
+            IProductsServices _productsServices,
+            IPaymentStatusService _paymentStatusService)
         {
             paymentMethodsServices = _paymentMethodsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -37,6 +39,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             paymentServices = _paymentServices;
             errorLogsServices = _errorLogsServices;
             productsServices = _productsServices;
+            paymentStatusService = _paymentStatusService;
         }
 
         #endregion
@@ -64,7 +67,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
                         SalesOrdersCode = salesOrder.SalesOrderNumber,
                         TotalAmount = salesOrder.PricePaid,
                         Product = (await productsServices.GetAsync( salesOrder.ProductId.Value)).ProductName,
-                        Quantity = salesOrder.Quantity
+                        Quantity = salesOrder.Quantity,
+                        PaymentStatus = (await paymentStatusService.GetAsync(item.PaymentStatuId.Value)).Status
                     });
                 }
 
