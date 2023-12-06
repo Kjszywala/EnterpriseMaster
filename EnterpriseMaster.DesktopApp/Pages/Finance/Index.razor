@@ -57,26 +57,29 @@
             <Icon Name="IconName.Kanban" /> Payment Approvals
         </TitleTemplate>
         <Content>
-           @* <br />
+            <br />
             <Accordion Class="container">
-                @foreach (var item in partsOrders)
+                @foreach (var item in purchaseOrders)
                 {
-                    <AccordionItem Title=@item.PartName>
+                    <AccordionItem Title=@item.Part.PartName>
                         <Content>
-                            <b>@item.Description</b>
+                            <b>Quantity in purchase order: @item.Quantity</b>
+                            <b>Quantity in stock: @item.Part.QuantityInStock</b>
+                            <b>Description: @item.Part.Description</b>
                             <br />
                             <div>
                                 <div class="mb-3">
-                                    <label class="form-label">Amount</label>
-                                    <NumberInput TValue="int" @bind-Value="@item.QuantityInStock" Placeholder="Enter amount" />
+                                    <label class="form-label">Amount to pay:</label>
+                                    <NumberInput TValue="decimal" @bind-Value="@item.PricePaid" Placeholder="Enter amount" Disabled/>
                                     <br>
-                                    <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => ApprovePayment(item.Id, item.QuantityInStock)"> Make Purchase Order </Button>
+                                    <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => ApprovePayment(item.Id)"> Accept Purchase Order </Button>
+                                    <Button Color="ButtonColor.Danger" Size="Size.Medium" @onclick="() => DeclinePayment(item.Id)"> Decline Purchase Order </Button>
                                 </div>
                             </div>
                         </Content>
                     </AccordionItem>
                 }
-            </Accordion>*@
+            </Accordion>
         </Content>
     </Tab>
     <Tab>
@@ -118,8 +121,11 @@
         try
         {
             payments = await financeService.GetAllPaymentsForGridAsync();
-            partsOrders = await orderService.GetAllPartsAsync();
-
+            purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+            foreach(var item in purchaseOrders)
+            {
+                item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
+            }
             await gridPayments.RefreshDataAsync();
         }
         catch(Exception e)
@@ -144,7 +150,16 @@
 
     #region Payment approval
 
-    private List<Parts> partsOrders = new List<Parts>();
+    private List<PurchaseOrders> purchaseOrders = new List<PurchaseOrders>();
 
+    private async Task ApprovePayment(int id)
+    {
+
+    }
+
+    private async Task DeclinePayment(int id)
+    {
+        
+    }
     #endregion
 }

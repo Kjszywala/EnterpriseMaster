@@ -61,6 +61,16 @@ namespace EnterpriseMaster.UnitTests.DbServicesUnitTests
                     Title = "Status 5",
                     Discription = "On Hold",
                     Status = 5
+                },
+                new OrderStatuses
+                {
+                    CreationDate = DateTime.Now,
+                    ModificationDate = DateTime.Now,
+                    IsActive = true,
+                    Notes = "Status 6 notes",
+                    Title = "Status 6",
+                    Discription = "Rejected",
+                    Status = 6
                 }
             };
 
