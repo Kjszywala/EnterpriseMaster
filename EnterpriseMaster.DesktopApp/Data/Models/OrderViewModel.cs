@@ -9,6 +9,6 @@
         public DateTime? PaymentTerm { get; set; }
         public decimal? Quantity { get; set; }
         public string? QuantityType { get; set; }
-        public DateTime? Deliverydate { get; set; }
+        public string? OrderStatus { get; set; }
     }
 }

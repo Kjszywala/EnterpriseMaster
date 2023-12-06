@@ -15,5 +15,7 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public Invoices? Invoice { get; set; }
         public int? SalesOrdersId { get; set; }
         public SalesOrders? SalesOrder { get; set; }
+        public int? PaymentStatuId { get; set; }
+        public PaymentStatus? PaymentStatu { get; set; }
     }
 }

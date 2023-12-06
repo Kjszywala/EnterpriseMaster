@@ -3,8 +3,10 @@
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @inherits MainLayout
 @inject FinanceService financeService
+@inject OrderService orderService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -55,14 +57,26 @@
             <Icon Name="IconName.Kanban" /> Payment Approvals
         </TitleTemplate>
         <Content>
-            <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
-                </div>
-            </div>
+           @* <br />
+            <Accordion Class="container">
+                @foreach (var item in partsOrders)
+                {
+                    <AccordionItem Title=@item.PartName>
+                        <Content>
+                            <b>@item.Description</b>
+                            <br />
+                            <div>
+                                <div class="mb-3">
+                                    <label class="form-label">Amount</label>
+                                    <NumberInput TValue="int" @bind-Value="@item.QuantityInStock" Placeholder="Enter amount" />
+                                    <br>
+                                    <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => ApprovePayment(item.Id, item.QuantityInStock)"> Make Purchase Order </Button>
+                                </div>
+                            </div>
+                        </Content>
+                    </AccordionItem>
+                }
+            </Accordion>*@
         </Content>
     </Tab>
     <Tab>
@@ -96,11 +110,13 @@
         </Content>
     </Tab>
 </Tabs>
-
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
     protected async override void OnInitialized()
     {
         payments = await financeService.GetAllPaymentsForGridAsync();
+        partsOrders = await orderService.GetAllPartsAsync();
 
         await gridPayments.RefreshDataAsync();
     }
@@ -116,6 +132,12 @@
 
         return await Task.FromResult(request.ApplyTo(payments));
     }
+
+    #endregion
+
+    #region Payment approval
+
+    private List<Parts> partsOrders = new List<Parts>();
 
     #endregion
 }

@@ -16,6 +16,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
         private readonly ISalesOrdersServices salesOrdersServices;
         private readonly IProductsServices productsServices;
         private readonly IQuantityTypesServices quantityTypesServices;
+        private readonly IOrderStatusesServices orderStatusesServices;
 
         #endregion
 
@@ -28,7 +29,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
             IReturnStatusService _returnStatus, 
             ISalesOrdersServices _salesOrdersServices,
             IProductsServices _productsServices,
-            IQuantityTypesServices _quantityTypesService)
+            IQuantityTypesServices _quantityTypesService,
+            IOrderStatusesServices _orderStatusesServices)
         {
             errorLogsServices = _errorLogsServices;
             refudsServices = _refudsServices;
@@ -37,6 +39,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
             salesOrdersServices = _salesOrdersServices;
             productsServices = _productsServices;
             quantityTypesServices = _quantityTypesService;
+            orderStatusesServices = _orderStatusesServices;
         }
 
         #endregion
@@ -225,7 +228,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
                 {
                     saleViewModelList.Add(new OrderViewModel
                     {
-                        Deliverydate = order.DeliveryDate,
+                        OrderStatus = (await orderStatusesServices.GetAsync(order.OrderStatuseId.Value)).Discription,
                         OrderNumber = order.SalesOrderNumber,
                         PaymentTerm = order.PaymentTerm,
                         PricePaid = order.PricePaid,

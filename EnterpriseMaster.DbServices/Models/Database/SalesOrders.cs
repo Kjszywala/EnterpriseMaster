@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using EnterpriseMaster.DbServices.Services;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EnterpriseMaster.DbServices.Models.Database
@@ -23,6 +24,8 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public ProductionOrders? ProductionOrder { get; set; }
         public int? CompanyId { get; set; }
         public Companies? Companies { get; set; }
+        public int? OrderStatuseId { get; set; }
+        public OrderStatuses? OrderStatuse { get; set; }
         public string RejectedReason { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }

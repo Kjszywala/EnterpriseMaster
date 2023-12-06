@@ -21,6 +21,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         private readonly IQuantityTypesServices quantityTypesServices;
         private readonly ISuppliersServices suppliersServices;
         private readonly ISuppliersAddressesServices suppliersAddressesServices;
+        private readonly IOrderStatusesServices orderStatusesServices;
 
         #endregion
 
@@ -39,7 +40,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             IProductsServices _productsServices,
             IPartsServices _partsServices,
             ISuppliersAddressesServices _suppliersAddressesServices,
-            ISuppliersServices _suppliersServices)
+            ISuppliersServices _suppliersServices,
+            IOrderStatusesServices _orderStatusesServices)
         {
             errorLogsServices = _errorLogsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -54,6 +56,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             partsServices = _partsServices;
             suppliersAddressesServices = _suppliersAddressesServices;
             suppliersServices = _suppliersServices;
+            orderStatusesServices = _orderStatusesServices;
         }
 
         #endregion
@@ -187,14 +190,14 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
                 {
                     orderViewModelList.Add(new OrderViewModel
                     {
-                        Deliverydate = item.DeliveryDate,
+                        OrderStatus = (await orderStatusesServices.GetAsync(item.OrderStatuseId.Value)).Discription,
                         OrderNumber = item.PurchaseOrderNumber,
                         PaymentTerm = item.PaymentTerm,
                         PricePaid = item.PricePaid,
                         ProductCode = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductCode,
                         ProductName = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductName,
                         Quantity = item.Quantity,
-                        QuantityType = (await quantityTypesServices.GetAsync(item.QuantityTypeId.Value)).Type
+                        QuantityType = (await quantityTypesServices.GetAsync(item.QuantityTypeId.Value)).Type,
                     });
                 }
 
