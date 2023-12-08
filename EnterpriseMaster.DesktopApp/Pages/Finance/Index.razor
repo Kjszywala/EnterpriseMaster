@@ -106,11 +106,54 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+            <div class="containerPanel">
+                <div class="topPanel-panel">
+                    <LineChart @ref="lineChart" Width="1100" Class="mb-4" />
+                </div>
+                <div class="bottomPanel-panel">
+                    <div class="bottomPanel-left">
+                        <h3>Summary</h3>
+                        <hr />
+                        <div class="summary-section">
+                            <p id="totalSpendings">Total Spendings: <span class="@((decimal.Parse(RemoveNonNumeric(totalSpendings)) >= 0) ? "green-number" : "red-number")">@totalSpendings</span></p>
+                            <br />
+                            <p id="averageMonthlySpendings">Average Monthly Spendings: <span class="@((decimal.Parse(RemoveNonNumeric(averageMonthlySpendings)) >= 0) ? "green-number" : "red-number")">@averageMonthlySpendings</span></p>
+                            <br />
+                            <p id="spendingChange">Spending Change from Previous Period: <span class="@((decimal.Parse(RemoveNonNumeric(spendingChangeFromPreviousPeriod)) >= 0) ? "green-number" : "red-number")">@spendingChangeFromPreviousPeriod</span></p>
+                            <br />
+                            <p id="budgetVsActual">Budget vs. This Month: <span class="@((decimal.Parse(RemoveNonNumeric(budgetVsActualSpending)) >= 0) ? "green-number" : "red-number")">@budgetVsActualSpending</span></p>
+                            <br />
+                            <p id="biggestPurchase">Biggest Single Purchase: <span class="@((decimal.Parse(RemoveNonNumeric(biggestSinglePurchase)) >= 0) ? "green-number" : "red-number")">@biggestSinglePurchase</span></p>
+                        </div>
+                    </div>
+                    <div class="bottomPanel-right">
+                        <h3>Last Approvals</h3>
+                        <hr />
+                        @if (lastPurchaseOrders.Count > 0)
+                        {
+                            @foreach (var item2 in lastPurchaseOrders)
+                            {
+                                <Alert Color="AlertColor.Success" Class="container">
+                                    <h4 class="alert-heading">Purchase Order Information</h4>
+                                    <p>Part Name: @item2.Part.PartName</p>
+
+                                    <hr>
+                                    <p>Part Description: @item2.Part.Description</p>
+                                    <p>Purchase Order Number: @item2.PurchaseOrderNumber</p>
+                                    <p>Date: @item2.ModificationDate</p>
+                                </Alert>
+                            }
+                        }
+                        else
+                        {
+                            <Alert Color="AlertColor.Success" Class="container">
+                                <h4 class="alert-heading">No Purchase Orders Approved</h4>
+                                <p>There are currently purchase orders for approved!</p>
+                                <hr>
+                                <p class="mb-0">Feel free to check back later or contact the relevant department for more information.</p>
+                            </Alert>
+                        }
+                    </div>
                 </div>
             </div>
         </Content>
@@ -149,11 +192,17 @@
         try
         {
             payments = await financeService.GetAllPaymentsForGridAsync();
-            purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+            purchaseOrders = await orderService.GetAllOpenPurchaseOrdersAsync();
             foreach(var item in purchaseOrders)
             {
                 item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
             }
+            lastPurchaseOrdersApproved = await orderService.GetAllPurchaseOrdersApprovedAsync();
+            foreach (var item in lastPurchaseOrdersApproved)
+            {
+                item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
+            }
+            lastPurchaseOrders = lastPurchaseOrdersApproved.OrderByDescending(item => item.ModificationDate).Take(5).ToList();
             await gridPayments.RefreshDataAsync();
         }
         catch(Exception e)
@@ -213,12 +262,19 @@
             {
                 ShowMessage(ToastType.Success, "Success!", "Payment accepted successfully");
                 payments = await financeService.GetAllPaymentsForGridAsync();
-                purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+                purchaseOrders = await orderService.GetAllOpenPurchaseOrdersAsync();
                 foreach (var item in purchaseOrders)
                 {
                     item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
                 }
                 await gridPayments.RefreshDataAsync();
+                var monthlyPayments = await financeService.CalculateMonthlySumAsync();
+                lastPurchaseOrdersApproved = await orderService.GetAllPurchaseOrdersApprovedAsync();
+                foreach (var item in lastPurchaseOrdersApproved)
+                {
+                    item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
+                }
+                lastPurchaseOrders = lastPurchaseOrdersApproved.OrderByDescending(item => item.ModificationDate).Take(5).ToList();
                 StateHasChanged();
                 await modal.HideAsync();
                 return;
@@ -248,7 +304,7 @@
             {
                 ShowMessage(ToastType.Success, "Success!", "Payment declined!");
                 payments = await financeService.GetAllPaymentsForGridAsync();
-                purchaseOrders = await orderService.GetAllPurchaseOrdersAsync();
+                purchaseOrders = await orderService.GetAllOpenPurchaseOrdersAsync();
                 foreach (var item in purchaseOrders)
                 {
                     item.Part = (await orderService.GetPartsAsync(item.PartId.Value));
@@ -275,6 +331,175 @@
     private async Task OnHideModalClick()
     {
         await modal.HideAsync();
+    }
+
+    #endregion
+
+    #region Expenses
+
+    private LineChart lineChart = default!;
+    private LineChartOptions lineChartOptions = default!;
+    private ChartData chartData = default!;
+    private string currentYear = "";
+    private string totalSpendings = "0";
+    private string averageMonthlySpendings = "0";
+    private string spendingChangeFromPreviousPeriod = "0";
+    private string budgetVsActualSpending = "0";
+    private string biggestSinglePurchase = "0";
+    private List<PurchaseOrders> lastPurchaseOrders = new List<PurchaseOrders>();
+    private List<PurchaseOrders> lastPurchaseOrdersApproved = new List<PurchaseOrders>();
+
+    protected async Task OnChartLoad()
+    {
+        currentYear = DateTime.Now.Year.ToString();
+        var payments = await financeService.GetAllPaymentsAsync();
+        totalSpendings = (await this.CalculateTotalSpendingsAsync(payments));
+        averageMonthlySpendings = (await this.CalculateAverageMonthlySpendingsAsync(payments));
+        spendingChangeFromPreviousPeriod = (await this.CalculateSpendingChangeFromPreviousMonthAsync(payments));
+        budgetVsActualSpending = (await this.CalculateBudgetVsActualSpendingAsync(payments, 100000m));
+        biggestSinglePurchase = (await this.FindBiggestSinglePurchaseAsync(payments));
+
+        var monthlyPayments = await financeService.CalculateMonthlySumAsync();
+        var colors = ColorBuilder.CategoricalTwelveColors;
+
+        var labels = new List<string> { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        var datasets = new List<IChartDataset>();
+
+        var dataset1 = new LineChartDataset
+            {
+                Label = "Spendings",
+                Data = GetDataForMonths(monthlyPayments, labels),
+                BackgroundColor = new List<string> { colors[0] },
+                BorderColor = new List<string> { colors[0] },
+                BorderWidth = new List<double> { 2 },
+                HoverBorderWidth = new List<double> { 4 },
+                PointBackgroundColor = new List<string> { colors[0] },
+                PointRadius = new List<int> { 0 }, // hide points
+                PointHoverRadius = new List<int> { 4 }
+            };
+        datasets.Add(dataset1);
+
+        chartData = new ChartData
+        {
+            Labels = labels,
+            Datasets = datasets
+        };
+
+        lineChartOptions = new();
+        lineChartOptions.Locale = "de-DE";
+        lineChartOptions.Responsive = true;
+        lineChartOptions.Interaction = new Interaction { Mode = InteractionMode.Index };
+
+        lineChartOptions.Scales.X.Title.Text = currentYear;
+        lineChartOptions.Scales.X.Title.Display = true;
+
+        lineChartOptions.Plugins.Title.Text = "Spendings";
+        lineChartOptions.Plugins.Title.Display = true;
+        StateHasChanged();
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await OnChartLoad();
+            await lineChart.InitializeAsync(chartData, lineChartOptions);
+        }
+    }
+
+    private List<double> GetDataForMonths(List<PaymentsMonthly> monthlyPayments, List<string> labels)
+    {
+        var dataForMonths = new List<double>();
+
+        foreach (var label in labels)
+        {
+            var correspondingMonth = monthlyPayments.FirstOrDefault(monthlyPayment => System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(monthlyPayment.Month) == label);
+
+            if (correspondingMonth != null)
+            {
+                dataForMonths.Add((double)correspondingMonth.TotalAmount);
+            }
+            else
+            {
+                // If there's no corresponding month, set the value to 0 or any default value as needed.
+                dataForMonths.Add(0.0);
+            }
+        }
+
+        return dataForMonths;
+    }
+
+    // Method to calculate total spendings
+    public async Task<string> CalculateTotalSpendingsAsync(List<Payments> payments)
+    {
+        decimal totalSpendings = payments.Sum(payment => payment.TotalAmount);
+        return totalSpendings.ToString("C"); // Format as currency
+    }
+
+    // Method to calculate average monthly spendings
+    public async Task<string> CalculateAverageMonthlySpendingsAsync(List<Payments> payments)
+    {
+        var groupedByMonth = payments.GroupBy(payment => new { payment.ModificationDate.Year, payment.ModificationDate.Month });
+        decimal averageMonthlySpendings = groupedByMonth.Average(group => group.Sum(payment => payment.TotalAmount));
+        return averageMonthlySpendings.ToString("C"); // Format as currency
+    }
+
+    // Method to calculate spending change from the previous month
+    public async Task<string> CalculateSpendingChangeFromPreviousMonthAsync(List<Payments> payments)
+    {
+        // Implement logic to compare spending with the previous month
+        // Replace the following with your actual logic
+        decimal spendingChange = CalculateSpendingChangeFromPreviousMonth(payments); // Replace with your logic
+        return spendingChange.ToString("C"); // Format as currency
+    }
+
+    // Method to calculate budget vs. actual spending
+    public async Task<string> CalculateBudgetVsActualSpendingAsync(List<Payments> payments, decimal budgetedAmount)
+    {
+        // Implement logic to compare budget vs. actual spending
+        // Replace the following with your actual logic
+        decimal budgetVsActual = CalculateBudgetVsActual(payments, budgetedAmount); // Replace with your logic
+        return budgetVsActual.ToString("C"); // Format as currency
+    }
+
+    // Method to find the biggest single purchase
+    public async Task<string> FindBiggestSinglePurchaseAsync(List<Payments> payments)
+    {
+        var biggestPurchase = payments.OrderByDescending(payment => payment.TotalAmount).FirstOrDefault();
+        return biggestPurchase != null ? biggestPurchase.TotalAmount.ToString("C") : "No purchases yet"; 
+    }
+
+    // Placeholder method for spending change calculation
+    private decimal CalculateSpendingChangeFromPreviousMonth(List<Payments> payments)
+    {
+        // Replace this with your actual logic to calculate spending change from the previous month
+        // Example: Compare the current month's total spending with the total spending from the previous month
+        var currentDate = DateTime.Now;
+        var previousMonthPayments = payments
+            .Where(payment => payment.ModificationDate.Year == currentDate.Year && payment.ModificationDate.Month == currentDate.Month - 1)
+            .ToList();
+
+        decimal currentMonthTotalSpendings = payments.Sum(payment => payment.TotalAmount);
+        decimal previousMonthTotalSpendings = previousMonthPayments.Sum(payment => payment.TotalAmount);
+
+        decimal spendingChange = currentMonthTotalSpendings - previousMonthTotalSpendings;
+        return spendingChange;
+    }
+
+    // Placeholder method for budget vs. actual spending calculation
+    private decimal CalculateBudgetVsActual(List<Payments> payments, decimal budgetedAmount)
+    {
+        decimal currentMonthTotalSpendings = payments.Sum(payment => payment.TotalAmount);
+        decimal budgetVsActual = budgetedAmount - currentMonthTotalSpendings;
+
+        return budgetVsActual;
+    }
+
+    private string RemoveNonNumeric(string input)
+    {
+        return new string(input.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
     }
 
     #endregion

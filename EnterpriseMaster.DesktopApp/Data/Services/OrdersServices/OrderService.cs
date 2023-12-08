@@ -211,11 +211,26 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
-        public async Task<List<PurchaseOrders>> GetAllPurchaseOrdersAsync()
+        public async Task<List<PurchaseOrders>> GetAllOpenPurchaseOrdersAsync()
         {
             try
             {
                 var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.OrderStatuseId == (int)StatusForOrder.Open).ToList();
+
+                return purchaseOrders;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<PurchaseOrders>> GetAllPurchaseOrdersApprovedAsync()
+        {
+            try
+            {
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.OrderStatuseId == (int)StatusForOrder.InProgress).ToList();
 
                 return purchaseOrders;
             }

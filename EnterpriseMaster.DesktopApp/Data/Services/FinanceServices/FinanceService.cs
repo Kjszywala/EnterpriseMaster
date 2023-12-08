@@ -101,6 +101,38 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             }
         }
 
+        public async Task<List<PaymentsMonthly>> CalculateMonthlySumAsync()
+        {
+            var payments = await GetAllPaymentsAsync();
+
+            var monthlySum = payments
+                .GroupBy(payment => new { Year = payment.ModificationDate.Year, Month = payment.ModificationDate.Month })
+                .Select(group => new PaymentsMonthly
+                {
+                    Year = group.Key.Year,
+                    Month = group.Key.Month,
+                    TotalAmount = group.Sum(payment => payment.TotalAmount)
+                })
+                .OrderBy(group => group.Year)
+                .ThenBy(group => group.Month)
+                .ToList();
+
+            return monthlySum;
+        }
+
+        public async Task<List<double>> CalculateMonthlyTotalAmountsAsync()
+        {
+            var payments = await GetAllPaymentsAsync();
+
+            var monthlyTotalAmounts = payments
+                .GroupBy(payment => new { Year = payment.ModificationDate.Year, Month = payment.ModificationDate.Month })
+                .Select(group => (double)group.Sum(payment => payment.TotalAmount)) 
+                .OrderBy(totalAmount => totalAmount)
+                .ToList();
+
+            return monthlyTotalAmounts;
+        }
+
         public async Task<List<Payments>> GetAllPaymentsAsync()
         {
             try

@@ -63,3 +63,113 @@ textarea {
     font-size: 16px;
     resize: vertical; /* Allow vertical resizing */
 }
+
+.containerPanel {
+    width: 100%;
+    max-width: 1200px; /* Set a maximum width if needed */
+    margin: 0 auto; /* Center the container horizontally */
+    display: flex;
+    flex-direction: column; /* Default to a column layout */
+}
+
+.topPanel-panel {
+    background-color: #f0f0f0;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+}
+
+.bottomPanel-panel {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.bottomPanel-left,
+.bottomPanel-right {
+    flex: 1;
+    padding: 20px;
+}
+
+.bottomPanel-left {
+    background-color: #f0f0f0;
+    color: #fff;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+    max-width: 300px;
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.bottomPanel-right {
+    background-color: #f0f0f0;
+    color: #fff;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+    max-height: 60vh;
+    overflow: auto;
+}
+
+@media (max-width: 768px) {
+    .bottomPanel-panel {
+        flex-direction: column; /* Stack items vertically */
+    }
+
+    .bottomPanel-left,
+    .bottomPanel-right {
+        width: 100%;
+    }
+}
+h3 {
+    color: black;
+}
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+#totalSpendings,
+#averageMonthlySpendings,
+#topSpendingCategories,
+#spendingChange,
+#budgetVsActual,
+#biggestPurchase,
+#spendingTrendsLabel {
+    margin: 5px 0;
+    color: #333; /* Text color */
+}
+.green-number {
+    color: #28a745; /* Green color for numbers */
+}
+.red-number {
+    color: #dc3545; /* Red color for negative numbers */
+}
+#categoryList {
+    list-style-type: none;
+    padding: 0;
+}
+
+    #categoryList li {
+        margin: 5px 0;
+    }
+
+#spendingTrendChart {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+.summary-section {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 10px;
+}
