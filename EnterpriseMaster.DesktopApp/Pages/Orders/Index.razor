@@ -634,6 +634,7 @@
             await gridSupplierViewModel.RefreshDataAsync();
             await gridPartsViewModel.RefreshDataAsync();
             await gridPurchaseOrderManagementViewModel.RefreshDataAsync();
+            StateHasChanged();
         }
         catch(Exception e)
         {
@@ -1393,7 +1394,28 @@
 
     private async Task SetPurchaseOrderAsComplete(int id)
     {
-
+        var order = await orderService.GetPurchaseOrderAsync(id);
+        order.OrderStatuseId = (int)StatusForOrder.Completed;
+        order.ModificationDate = DateTime.Now;
+        var part = await orderService.GetPartsAsync(order.PartId.Value);
+        part.QuantityInStock = part.QuantityInStock + order.Quantity;
+        part.ModificationDate = DateTime.Now;
+        if (await orderService.UpdatePurchaseOrderAsync(order) && await orderService.UpdatePartsAsync(part))
+        {
+            await OnHideModalClick();
+            ShowMessage(ToastType.Success, "Success!", "Order Completed!");
+            purchaseOrderManagementViewModels = await orderService.GetAllPurchaseOrdersManagementForGridAsync();
+            purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
+            parts = await orderService.GetAllPartsForGridAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            await gridPartsViewModel.RefreshDataAsync();
+            await gridPurchaseOrderManagementViewModel.RefreshDataAsync();
+            StateHasChanged();
+            return;
+        };
+        ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while completing the order!");
+        StateHasChanged();
+        await gridSupplierViewModel.RefreshDataAsync();
     }
 
     private async Task OnShowModalClick(GridRowEventArgs<PurchaseOrderManagementViewModel> args)
