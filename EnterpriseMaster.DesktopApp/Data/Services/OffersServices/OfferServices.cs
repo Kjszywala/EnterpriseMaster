@@ -39,7 +39,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         {
             try
             {
-                var offers = (await offerServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var offers = (await offerServices.GetAllAsync())
+                    .Where(item => item.IsActive == true)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
 
                 var list = new List<OffersViewModel>();
 

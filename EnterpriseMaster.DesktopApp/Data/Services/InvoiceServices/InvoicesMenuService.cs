@@ -61,7 +61,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
-                var invoices = (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var invoices = (await invoicesServices.GetAllAsync())
+                    .Where(item => item.IsActive == true)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
 
                 var invoiceViewModel = new List<InvoiceViewModel>();
 

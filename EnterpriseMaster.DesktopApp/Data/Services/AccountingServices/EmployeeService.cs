@@ -65,7 +65,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
                     company.CompanyAddress = await companyAddressServices.GetAsync(company.CompanyAddressId.Value);
                 }
 
-                var employees = (await employeeService.GetAllAsync()).Where(item => item.CompanyId == company.Id).ToList();
+                var employees = (await employeeService.GetAllAsync())
+                    .Where(item => item.CompanyId == company.Id)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
 
                 foreach (var employee in employees)
                 {

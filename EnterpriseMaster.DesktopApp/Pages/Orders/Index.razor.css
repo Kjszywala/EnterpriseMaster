@@ -235,3 +235,110 @@ hr {
 label {
     color: black;
 }
+/* CSS */
+.button-41 {
+    background-color: initial;
+    background-image: linear-gradient(-180deg, #00D775, #00BD68);
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 24px; /* Adjusted height */
+    line-height: 24px; /* Adjusted line-height */
+    outline: 0;
+    overflow: hidden;
+    padding: 0 10px; /* Adjusted padding */
+    pointer-events: auto;
+    position: relative;
+    text-align: center;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle; /* Center text vertically */
+    white-space: nowrap;
+    width: 100%;
+    z-index: 9;
+    border: 0;
+}
+
+.button-41:hover {
+    background: #00bd68;
+}
+/* CSS */
+.button-42 {
+    background-color: initial;
+    background-image: linear-gradient(-180deg, #FF7E31, #E62C03);
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 24px; /* Adjusted height */
+    line-height: 24px; /* Adjusted line-height */
+    outline: 0;
+    overflow: hidden;
+    padding: 0 10px; /* Adjusted padding */
+    pointer-events: auto;
+    position: relative;
+    text-align: center;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle; /* Center text vertically */
+    white-space: nowrap;
+    width: 100%;
+    z-index: 9;
+    border: 0;
+}
+
+.button-42:hover {
+    box-shadow: rgba(253, 76, 0, 0.5) 0 3px 8px;
+}
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+    .button-container button {
+        margin-top: 10px; /* Adjust the space between buttons */
+    }
+
+/* Add your CSS styles here */
+.task-info {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    text-align: left;
+}
+
+    .task-info div {
+        margin-bottom: 10px;
+    }
+
+    .task-info span {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .task-info span strong {
+            margin-left: 10px;
+        }
+
+    .task-info .default-button {
+        /* Include your button styles here */
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+    }

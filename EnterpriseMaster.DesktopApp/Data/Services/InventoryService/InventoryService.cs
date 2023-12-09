@@ -36,7 +36,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
         {
             try
             {
-                var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var products = (await productsServices.GetAllAsync())
+                    .Where(item => item.IsActive == true)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
 
                 return (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }

@@ -51,7 +51,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices
         {
             try
             {
-                var customers = (await informationServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var customers = (await informationServices.GetAllAsync())
+                    .Where(item => item.IsActive == true)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
+
                 var list = new List<CustomerDataViewModel>();
                 foreach (var customer in customers)
                 {

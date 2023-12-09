@@ -39,7 +39,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
-                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
+                var currentEmployee = (await employeesServices.GetAllAsync())
+                    .Where(item => item.UserId == Config.UserId)
+                    .OrderBy(item => item.ModificationDate)
+                    .FirstOrDefault();
+
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.TaskStatusId == 1)
                     .Where(item3 => item3.EmployeeId == currentEmployee.Id)

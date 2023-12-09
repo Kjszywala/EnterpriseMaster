@@ -220,7 +220,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
         {
             try
             {
-                var saleOrders = (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var saleOrders = (await salesOrdersServices.GetAllAsync())
+                    .Where(item => item.IsActive == true)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
 
                 var saleViewModelList = new List<OrderViewModel>();
 

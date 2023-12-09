@@ -5,6 +5,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
+@using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @inherits MainLayout
 @inject OrderService orderService
 @inject InventoryService inventoryService
@@ -54,7 +55,9 @@
                     @context.QuantityType
                 </GridColumn>
                 <GridColumn TItem="OrderViewModel" HeaderText="Order Status" PropertyName="OrderStatus" SortKeySelector="item => item.OrderStatus">
-                    @context.OrderStatus
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <span class="@OrderStatusClasses.GetClassForOrderStatus(context.OrderStatus)" style="width: 150px; text-align: center;">@context.OrderStatus</span>
+                    </div>
                 </GridColumn>
             </Grid>
         </Content>
@@ -497,13 +500,50 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
-                </div>
-            </div>
+            <Grid TItem="PurchaseOrderManagementViewModel"
+                    @ref="gridPurchaseOrderManagementViewModel"
+                    AllowFiltering="true"
+                    AllowPaging="true"
+                    AllowSorting="true"
+                    AllowRowClick="true"
+                    DataProvider="purchaseOrderManagementViewModelDataProvider"
+                    Class="table table-hover table-bordered table-striped"
+                    FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                    HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                    PageSize="5"
+                    PageSizeSelectorVisible="true"
+                    PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                    PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                    ItemsPerPageText="Items per page"
+                    OnRowClick="OnShowModalClick"
+                    Responsive="true">
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Part Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
+                    @context.ProductCode
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Price To Pay($)" PropertyName="PricePaid" SortKeySelector="item => item.PricePaid">
+                    @context.PricePaid
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Order Number" PropertyName="OrderNumber" SortKeySelector="item => item.OrderNumber">
+                    @context.OrderNumber
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm" FilterTextboxWidth="100" SortKeySelector="item => item.PaymentTerm">
+                    @context.PaymentTerm
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Quantity" PropertyName="Quantity" FilterTextboxWidth="100" SortKeySelector="item => item.Quantity">
+                    @context.Quantity
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="QuantityType" PropertyName="QuantityType" FilterTextboxWidth="100" SortKeySelector="item => item.QuantityType">
+                    @context.QuantityType
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Order Status" PropertyName="OrderStatus" FilterTextboxWidth="100" SortKeySelector="item => item.OrderStatus">
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <span class="@OrderStatusClasses.GetClassForOrderStatus(context.OrderStatus)" style="width: 150px; text-align: center;">@context.OrderStatus</span>
+                    </div>
+                </GridColumn>
+            </Grid>
         </Content>
     </Tab> 
     <Tab>
@@ -522,6 +562,54 @@
         </Content>
     </Tab>
 </Tabs>
+<Modal @ref="purchaseOrderModal" Title="@purchaseOrderManagement.PurchaseOrderNumber" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="task-info">
+            <div id="task-id">
+                <span><strong>Part Name:</strong></span>
+                <span>@purchaseOrderManagement.Part.PartName</span>
+            </div>
+            <div id="task-description">
+                <span><strong>Description:</strong></span>
+                <span>@purchaseOrderManagement.Part.Description</span>
+            </div>
+            <div id="task-status">
+                <span><strong>Status:</strong></span>
+                <span class="@OrderStatusClasses.GetClassForOrderStatus(purchaseOrderManagement.OrderStatuse.Discription)">@purchaseOrderManagement.OrderStatuse.Discription</span>
+            </div>
+            <div id="task-complete-by">
+                <span><strong>Creation Date:</strong></span>
+                <span>@purchaseOrderManagement.CreationDate.ToString("yyyy-MM-dd")</span>
+            </div>
+            <div id="task-creation-date">
+                <span><strong>Modification Date:</strong></span>
+                <span>@purchaseOrderManagement.ModificationDate.ToString("yyyy-MM-dd")</span>
+            </div>
+            <div id="task-quantity">
+                <span><strong>Quantity:</strong></span>
+                <span>@purchaseOrderManagement.Quantity</span>
+            </div>
+            <div id="task-price-paid">
+                <span><strong>Price Paid:</strong></span>
+                <span>@purchaseOrderManagement.PricePaid</span>
+            </div>
+            @if (purchaseOrderManagement.OrderStatuse.Status == 6)
+            {
+                <div id="task-price-paid">
+                    <span><strong>Reject reason:</strong></span>
+                    <span>@purchaseOrderManagement.RejectedReason</span>
+                </div>
+            }
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        @if (purchaseOrderManagement.OrderStatuse.Status != 1 && purchaseOrderManagement.OrderStatuse.Status != 6)
+        {
+            <Button Color="ButtonColor.Success" @onclick="(e) => SetPurchaseOrderAsComplete(purchaseOrderManagement.Id)">Set As Complete</Button>
+        }
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
 <Preload />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
@@ -537,6 +625,7 @@
             partsAvailable = await orderService.GetAllPartsAsync();
             parts = await orderService.GetAllPartsForGridAsync();
             partsOrders = await orderService.GetAllPartsAsync();
+            purchaseOrderManagementViewModels = await orderService.GetAllPurchaseOrdersManagementForGridAsync();
             foreach (var part in partsAvailable)
             {
                 part.Products = await inventoryService.GetProductAsync(part.ProductsId.Value);
@@ -544,18 +633,14 @@
             await gridOrderViewModel.RefreshDataAsync();
             await gridSupplierViewModel.RefreshDataAsync();
             await gridPartsViewModel.RefreshDataAsync();
+            await gridPurchaseOrderManagementViewModel.RefreshDataAsync();
         }
         catch(Exception e)
         {
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
-       
+
     }
-
-    #region OrderViewModel
-
-
-    #endregion
 
     #region PurchaseOrders
 
@@ -1212,7 +1297,7 @@
         // All checks passed, the data is valid
         return true;
     }
-    
+
     public bool IsValidSupplierEdit()
     {
         if (string.IsNullOrWhiteSpace(companyNameEdit))
@@ -1292,6 +1377,38 @@
     #endregion
 
     #region Order Management
+
+    List<PurchaseOrderManagementViewModel> purchaseOrderManagementViewModels = new List<PurchaseOrderManagementViewModel>();
+    private Grid<PurchaseOrderManagementViewModel> gridPurchaseOrderManagementViewModel;
+    private async Task<GridDataProviderResult<PurchaseOrderManagementViewModel>> purchaseOrderManagementViewModelDataProvider(GridDataProviderRequest<PurchaseOrderManagementViewModel> request)
+    {
+        if (purchaseOrderManagementViewModels is null)
+            purchaseOrderManagementViewModels = await orderService.GetAllPurchaseOrdersManagementForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(purchaseOrderManagementViewModels));
+    }
+
+    private PurchaseOrders purchaseOrderManagement = new PurchaseOrders();
+    private Modal purchaseOrderModal;
+
+    private async Task SetPurchaseOrderAsComplete(int id)
+    {
+
+    }
+
+    private async Task OnShowModalClick(GridRowEventArgs<PurchaseOrderManagementViewModel> args)
+    {
+        purchaseOrderManagement = await orderService.GetPurchaseOrderAsync((int)args.Item.Id);
+        purchaseOrderManagement.Part = await orderService.GetPartsAsync(purchaseOrderManagement.PartId.Value);
+        purchaseOrderManagement.OrderStatuse = await orderService.GetPurchaseOrderStatusAsync(purchaseOrderManagement.OrderStatuseId.Value);
+        await purchaseOrderModal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await purchaseOrderModal?.HideAsync();
+    }
+
     #endregion
 
     #region Order Reports

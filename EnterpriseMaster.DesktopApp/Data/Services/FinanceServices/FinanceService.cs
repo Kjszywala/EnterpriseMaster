@@ -72,7 +72,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
-                var paymentList = (await paymentServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var paymentList = (await paymentServices.GetAllAsync())
+                    .Where(item => item.IsActive == true)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
+
                 var paymentListViewModel = new List<PaymentViewModel>();
 
                 foreach (var item in paymentList)
