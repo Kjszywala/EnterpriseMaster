@@ -7,6 +7,10 @@
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @using System.Text;
+@using QuestPDF.Fluent;
+@using QuestPDF.Helpers;
+@using QuestPDF.Infrastructure;
+@using QuestPDF.Previewer;
 @inherits MainLayout
 @inject OrderService orderService
 @inject InventoryService inventoryService
@@ -81,7 +85,7 @@
                                     <label class="form-label">Amount</label>
                                     <NumberInput TValue="int" @bind-Value="@item.QuantityInStock" Placeholder="Enter amount" />
                                     <br>
-                                    <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => MakeAnOrder(item.Id, item.QuantityInStock)"> Make Purchase Order </Button>
+                                    <Button Color="ButtonColor.Success" Size="BlazorBootstrap.Size.Medium" @onclick="() => MakeAnOrder(item.Id, item.QuantityInStock)"> Make Purchase Order </Button>
                                 </div>
                             </div>
                         </Content>
@@ -664,7 +668,7 @@
                                 <DropdownToggleButton Color="ButtonColor.Success"> Generate Report </DropdownToggleButton>
                                 <DropdownMenu>
                                     <DropdownItem @onclick="GenerateReportCsv" Type="ButtonType.Link">CSV</DropdownItem>
-                                    <DropdownItem Type="ButtonType.Link">PDF</DropdownItem>
+                                    <DropdownItem @onclick="GenerateReportPdf" Type="ButtonType.Link">PDF</DropdownItem>
                                     <DropdownItem Type="ButtonType.Link">WORD</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -1620,6 +1624,12 @@
         // Save the CSV content to a file
         File.WriteAllText($"C:\\Users\\kamil\\Downloads\\report_{DateTime.Now:yyyyMMdd_HHmmss}.csv", csvContent.ToString());
         ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
+    }
+
+    private void GenerateReportPdf()
+    {
+        
+       
     }
     #endregion
 }
