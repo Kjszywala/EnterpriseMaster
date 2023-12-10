@@ -6,6 +6,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @using EnterpriseMaster.DesktopApp.Helpers.Methods;
+@using System.Text;
 @inherits MainLayout
 @inject OrderService orderService
 @inject InventoryService inventoryService
@@ -659,6 +660,7 @@
                                     </form>
                                 </div>
                             </div>
+                            <Button Color="ButtonColor.Success" @onclick="GenerateReport"> Generate Report </Button>
                         </div>
                     </div>
                 </div>
@@ -1594,7 +1596,23 @@
 
     private void GenerateReport()
     {
-        
+        // Create a CSV content string
+        var csvContent = new StringBuilder();
+
+        // Add header row
+        csvContent.AppendLine("ProductName,ProductCode,PartName,PricePaid,OrderNumber,Description,PaymentTerm,DateCreated,DateUpdated,Quantity,QuantityType,OrderStatus");
+
+        // Add data rows
+        foreach (var item in purchaseOrderReportViewModels)
+        {
+            csvContent.AppendLine($"{item.ProductName},{item.ProductCode},{item.PartName},{item.PricePaid},{item.OrderNumber},{item.Description},{item.PaymentTerm},{item.DateCreated},{item.DateUpdated},{item.Quantity},{item.QuantityType},{item.OrderStatus}");
+        }
+
+        csvContent.AppendLine("BiggestPurchase,QuantityTogether,TotalCost,MostOrderingPart,BiggestQuantity,MostSameQuantityType");
+        csvContent.AppendLine($"{biggestPurchase},{quantityTogether},{totalCost},{mostOrderingPart},{biggestQuantity},{mostSameQuantityType}");
+        // Save the CSV content to a file
+        File.WriteAllText($"C:\\Users\\kamil\\Downloads\\report.csv", csvContent.ToString());
+        ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
     }
     #endregion
 }

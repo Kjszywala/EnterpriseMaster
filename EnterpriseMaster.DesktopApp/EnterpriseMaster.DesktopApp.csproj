@@ -51,7 +51,9 @@
 
     <ItemGroup>
         <PackageReference Include="Blazor.Bootstrap" Version="1.10.2" />
+        <PackageReference Include="DinkToPdf" Version="1.0.8" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+        <PackageReference Include="PdfSharp" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
