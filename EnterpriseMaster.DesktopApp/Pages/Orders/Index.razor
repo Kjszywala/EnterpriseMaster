@@ -621,12 +621,12 @@
                                 <div class="col-md-4">
                                     <form>
                                         <div class="form-group">
-                                            <label for="biggestPurchase" class="form-label">Biggest Purchase:</label>
+                                            <label for="biggestPurchase" class="form-label">Largest Purchase:</label>
                                             <input type="text" class="form-control" id="biggestPurchase" value="@biggestPurchase" readonly>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="quesntityTogether" class="form-label">Quantity Together:</label>
+                                            <label for="quesntityTogether" class="form-label">Total Quantity:</label>
                                             <input type="text" class="form-control" id="quesntityTogether" value="@quantityTogether" readonly>
                                         </div>
                                     </form>
@@ -640,7 +640,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="mostOrderingPart" class="form-label">Most Ordering Part:</label>
+                                            <label for="mostOrderingPart" class="form-label">Most Ordered Part:</label>
                                             <input type="text" class="form-control" id="mostOrderingPart" value="@mostOrderingPart" readonly>
                                         </div>
                                     </form>
@@ -649,18 +649,25 @@
                                 <div class="col-md-4">
                                     <form>
                                         <div class="form-group">
-                                            <label for="biggestQuantity" class="form-label">Biggest Quantity:</label>
+                                            <label for="biggestQuantity" class="form-label">Maximum Quantity:</label>
                                             <input type="text" class="form-control" id="biggestQuantity" value="@biggestQuantity" readonly>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="mostSameQuantityType" class="form-label">Most Same Quantity Type:</label>
+                                            <label for="mostSameQuantityType" class="form-label">Most Frequent Quantity Type::</label>
                                             <input type="text" class="form-control" id="mostSameQuantityType" value="@mostSameQuantityType" readonly>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            <Button Color="ButtonColor.Success" @onclick="GenerateReport"> Generate Report </Button>
+                            <Dropdown>
+                                <DropdownToggleButton Color="ButtonColor.Success"> Generate Report </DropdownToggleButton>
+                                <DropdownMenu>
+                                    <DropdownItem @onclick="GenerateReportCsv" Type="ButtonType.Link">CSV</DropdownItem>
+                                    <DropdownItem Type="ButtonType.Link">PDF</DropdownItem>
+                                    <DropdownItem Type="ButtonType.Link">WORD</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
@@ -1594,7 +1601,7 @@
         await gridPurchaseOrderReportViewModel.RefreshDataAsync();
     }
 
-    private void GenerateReport()
+    private void GenerateReportCsv()
     {
         // Create a CSV content string
         var csvContent = new StringBuilder();
@@ -1611,7 +1618,7 @@
         csvContent.AppendLine("BiggestPurchase,QuantityTogether,TotalCost,MostOrderingPart,BiggestQuantity,MostSameQuantityType");
         csvContent.AppendLine($"{biggestPurchase},{quantityTogether},{totalCost},{mostOrderingPart},{biggestQuantity},{mostSameQuantityType}");
         // Save the CSV content to a file
-        File.WriteAllText($"C:\\Users\\kamil\\Downloads\\report.csv", csvContent.ToString());
+        File.WriteAllText($"C:\\Users\\kamil\\Downloads\\report_{DateTime.Now:yyyyMMdd_HHmmss}.csv", csvContent.ToString());
         ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
     }
     #endregion
