@@ -279,6 +279,50 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
+        public async Task<List<PurchaseOrderManagementViewModel>> GetAllPurchaseOrdersReportForGridAsync(DateTime dateFrom, DateTime dateTo)
+        {
+            try
+            {
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync())
+                    .Where(item => item.ModificationDate > dateFrom && item.ModificationDate < dateTo)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
+
+                foreach (var purchaseOrder in purchaseOrders)
+                {
+                    purchaseOrder.Part = await partsServices.GetAsync(purchaseOrder.PartId.Value);
+                }
+
+                var orderViewModelList = new List<PurchaseOrderManagementViewModel>();
+                foreach (var item in purchaseOrders)
+                {
+                    orderViewModelList.Add(new PurchaseOrderManagementViewModel
+                    {
+                        OrderStatus = (await orderStatusesServices.GetAsync(item.OrderStatuseId.Value)).Discription,
+                        OrderNumber = item.PurchaseOrderNumber,
+                        PaymentTerm = item.PaymentTerm,
+                        PricePaid = item.PricePaid,
+                        ProductCode = (await productsServices.GetAsync(item.Part.ProductsId.Value)).ProductCode,
+                        ProductName = (await partsServices.GetAsync(item.PartId.Value)).PartName,
+                        Quantity = item.Quantity,
+                        QuantityType = (await quantityTypesServices.GetAsync(item.QuantityTypeId.Value)).Type,
+                        Id = item.Id,
+                        DateCreated = item.CreationDate,
+                        DateUpdated = item.ModificationDate,
+                        Description = (await partsServices.GetAsync(item.PartId.Value)).Description,
+                        PartName = (await partsServices.GetAsync(item.PartId.Value)).PartName
+                    });
+                }
+
+                return orderViewModelList;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
         public async Task<List<PurchaseOrders>> GetAllOpenPurchaseOrdersAsync()
         {
             try

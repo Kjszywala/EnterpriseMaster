@@ -548,15 +548,119 @@
     </Tab> 
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Binoculars" /> Order Reports
+            <Icon Name="IconName.Binoculars" /> Purchase Order Reports
         </TitleTemplate>
         <Content>
             <br />
+            <div class="mb-3">
+                <div class="labelForDateFrom">
+                    <label>From:</label>
+                </div>
+                <div class="dateFrom">
+                    <DateInput id="from" TValue="DateOnly" @bind-Value="@dateFrom" Placeholder="Enter Date" />
+                </div>
+                <div class="labelForDateTo">
+                    <label>To:</label>
+                </div>
+                <div class="dateTo">
+                    <DateInput id="to" TValue="DateOnly" @bind-Value="@dateTo" Placeholder="Enter Date" />
+                </div>
+                <div class="showGridDates">
+                    <Button Color="ButtonColor.Success" @onclick="RefreshDataReport"> Show Orders Between Dates </Button>
+                </div>
+            </div>
+            <Grid TItem="PurchaseOrderManagementViewModel"
+                  @ref="gridPurchaseOrderReportViewModel"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="purchaseOrderReportViewModelDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Part Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
+                    @context.ProductCode
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Price To Pay($)" PropertyName="PricePaid" SortKeySelector="item => item.PricePaid">
+                    @context.PricePaid
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Order Number" PropertyName="OrderNumber" SortKeySelector="item => item.OrderNumber">
+                    @context.OrderNumber
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Payment Term" PropertyName="PaymentTerm" FilterTextboxWidth="100" SortKeySelector="item => item.PaymentTerm">
+                    @context.PaymentTerm
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Quantity" PropertyName="Quantity" FilterTextboxWidth="100" SortKeySelector="item => item.Quantity">
+                    @context.Quantity
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="QuantityType" PropertyName="QuantityType" FilterTextboxWidth="100" SortKeySelector="item => item.QuantityType">
+                    @context.QuantityType
+                </GridColumn>
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Order Status" PropertyName="OrderStatus" FilterTextboxWidth="100" SortKeySelector="item => item.OrderStatus">
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <span class="@OrderStatusClasses.GetClassForOrderStatus(context.OrderStatus)" style="width: 150px; text-align: center;">@context.OrderStatus</span>
+                    </div>
+                </GridColumn>
+            </Grid>
             <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+                <div class="containerPanelReports">
+                    <div class="topPanelReportsBottom">
+                        <div class="container-fluid form-container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="biggestPurchase" class="form-label">Biggest Purchase:</label>
+                                            <input type="text" class="form-control" id="biggestPurchase" value="@biggestPurchase" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="quesntityTogether" class="form-label">Quantity Together:</label>
+                                            <input type="text" class="form-control" id="quesntityTogether" value="@quantityTogether" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="totalCost" class="form-label">Total Cost:</label>
+                                            <input type="text" class="form-control" id="totalCost" value="@totalCost" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="mostOrderingPart" class="form-label">Most Ordering Part:</label>
+                                            <input type="text" class="form-control" id="mostOrderingPart" value="@mostOrderingPart" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="biggestQuantity" class="form-label">Biggest Quantity:</label>
+                                            <input type="text" class="form-control" id="biggestQuantity" value="@biggestQuantity" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="mostSameQuantityType" class="form-label">Most Same Quantity Type:</label>
+                                            <input type="text" class="form-control" id="mostSameQuantityType" value="@mostSameQuantityType" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Content>
@@ -626,6 +730,7 @@
             parts = await orderService.GetAllPartsForGridAsync();
             partsOrders = await orderService.GetAllPartsAsync();
             purchaseOrderManagementViewModels = await orderService.GetAllPurchaseOrdersManagementForGridAsync();
+            purchaseOrderReportViewModels = await orderService.GetAllPurchaseOrdersReportForGridAsync(dateFrom.ToDateTime(TimeOnly.MinValue), dateTo.ToDateTime(TimeOnly.MinValue));
             foreach (var part in partsAvailable)
             {
                 part.Products = await inventoryService.GetProductAsync(part.ProductsId.Value);
@@ -634,6 +739,7 @@
             await gridSupplierViewModel.RefreshDataAsync();
             await gridPartsViewModel.RefreshDataAsync();
             await gridPurchaseOrderManagementViewModel.RefreshDataAsync();
+            await gridPurchaseOrderReportViewModel.RefreshDataAsync();
             StateHasChanged();
         }
         catch(Exception e)
@@ -1434,5 +1540,61 @@
     #endregion
 
     #region Order Reports
+
+    private DateOnly dateFrom = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly dateTo = DateOnly.FromDateTime(DateTime.Now);
+    List<PurchaseOrderManagementViewModel> purchaseOrderReportViewModels = new List<PurchaseOrderManagementViewModel>();
+    private Grid<PurchaseOrderManagementViewModel> gridPurchaseOrderReportViewModel;
+    private string biggestPurchase;
+    private string quantityTogether;
+    private string totalCost;
+    private string mostOrderingPart;
+    private string biggestQuantity;
+    private string mostSameQuantityType;
+
+    private async Task<GridDataProviderResult<PurchaseOrderManagementViewModel>> purchaseOrderReportViewModelDataProvider(GridDataProviderRequest<PurchaseOrderManagementViewModel> request)
+    {
+        if (purchaseOrderReportViewModels is null)
+            purchaseOrderReportViewModels = await orderService.GetAllPurchaseOrdersReportForGridAsync(dateFrom.ToDateTime(TimeOnly.MinValue), dateTo.ToDateTime(TimeOnly.MinValue));
+
+        return await Task.FromResult(request.ApplyTo(purchaseOrderReportViewModels));
+    }
+
+    private async Task RefreshDataReport()
+    {
+        purchaseOrderReportViewModels = await orderService.GetAllPurchaseOrdersReportForGridAsync(dateFrom.ToDateTime(TimeOnly.MinValue), dateTo.ToDateTime(TimeOnly.MinValue));
+        biggestPurchase = "$" + " " + purchaseOrderReportViewModels
+            .OrderByDescending(item => item.PricePaid)
+            .FirstOrDefault()
+            .PricePaid
+            .ToString();
+        quantityTogether = purchaseOrderReportViewModels
+            .Sum(item => item.Quantity)
+            .Value
+            .ToString();
+        totalCost = "$" + " " + purchaseOrderReportViewModels
+            .Sum(item => item.PricePaid)
+            .Value
+            .ToString();
+        mostOrderingPart = purchaseOrderReportViewModels
+            .GroupBy(item => item.PartName)
+            .OrderByDescending(group => group.Count())
+            .FirstOrDefault()?.Key;
+        biggestQuantity = purchaseOrderReportViewModels
+            .OrderByDescending(item => item.Quantity)
+            .FirstOrDefault()
+            .Quantity
+            .ToString();
+        mostSameQuantityType = purchaseOrderReportViewModels
+            .GroupBy(item => item.QuantityType)
+            .OrderByDescending(group => group.Count())
+            .FirstOrDefault()?.Key;
+        await gridPurchaseOrderReportViewModel.RefreshDataAsync();
+    }
+
+    private void GenerateReport()
+    {
+        
+    }
     #endregion
 }
