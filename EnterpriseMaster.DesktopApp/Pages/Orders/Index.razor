@@ -1558,12 +1558,12 @@
     private DateOnly dateTo = DateOnly.FromDateTime(DateTime.Now);
     List<PurchaseOrderManagementViewModel> purchaseOrderReportViewModels = new List<PurchaseOrderManagementViewModel>();
     private Grid<PurchaseOrderManagementViewModel> gridPurchaseOrderReportViewModel;
-    private string biggestPurchase;
-    private string quantityTogether;
-    private string totalCost;
-    private string mostOrderingPart;
-    private string biggestQuantity;
-    private string mostSameQuantityType;
+    private string? biggestPurchase;
+    private string? quantityTogether;
+    private string? totalCost;
+    private string? mostOrderingPart;
+    private string? biggestQuantity;
+    private string? mostSameQuantityType;
 
     private async Task<GridDataProviderResult<PurchaseOrderManagementViewModel>> purchaseOrderReportViewModelDataProvider(GridDataProviderRequest<PurchaseOrderManagementViewModel> request)
     {
@@ -1575,38 +1575,53 @@
 
     private async Task RefreshDataReport()
     {
-        purchaseOrderReportViewModels = await orderService.GetAllPurchaseOrdersReportForGridAsync(dateFrom.ToDateTime(TimeOnly.MinValue), dateTo.ToDateTime(TimeOnly.MinValue));
-        biggestPurchase = "$" + " " + purchaseOrderReportViewModels
-            .OrderByDescending(item => item.PricePaid)
-            .FirstOrDefault()
-            .PricePaid
-            .ToString();
-        quantityTogether = purchaseOrderReportViewModels
-            .Sum(item => item.Quantity)
-            .Value
-            .ToString();
-        totalCost = "$" + " " + purchaseOrderReportViewModels
-            .Sum(item => item.PricePaid)
-            .Value
-            .ToString();
-        mostOrderingPart = purchaseOrderReportViewModels
-            .GroupBy(item => item.PartName)
-            .OrderByDescending(group => group.Count())
-            .FirstOrDefault()?.Key;
-        biggestQuantity = purchaseOrderReportViewModels
-            .OrderByDescending(item => item.Quantity)
-            .FirstOrDefault()
-            .Quantity
-            .ToString();
-        mostSameQuantityType = purchaseOrderReportViewModels
-            .GroupBy(item => item.QuantityType)
-            .OrderByDescending(group => group.Count())
-            .FirstOrDefault()?.Key;
-        await gridPurchaseOrderReportViewModel.RefreshDataAsync();
+        try
+        {
+            purchaseOrderReportViewModels = await orderService.GetAllPurchaseOrdersReportForGridAsync(dateFrom.ToDateTime(TimeOnly.MinValue), dateTo.ToDateTime(TimeOnly.MinValue));
+            if(purchaseOrderReportViewModels.Count > 0)
+            {
+                biggestPurchase = "$" + " " + purchaseOrderReportViewModels
+                    .OrderByDescending(item => item.PricePaid)
+                    .FirstOrDefault()
+                    .PricePaid
+                    .ToString() ?? "None";
+                quantityTogether = purchaseOrderReportViewModels
+                    .Sum(item => item.Quantity)
+                    .Value
+                    .ToString();
+                totalCost = "$" + " " + purchaseOrderReportViewModels
+                    .Sum(item => item.PricePaid)
+                    .Value
+                    .ToString() ?? "None";
+                mostOrderingPart = purchaseOrderReportViewModels
+                    .GroupBy(item => item.PartName)
+                    .OrderByDescending(group => group.Count())
+                    .FirstOrDefault()?.Key ?? "None";
+                biggestQuantity = purchaseOrderReportViewModels
+                    .OrderByDescending(item => item.Quantity)
+                    .FirstOrDefault()
+                    .Quantity
+                    .ToString() ?? "None";
+                mostSameQuantityType = purchaseOrderReportViewModels
+                    .GroupBy(item => item.QuantityType)
+                    .OrderByDescending(group => group.Count())
+                    .FirstOrDefault()?.Key ?? "None";
+                await gridPurchaseOrderReportViewModel.RefreshDataAsync();
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
     private void GenerateReportCsv()
     {
+        //var filePath = SelectFolderAsync();
         // Create a CSV content string
         var csvContent = new StringBuilder();
 
@@ -1631,5 +1646,21 @@
         
        
     }
+
+    //private async Task<string> SelectFolderAsync()
+    //{
+    //    // Set the mode to pick folders
+    //    var options = new PickOptions
+    //        {
+    //            PickerTitle = "Select a folder"
+    //        };
+
+    //    // Show the file picker and wait for the user's selection
+    //    var result = await _filePicker.PickAsync(options);
+
+    //    // Return the selected folder path
+    //    return result?.FullPath;
+    //}
+
     #endregion
 }
