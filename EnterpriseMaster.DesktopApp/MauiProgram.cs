@@ -105,6 +105,9 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IPartsServices, PartsServices>();
             builder.Services.AddScoped<IPaymentStatusService, PaymentStatusService>();
             builder.Services.AddScoped<IPurchaseOrderReportsService, PurchaseOrderReportsService>();
+            builder.Services.AddScoped<IRolesService, RolesService>();
+            builder.Services.AddScoped<IUserRolesService, UserRolesService>();
+            builder.Services.AddScoped<IEmployeeRolesService, EmployeeRolesService>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

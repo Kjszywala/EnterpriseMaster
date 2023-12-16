@@ -23,5 +23,6 @@
         public List<Tasks>? Tasks { get; set; }
         public List<PurchaseOrders>? PurchaseOrders { get; set; }
         public List<PurchaseOrderReports>? PurchaseOrderReports { get; set; }
+        public List<EmployeeRoles>? EmployeeRoles { get; set; }
     }
 }

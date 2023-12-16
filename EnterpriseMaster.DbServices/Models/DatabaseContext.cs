@@ -22,6 +22,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<CustomerInformation> CustomerInformation { get; set; }
         public virtual DbSet<EmployeeAddresses> EmployeeAddresses { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
+        public virtual DbSet<EmployeeRoles> EmployeeRoles { get; set; }
         public virtual DbSet<ErrorLogs> ErrorLogs { get; set; }
         public virtual DbSet<FxRates> FxRates { get; set; }
         public virtual DbSet<Invoices> Invoices { get; set; }
@@ -47,6 +48,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<SuppliersAddresses> SuppliersAddresses { get; set; }
         public virtual DbSet<SupportCases> SupportCases { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersAdresses> UsersAdresses { get; set; }
         public virtual DbSet<EmployeeAccesses> EmployeeAccesses { get; set; }
         public virtual DbSet<WhatsNew> WhatsNew { get; set; }
@@ -66,6 +68,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<Refunds> Refunds { get; set; }
         public virtual DbSet<Returns> Returns { get; set; }
         public virtual DbSet<ReturnsStatuses> ReturnsStatuses { get; set; }
+        public virtual DbSet<Roles> Roles { get; set; }
 
         #endregion
     }
