@@ -659,7 +659,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="mostSameQuantityType" class="form-label">Most Frequent Quantity Type::</label>
+                                            <label for="mostSameQuantityType" class="form-label">Most Frequent Quantity Type:</label>
                                             <input type="text" class="form-control" id="mostSameQuantityType" value="@mostSameQuantityType" readonly>
                                         </div>
                                     </form>
@@ -670,7 +670,6 @@
                                 <DropdownMenu>
                                     <DropdownItem @onclick="GenerateReportCsv" Type="ButtonType.Link">CSV</DropdownItem>
                                     <DropdownItem @onclick="GenerateReportPdf" Type="ButtonType.Link">PDF</DropdownItem>
-                                    <DropdownItem Type="ButtonType.Link">WORD</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
@@ -1644,6 +1643,7 @@
 
     private void GenerateReportPdf()
     {
+        var path = _folderPicker.DisplayFolderPicker();
         
        
     }

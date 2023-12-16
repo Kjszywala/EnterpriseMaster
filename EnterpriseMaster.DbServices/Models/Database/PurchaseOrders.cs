@@ -33,5 +33,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public DateTime PaymentTerm { get; set; }
         public List<Invoices>? Invoices { get; set; }
         public List<Payments>? Payments { get; set; }
+        public List<PurchaseOrderReports>? PurchaseOrderReports { get; set; }
     }
 }
