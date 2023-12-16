@@ -8,6 +8,8 @@
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @using System.Text;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation.Models;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation;
 @using QuestPDF.Fluent;
 @using QuestPDF.Helpers;
 @using QuestPDF.Infrastructure;
@@ -596,7 +598,7 @@
                 <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Part Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
-                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
+                <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Part Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
                     @context.ProductCode
                 </GridColumn>
                 <GridColumn TItem="PurchaseOrderManagementViewModel" HeaderText="Price To Pay($)" PropertyName="PricePaid" SortKeySelector="item => item.PricePaid">
@@ -1646,22 +1648,22 @@
                 {
                     csvContent.AppendLine($"{item.ProductName},{item.ProductCode},{item.PartName},{item.PricePaid},{item.OrderNumber},{item.Description},{item.PaymentTerm},{item.DateCreated},{item.DateUpdated},{item.Quantity},{item.QuantityType},{item.OrderStatus}");
                     var report = new PurchaseOrderReports()
-                        {
-                            CreationDate = DateTime.Now,
-                            ModificationDate = DateTime.Now,
-                            DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
-                            DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
-                            EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
-                            IsActive = true,
-                            LargestPurchase = biggestPurchase,
-                            MaximumQuantity = biggestQuantity,
-                            MostFrequesntQuantityType = mostSameQuantityType,
-                            MostOrderedPart = mostOrderingPart,
-                            PurchaseOrderId = item.Id,
-                            ReportNumber = guid.ToString(),
-                            TotalCost = totalCost,
-                            TotalQuantity = quantityTogether
-                        };
+                    {
+                        CreationDate = DateTime.Now,
+                        ModificationDate = DateTime.Now,
+                        DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
+                        DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
+                        EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                        IsActive = true,
+                        LargestPurchase = biggestPurchase,
+                        MaximumQuantity = biggestQuantity,
+                        MostFrequesntQuantityType = mostSameQuantityType,
+                        MostOrderedPart = mostOrderingPart,
+                        PurchaseOrderId = item.Id,
+                        ReportNumber = guid.ToString(),
+                        TotalCost = totalCost,
+                        TotalQuantity = quantityTogether
+                    };
                     await orderService.AddPurchaseOrderReportAsync(report);
                 }
 
@@ -1685,7 +1687,7 @@
 
     }
 
-    private void GenerateReportPdf()
+    private async Task GenerateReportPdf()
     {
         try
         {
@@ -1696,10 +1698,62 @@
             }
             var path = _folderPicker.DisplayFolderPicker();
             preloadService.Show(SpinnerColor.Dark);
+            var guid = Guid.NewGuid();
             if (path != null)
             {
+                var list = new List<PurchaseOrders>();
+                foreach(var item in purchaseOrderReportViewModels)
+                {
+                    var part = (await orderService.GetAllPartsAsync()).Where(item2 => item2.PartName == item.ProductName).FirstOrDefault();
+                    list.Add(new PurchaseOrders
+                    {
+                        Part = part,
+                        Quantity = (int)item.Quantity
+                    });
+                }
+                var orderReportModel = new PurchaseOrderReportModel
+                {
+                    DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
+                    DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
+                    EmployeeEmail = Config.Email,
+                    LargestPurchase = biggestPurchase,
+                    MaximumQuantity = biggestQuantity,
+                    MostFrequesntQuantityType = mostSameQuantityType,
+                    MostOrderedPart = mostOrderingPart,
+                    PurchaseOrders = list,
+                    ReportNumber = guid.ToString(),
+                    TotalCost = totalCost,
+                    TotalQuantity = quantityTogether
+                };
+
+                foreach (var item in purchaseOrderReportViewModels)
+                {
+                    var reportPurchase = new PurchaseOrderReports()
+                    {
+                        CreationDate = DateTime.Now,
+                        ModificationDate = DateTime.Now,
+                        DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
+                        DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
+                        EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                        IsActive = true,
+                        LargestPurchase = biggestPurchase,
+                        MaximumQuantity = biggestQuantity,
+                        MostFrequesntQuantityType = mostSameQuantityType,
+                        MostOrderedPart = mostOrderingPart,
+                        PurchaseOrderId = item.Id,
+                        ReportNumber = guid.ToString(),
+                        TotalCost = totalCost,
+                        TotalQuantity = quantityTogether
+                    };
+                    await orderService.AddPurchaseOrderReportAsync(reportPurchase);
+                }
+
+                var report = new CreateOrderReport($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.pdf", orderReportModel);
+                report.Create();
+
                 // code here ...
                 preloadService.Hide();
+                ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
                 return;
             }
             ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
