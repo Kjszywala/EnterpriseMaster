@@ -503,7 +503,6 @@
             await modal?.HideAsync();
             await modalProgressTask?.HideAsync();
             preloadService.Hide();
-            //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
             if (isCompleted)
             {
                 ShowMessage(ToastType.Success, "Success!", $"Task {taskCompleted.Task} set to copleted");

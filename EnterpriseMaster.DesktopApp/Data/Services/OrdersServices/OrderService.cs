@@ -24,6 +24,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         private readonly ISuppliersServices suppliersServices;
         private readonly ISuppliersAddressesServices suppliersAddressesServices;
         private readonly IOrderStatusesServices orderStatusesServices;
+        private readonly IPurchaseOrderReportsService purchaseOrderReportsService;
 
         #endregion
 
@@ -43,7 +44,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             IPartsServices _partsServices,
             ISuppliersAddressesServices _suppliersAddressesServices,
             ISuppliersServices _suppliersServices,
-            IOrderStatusesServices _orderStatusesServices)
+            IOrderStatusesServices _orderStatusesServices,
+            IPurchaseOrderReportsService _purchaseOrderReportsService)
         {
             errorLogsServices = _errorLogsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -59,6 +61,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             suppliersAddressesServices = _suppliersAddressesServices;
             suppliersServices = _suppliersServices;
             orderStatusesServices = _orderStatusesServices;
+            purchaseOrderReportsService = _purchaseOrderReportsService;
         }
 
         #endregion
@@ -185,6 +188,25 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
                 var parts = (await partsServices.EditAsync(part.Id, part));
 
                 return parts;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
+        #region Purchase Order Reports
+
+        public async Task<bool> AddPurchaseOrderReportAsync(PurchaseOrderReports report)
+        {
+            try
+            {
+                var purchaseOrdersReports = (await purchaseOrderReportsService.AddAsync(report));
+
+                return purchaseOrdersReports;
             }
             catch (Exception e)
             {

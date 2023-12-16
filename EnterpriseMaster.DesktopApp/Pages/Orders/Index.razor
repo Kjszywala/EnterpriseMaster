@@ -2,6 +2,7 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
@@ -15,6 +16,7 @@
 @inject OrderService orderService
 @inject InventoryService inventoryService
 @inject Helpers.Interfaces.IFolderPick _folderPicker
+@inject EmployeeService employeeService
 
 <Tabs EnableFadeEffect="true">
     <Tab IsActive="true">
@@ -1619,33 +1621,95 @@
         }
     }
 
-    private void GenerateReportCsv()
+    private async Task GenerateReportCsv()
     {
-        var path = _folderPicker.DisplayFolderPicker();
-        // Create a CSV content string
-        var csvContent = new StringBuilder();
-
-        // Add header row
-        csvContent.AppendLine("ProductName,ProductCode,PartName,PricePaid,OrderNumber,Description,PaymentTerm,DateCreated,DateUpdated,Quantity,QuantityType,OrderStatus");
-
-        // Add data rows
-        foreach (var item in purchaseOrderReportViewModels)
+        try
         {
-            csvContent.AppendLine($"{item.ProductName},{item.ProductCode},{item.PartName},{item.PricePaid},{item.OrderNumber},{item.Description},{item.PaymentTerm},{item.DateCreated},{item.DateUpdated},{item.Quantity},{item.QuantityType},{item.OrderStatus}");
+            if (purchaseOrderReportViewModels.Count == 0)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
+                return;
+            }
+            var path = _folderPicker.DisplayFolderPicker();
+            preloadService.Show(SpinnerColor.Dark);
+            if (path != null)
+            {
+                // Create a CSV content string
+                var csvContent = new StringBuilder();
+
+                // Add header row
+                csvContent.AppendLine("ProductName,ProductCode,PartName,PricePaid,OrderNumber,Description,PaymentTerm,DateCreated,DateUpdated,Quantity,QuantityType,OrderStatus");
+
+                var guid = Guid.NewGuid();
+                // Add data rows
+                foreach (var item in purchaseOrderReportViewModels)
+                {
+                    csvContent.AppendLine($"{item.ProductName},{item.ProductCode},{item.PartName},{item.PricePaid},{item.OrderNumber},{item.Description},{item.PaymentTerm},{item.DateCreated},{item.DateUpdated},{item.Quantity},{item.QuantityType},{item.OrderStatus}");
+                    var report = new PurchaseOrderReports()
+                        {
+                            CreationDate = DateTime.Now,
+                            ModificationDate = DateTime.Now,
+                            DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
+                            DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
+                            EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                            IsActive = true,
+                            LargestPurchase = biggestPurchase,
+                            MaximumQuantity = biggestQuantity,
+                            MostFrequesntQuantityType = mostSameQuantityType,
+                            MostOrderedPart = mostOrderingPart,
+                            PurchaseOrderId = item.Id,
+                            ReportNumber = guid.ToString(),
+                            TotalCost = totalCost,
+                            TotalQuantity = quantityTogether
+                        };
+                    await orderService.AddPurchaseOrderReportAsync(report);
+                }
+
+                csvContent.AppendLine("BiggestPurchase,QuantityTogether,TotalCost,MostOrderingPart,BiggestQuantity,MostSameQuantityType");
+                csvContent.AppendLine($"{biggestPurchase},{quantityTogether},{totalCost},{mostOrderingPart},{biggestQuantity},{mostSameQuantityType}");
+                // Save the CSV content to a file
+                File.WriteAllText($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.csv", csvContent.ToString());
+
+                ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
+                preloadService.Hide();
+                return;
+            }
+            preloadService.Hide();
+            ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
         }
 
-        csvContent.AppendLine("BiggestPurchase,QuantityTogether,TotalCost,MostOrderingPart,BiggestQuantity,MostSameQuantityType");
-        csvContent.AppendLine($"{biggestPurchase},{quantityTogether},{totalCost},{mostOrderingPart},{biggestQuantity},{mostSameQuantityType}");
-        // Save the CSV content to a file
-        File.WriteAllText($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.csv", csvContent.ToString());
-        ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
     }
 
     private void GenerateReportPdf()
     {
-        var path = _folderPicker.DisplayFolderPicker();
-        
-       
+        try
+        {
+            if (purchaseOrderReportViewModels.Count == 0)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
+                return;
+            }
+            var path = _folderPicker.DisplayFolderPicker();
+            preloadService.Show(SpinnerColor.Dark);
+            if (path != null)
+            {
+                // code here ...
+                preloadService.Hide();
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
     }
 
     #endregion
