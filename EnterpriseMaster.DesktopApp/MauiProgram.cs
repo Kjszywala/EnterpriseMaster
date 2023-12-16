@@ -15,7 +15,6 @@ using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
 using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 using Microsoft.Extensions.Logging;
-
 namespace EnterpriseMaster.DesktopApp
 {
     public static class MauiProgram
@@ -51,6 +50,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<AnalyticsService>();
             builder.Services.AddSingleton<SalesService>();
             builder.Services.AddSingleton<FinanceService>();
+            builder.Services.AddTransient<Helpers.Interfaces.IFolderPick, Helpers.Services.FolderPick>();
 
             // Db injection
             builder.Services.AddScoped<IAboutPageServices, AboutPageServices>();

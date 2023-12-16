@@ -14,6 +14,7 @@
 @inherits MainLayout
 @inject OrderService orderService
 @inject InventoryService inventoryService
+@inject Helpers.Interfaces.IFolderPick _folderPicker
 
 <Tabs EnableFadeEffect="true">
     <Tab IsActive="true">
@@ -1621,7 +1622,7 @@
 
     private void GenerateReportCsv()
     {
-        //var filePath = SelectFolderAsync();
+        var path = _folderPicker.DisplayFolderPicker();
         // Create a CSV content string
         var csvContent = new StringBuilder();
 
@@ -1637,7 +1638,7 @@
         csvContent.AppendLine("BiggestPurchase,QuantityTogether,TotalCost,MostOrderingPart,BiggestQuantity,MostSameQuantityType");
         csvContent.AppendLine($"{biggestPurchase},{quantityTogether},{totalCost},{mostOrderingPart},{biggestQuantity},{mostSameQuantityType}");
         // Save the CSV content to a file
-        File.WriteAllText($"C:\\Users\\kamil\\Downloads\\report_{DateTime.Now:yyyyMMdd_HHmmss}.csv", csvContent.ToString());
+        File.WriteAllText($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.csv", csvContent.ToString());
         ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
     }
 
@@ -1646,21 +1647,6 @@
         
        
     }
-
-    //private async Task<string> SelectFolderAsync()
-    //{
-    //    // Set the mode to pick folders
-    //    var options = new PickOptions
-    //        {
-    //            PickerTitle = "Select a folder"
-    //        };
-
-    //    // Show the file picker and wait for the user's selection
-    //    var result = await _filePicker.PickAsync(options);
-
-    //    // Return the selected folder path
-    //    return result?.FullPath;
-    //}
 
     #endregion
 }
