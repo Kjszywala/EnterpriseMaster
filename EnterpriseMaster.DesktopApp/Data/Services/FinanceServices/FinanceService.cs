@@ -18,6 +18,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         private readonly IProductsServices productsServices;
         private readonly IPaymentStatusService paymentStatusService;
         private readonly IPartsServices partsServices;
+        private readonly IPaymentReportsServices paymentReportsServices;
 
         #endregion
 
@@ -32,7 +33,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             IErrorLogsServices _errorLogsServices,
             IProductsServices _productsServices,
             IPaymentStatusService _paymentStatusService,
-            IPartsServices _partsServices)
+            IPartsServices _partsServices,
+            IPaymentReportsServices _paymentReportsServices)
         {
             paymentMethodsServices = _paymentMethodsServices;
             purchaseOrdersServices = _purchaseOrdersServices;
@@ -43,13 +45,44 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             productsServices = _productsServices;
             paymentStatusService = _paymentStatusService;
             partsServices = _partsServices;
+            paymentReportsServices = _paymentReportsServices;
         }
 
         #endregion
 
         #region Methods
 
+        #region Payment Reports
+
+        public async Task<bool> AddPaymentReportsAsync(PaymentReports report)
+        {
+            try
+            {
+                return (await paymentReportsServices.AddAsync(report));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
         #region PaymentStatus
+
+        public async Task<PaymentStatus> GetPaymentStatusAsyncBasedOnStatus(string status)
+        {
+            try
+            {
+                return (await paymentStatusService.GetAllAsync()).Where(item => item.Status == status).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<PaymentStatus> GetPaymentStatusAsync(int id)
         {

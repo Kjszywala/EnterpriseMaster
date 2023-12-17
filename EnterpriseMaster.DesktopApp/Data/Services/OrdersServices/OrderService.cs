@@ -360,6 +360,21 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             }
         }
 
+        public async Task<List<PurchaseOrders>> GetAllPurchaseOrdersAsync()
+        {
+            try
+            {
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).ToList();
+
+                return purchaseOrders;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
         public async Task<List<PurchaseOrders>> GetAllPurchaseOrdersApprovedAsync()
         {
             try

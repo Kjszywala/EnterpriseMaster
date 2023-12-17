@@ -2,6 +2,7 @@
 {
     public class PaymentReports : Bases
     {
+        public string ReportNumber { get; set; }
         public int? PaymentMethodId { get; set; }
         public PaymentMethods? PaymentMethod { get; set; }
         public int? PartId { get; set; }
@@ -12,7 +13,11 @@
         public Invoices? Invoice { get; set; }
         public int? PaymentStatusId { get; set; }
         public PaymentStatus? PaymentStatus { get; set; }
+        public int? EmployeeId { get; set; }
+        public Employees? Employee { get; set; }
         public int Quantity { get; set; }
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
         public decimal PricePaid { get; set; }
         public string LargestSinglePayment { get; set; }
         public string PaymentsTotal { get; set; }
