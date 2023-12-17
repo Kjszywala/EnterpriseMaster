@@ -4,12 +4,12 @@ using QuestPDF.Infrastructure;
 
 namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
 {
-    public class CreateOrderReport
+    public class CreatePaymentsReport
     {
         public string filePath { get; set; }
-        public PurchaseOrderReportModel model { get; set; }
+        public PaymentsReportModel model { get; set; }
 
-        public CreateOrderReport(string _filePath, PurchaseOrderReportModel _model)
+        public CreatePaymentsReport(string _filePath, PaymentsReportModel _model)
         {
             filePath = _filePath;
             model = _model;
@@ -51,7 +51,7 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                 {
                     column.Item().Text(text =>
                     {
-                        text.Span("Purchase Order Report Number:").SemiBold().FontSize(20);
+                        text.Span("Payments Report Number:").SemiBold().FontSize(20);
                         text.EmptyLine();
                         text.Span($"{model.ReportNumber}").FontSize(14);
                     });
@@ -87,13 +87,13 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                     .Text(text =>
                     {
                         text.Span("Max single Quantity: ").Bold();
-                        text.Span($"{model.MaximumQuantity}");
+                        text.Span($"{model.LargestQuantity}");
                         text.EmptyLine();
-                        text.Span("Largest Purchase: ").Bold();
-                        text.Span($"{model.LargestPurchase}");
+                        text.Span("Largest Single Payment: ").Bold();
+                        text.Span($"{model.LargestSinglePayment}");
                         text.EmptyLine();
                         text.Span("Most Ordered Part: ").Bold();
-                        text.Span($"{model.MostOrderedPart}");
+                        text.Span($"{model.MostFrequentlySellPart}");
                     });
 
                     // Spacing
@@ -102,22 +102,22 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                     row.RelativeItem()
                     .Background(QuestPDF.Helpers.Colors.Grey.Lighten3)
                     .Padding(10)
-                    .Text( text =>
+                    .Text(text =>
                     {
                         text.Span("Total Quantity: ").Bold();
-                        text.Span($"{model.TotalQuantity}");
+                        text.Span($"{model.QuantityTotal}");
                         text.EmptyLine();
-                        text.Span("Most Frequesnt Quantity Type: ").Bold();
-                        text.Span($"{model.MostFrequesntQuantityType}");
+                        text.Span("Most Frequently Payment Method: ").Bold();
+                        text.Span($"{model.MostFrequentlyPaymentMethod}");
                         text.EmptyLine();
-                        text.Span("Total Cost: ").Bold();
-                        text.Span($"{model.TotalCost}");
+                        text.Span("Payments Total: ").Bold();
+                        text.Span($"{model.PaymentsTotal}");
                     });
                 });
 
                 column.Item().Element(ComposeTable);
 
-                var totalPrice = model.TotalCost;
+                var totalPrice = model.PaymentsTotal;
                 column.Item().AlignRight().Text($"Grand total: {totalPrice}$").FontSize(14);
 
                 column.Item().PaddingTop(25).Element(ComposeComments);
@@ -153,13 +153,13 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                 });
 
                 // step 3
-                foreach (var item in model.PurchaseOrders)
+                foreach (var item in model.Payments)
                 {
-                    table.Cell().Element(CellStyle).Text(model.PurchaseOrders.IndexOf(item) + 1);
-                    table.Cell().Element(CellStyle).Text(item.Part.PartName);
-                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.Part.UnitCost}$");
+                    table.Cell().Element(CellStyle).Text(model.Payments.IndexOf(item) + 1);
+                    table.Cell().Element(CellStyle).Text(item.Product);
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice}$");
                     table.Cell().Element(CellStyle).AlignRight().Text(item.Quantity);
-                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.Part.UnitCost * item.Quantity}$");
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice * item.Quantity}$");
 
                     static QuestPDF.Infrastructure.IContainer CellStyle(QuestPDF.Infrastructure.IContainer container)
                     {
@@ -171,7 +171,7 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
 
         void ComposeComments(QuestPDF.Infrastructure.IContainer container)
         {
-            string purchaseOrdersAnalysisReportDescription = @"The Purchase Orders Analysis Report offers a comprehensive examination of the company's procurement activities during the specified time period. It provides insights into purchasing trends, vendor performance, and expenditure patterns, empowering stakeholders to make informed decisions.";
+            string purchaseOrdersAnalysisReportDescription = @"The Payments Report Analysis provides a detailed overview of the company's financial transactions over the specified time frame. It includes insights into payment trends, vendor relationships, and overall expenditure patterns, enabling stakeholders to make well-informed financial decisions.";
 
             container.Background(QuestPDF.Helpers.Colors.Grey.Lighten3).Padding(10).Column(column =>
             {

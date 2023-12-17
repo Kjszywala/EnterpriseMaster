@@ -8,6 +8,8 @@
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @using System.Text;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation.Models;
 @inherits MainLayout
 @inject FinanceService financeService
 @inject OrderService orderService
@@ -744,81 +746,81 @@
 
     public async Task GenerateReportPdf()
     {
-        //try
-        //{
-        //    if (purchaseOrderReportViewModels.Count == 0)
-        //    {
-        //        ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
-        //        return;
-        //    }
-        //    var path = _folderPicker.DisplayFolderPicker();
-        //    preloadService.Show(SpinnerColor.Dark);
-        //    var guid = Guid.NewGuid();
-        //    if (path != null)
-        //    {
-        //        var list = new List<PurchaseOrders>();
-        //        foreach (var item in purchaseOrderReportViewModels)
-        //        {
-        //            var part = (await orderService.GetAllPartsAsync()).Where(item2 => item2.PartName == item.ProductName).FirstOrDefault();
-        //            list.Add(new PurchaseOrders
-        //                {
-        //                    Part = part,
-        //                    Quantity = (int)item.Quantity
-        //                });
-        //        }
-        //        var orderReportModel = new PurchaseOrderReportModel
-        //            {
-        //                DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
-        //                DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
-        //                EmployeeEmail = Config.Email,
-        //                LargestPurchase = biggestPurchase,
-        //                MaximumQuantity = biggestQuantity,
-        //                MostFrequesntQuantityType = mostSameQuantityType,
-        //                MostOrderedPart = mostOrderingPart,
-        //                PurchaseOrders = list,
-        //                ReportNumber = guid.ToString(),
-        //                TotalCost = totalCost,
-        //                TotalQuantity = quantityTogether
-        //            };
+        try
+        {
+            if (paymentsReport.Count == 0)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
+                return;
+            }
+            var path = _folderPicker.DisplayFolderPicker();
+            preloadService.Show(SpinnerColor.Dark);
+            var guid = Guid.NewGuid();
+            if (path != null)
+            {
+                foreach(var item in paymentsReport)
+                {
+                    item.UnitPrice = (await orderService.GetAllPartsAsync()).Where(item2 => item2.PartName == item.Product).FirstOrDefault().UnitCost;
+                }
+                var orderReportModel = new PaymentsReportModel
+                {
+                    DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
+                    DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
+                    EmployeeEmail = Config.Email,
+                    LargestSinglePayment = largestSinglePayment,
+                    LargestQuantity = largestQuantity,
+                    MostFrequentlyPaymentMethod = mostFrequentlyPaymentMethod,
+                    MostFrequentlySellPart = mostFrequentlySellPart,
+                    Payments = paymentsReport,
+                    ReportNumber = guid.ToString(),
+                    PaymentsTotal = paymentsTotal,
+                    QuantityTotal = quantityTotal
+                };
 
-        //        foreach (var item in purchaseOrderReportViewModels)
-        //        {
-        //            var reportPurchase = new PurchaseOrderReports()
-        //                {
-        //                    CreationDate = DateTime.Now,
-        //                    ModificationDate = DateTime.Now,
-        //                    DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
-        //                    DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
-        //                    EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
-        //                    IsActive = true,
-        //                    LargestPurchase = biggestPurchase,
-        //                    MaximumQuantity = biggestQuantity,
-        //                    MostFrequesntQuantityType = mostSameQuantityType,
-        //                    MostOrderedPart = mostOrderingPart,
-        //                    PurchaseOrderId = item.Id,
-        //                    ReportNumber = guid.ToString(),
-        //                    TotalCost = totalCost,
-        //                    TotalQuantity = quantityTogether
-        //                };
-        //            await orderService.AddPurchaseOrderReportAsync(reportPurchase);
-        //        }
+                foreach (var item in paymentsReport)
+                {
+                    var reportPayment = new PaymentReports()
+                    {
+                        CreationDate = DateTime.Now,
+                        ModificationDate = DateTime.Now,
+                        DateFrom = dateFrom.ToDateTime(TimeOnly.MinValue),
+                        DateTo = dateTo.ToDateTime(TimeOnly.MinValue),
+                        EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                        IsActive = true,
+                        LargestSinglePayment = largestSinglePayment,
+                        LargestQuantity = largestQuantity,
+                        MostFrequentlyPaymentMethod = mostFrequentlyPaymentMethod,
+                        MostFrequentlySellPart = mostFrequentlySellPart,
+                        ReportNumber = guid.ToString(),
+                        PaymentsTotal = paymentsTotal,
+                        QuantityTotal = quantityTotal,
+                        PaymentStatusId = (await financeService.GetPaymentStatusAsyncBasedOnStatus(item.PaymentStatus)).Id,
+                        InvoicesId = item.InvoicesCode == "None" ? null : (await financeService.GetAllInvoicesAsync()).Where(item2 => item2.InvoiceNumber == item.InvoicesCode).FirstOrDefault().Id,
+                        PartId = (await orderService.GetAllPartsAsync()).Where(item2 => item2.PartName == item.Product).FirstOrDefault().Id,
+                        PricePaid = (decimal)item.TotalAmount,
+                        Quantity = (int)item.Quantity,
+                        PaymentMethodId = (await financeService.GetAllPaymentMetdhodsAsync()).Where(item2 => item2.PaymentType == item.PaymentMethod).FirstOrDefault().Id,
+                        PurchaseOrderId = (await orderService.GetAllPurchaseOrdersAsync()).Where(item2 => item2.PurchaseOrderNumber == item.PurchaseOrderCode).FirstOrDefault().Id,
+                    };
+                    await financeService.AddPaymentReportsAsync(reportPayment);
+                }
 
-        //        var report = new CreateOrderReport($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.pdf", orderReportModel);
-        //        report.Create();
+                var report = new CreatePaymentsReport($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.pdf", orderReportModel);
+                report.Create();
 
-        //        // code here ...
-        //        preloadService.Hide();
-        //        ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
-        //        return;
-        //    }
-        //    ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
-        //    preloadService.Hide();
-        //}
-        //catch (Exception e)
-        //{
-        //    ShowMessage(ToastType.Warning, "Warning!", e.Message);
-        //    preloadService.Hide();
-        //}
+                // code here ...
+                preloadService.Hide();
+                ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
     }
 
     #endregion

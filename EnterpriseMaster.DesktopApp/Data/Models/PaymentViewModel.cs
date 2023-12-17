@@ -16,5 +16,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Models
         public string? InvoicesCode { get; set; }
         public string? SalesOrdersCode { get; set; }
         public string? PaymentStatus { get; set; }
+        public decimal? UnitPrice { get; set; }
     }
 }
