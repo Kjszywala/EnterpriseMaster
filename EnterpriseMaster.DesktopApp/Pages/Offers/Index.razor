@@ -2,9 +2,13 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OffersServices;
 @inherits MainLayout
 @inject OfferServices offerServices
+@inject InventoryService inventoryService
+@inject EmployeeService employeeService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -12,6 +16,10 @@
             <Icon Name="IconName.BuildingAdd" /> Offers
         </TitleTemplate>
         <Content>
+            <br />
+            <div class="agenda-item pending">Pending</div>
+            <div class="agenda-item rejected">Rejected</div>
+            <div class="agenda-item accepted">Accepted</div>
             <br />
             <Grid TItem="OffersViewModel"
                   @ref="gridOffersViewModel"
@@ -28,7 +36,8 @@
                   PageSizeSelectorItems="@(new int[] { 5,10,20 })"
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
-                  Responsive="true">
+                  Responsive="true"
+                  RowClass="GetRowClass">
                 <GridColumn TItem="OffersViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
                 </GridColumn>
@@ -45,7 +54,7 @@
                     @context.OfferDescrition
                 </GridColumn>
                 <GridColumn TItem="OffersViewModel" HeaderText="Discount" PropertyName="Discount" SortKeySelector="item => item.Discount">
-                    @context.Discount
+                    @($"{@context.Discount * 100:N2} %")
                 </GridColumn>
             </Grid>
         </Content>
@@ -56,13 +65,65 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
-                </div>
-            </div>
+            @if (products.Count > 0)
+            {
+                <Accordion Class="container">
+                    @foreach (var item in products)
+                    {
+                        <AccordionItem Title=@item.ProductName>
+                            <Content>
+                                <div class="container">
+                                    <form action="submit_action_here" method="POST">
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                <label for="availableFrom">Available From</label>
+                                                <DateInput id="availableFrom" name="availableFrom" TValue="DateOnly" @bind-Value="@availableFrom" Placeholder="Enter Date" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="availableTo">Available To</label>
+                                                <DateInput id="availableTo" name="availableTo" TValue="DateOnly" @bind-Value="@availableTo" Placeholder="Enter Date" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                <label for="offerName">Offer Name</label>
+                                                <input type="text" id="offerName" name="offerName" @bind="@offerName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="offerDescription">Offer Description</label>
+                                                <input type="text" id="offerDescription" name="offerDescription" @bind="@offerDescription">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                <label for="discount">Discount</label>
+                                                <input type="number" id="discount" name="discount" min="0" @bind="@discount">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div>
+                                    <div class="mb-3">
+                                        <br>
+                                        <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => AddOfferToApprovals(item.Id)"> Create An Offer </Button>
+                                    </div>
+                                </div>
+                            </Content>
+                        </AccordionItem>
+                    }
+                </Accordion>
+            }
+            else
+            {
+                <Alert Color="AlertColor.Info" Class="container">
+                    <h4 class="alert-heading">No Products Available</h4>
+                    <p>There are currently no products available.</p>
+                    <hr>
+                    <p class="mb-0">Feel free to check back later or explore other sections for more information.</p>
+                </Alert>
+            }
         </Content>
     </Tab>
     <Tab>
@@ -71,65 +132,290 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
-                </div>
-            </div>
+            @if (offersToApprove.Count > 0)
+            {
+                <Accordion Class="container">
+                    @foreach (var item in offersToApprove)
+                    {
+                        <AccordionItem Title=@item.Product.ProductName>
+                            <Content>
+                                <div class="container">
+                                    <form action="submit_action_here" method="POST">
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                <label for="availableFrom">Available From</label>
+                                                <DateInput id="availableFrom" name="availableFrom" TValue="DateTime" @bind-Value="@item.AvailableFrom" Placeholder="Enter Date" Disabled=true />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="availableTo">Available To</label>
+                                                <DateInput id="availableTo" name="availableTo" TValue="DateTime" @bind-Value="@item.AvailableTo" Placeholder="Enter Date" Disabled=true />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                <label for="offerName">Offer Name</label>
+                                                <input type="text" id="offerName" name="offerName" @bind="@item.OfferName" disabled="true">
+                                            </div>
+                                        </div>
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                <label for="discount">Discount</label>
+                                                <input type="number" id="discount" name="discount" min="0" @bind="@item.Discount" disabled="true">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="form-group">
+                                    <label for="offerDescription">Offer Description</label>
+                                    <textarea id="offerDescription" name="offerDescription" @bind="@item.OfferDescrition" disabled="true"></textarea>
+                                </div>
+                                <br />
+                                <div>
+                                    <div class="mb-3">
+                                        <br>
+                                        <Button Color="ButtonColor.Success" Size="Size.Medium" @onclick="() => ApproveOffer(item.Id)"> Accept Offer </Button>
+                                        <Button Color="ButtonColor.Danger" Size="Size.Medium" @onclick="() => OnShowModalClick(item.Id)"> Decline Offer </Button>
+                                    </div>
+                                </div>
+                            </Content>
+                        </AccordionItem>
+                    }
+                </Accordion>
+            }
+            else
+            {
+                <Alert Color="AlertColor.Info" Class="container">
+                    <h4 class="alert-heading">No Offers to Approve</h4>
+                    <p>There are currently no pending offers for approval. You're all caught up!</p>
+                    <hr>
+                    <p class="mb-0">Feel free to check back later or contact the relevant department for more information.</p>
+                </Alert>
+            }
         </Content>
     </Tab>
 </Tabs>
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+<Modal @ref="modal" Title="Reject Reason">
+    <BodyTemplate>
+        Specify the reject reason here:
+        <textarea class="form-control" id="exampleTextarea" @bind="rejectReason" rows="5"></textarea>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="DeclineOffer">Reject Offer</Button>
+    </FooterTemplate>
+</Modal>
 @code {
     protected async override void OnInitialized()
     {
-        customerInformation = await offerServices.GetAllOffersForGridAsync();
-
-        await gridOffersViewModel.RefreshDataAsync();
+        try
+        {        
+            offers = await offerServices.GetAllOffersForGridAsync();
+            products = await inventoryService.GetAllProductsAsync();
+            offersToApprove = await offerServices.GetAllOffersAsync();
+            foreach(var item in offersToApprove)
+            {
+                item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
+            }
+            await gridOffersViewModel.RefreshDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
     #region OffersViewModel
 
-    private List<OffersViewModel> customerInformation = new List<OffersViewModel>();
+    private List<OffersViewModel> offers = new List<OffersViewModel>();
     private Grid<OffersViewModel> gridOffersViewModel;
     private async Task<GridDataProviderResult<OffersViewModel>> OffersViewModelDataProvider(GridDataProviderRequest<OffersViewModel> request)
     {
-        if (customerInformation is null)
-            customerInformation = await offerServices.GetAllOffersForGridAsync();
+        if (offers is null)
+            offers = await offerServices.GetAllOffersForGridAsync();
 
-        return await Task.FromResult(request.ApplyTo(customerInformation));
+        return await Task.FromResult(request.ApplyTo(offers));
+    }
+
+    private string GetRowClass(OffersViewModel emp)
+    {
+        if (!(bool)emp.Rejected && (bool)emp.Active)
+            return "table-primary";
+        else if ((bool)emp.Rejected)
+            return "table-danger";
+        else if (!(bool)emp.Active)
+            return "table-success";
+        return string.Empty;
     }
 
     #endregion
 
     #region Create Offers
 
-    private Products product;
-    private DateTime availableFrom = DateTime.Now;
-    private DateTime availableTo = DateTime.Now;
+    private List<Products> products = new List<Products>();
+    private decimal priceAfterDiscount;
+    private DateOnly availableFrom = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly availableTo = DateOnly.FromDateTime(DateTime.Now);
     private string offerName;
     private string offerDescription;
-    private string RejectReason;
-    public int Discount;
+    public int discount;
+    public int currentModalId;
 
-    public async Task AddOfferToApprovals()
+    public async Task AddOfferToApprovals(int productId)
     {
+        try
+        {
+            if (!CheckVariablesAreSet())
+            {
+                return;
+            }
 
+            var model = new Offers()
+            {
+                AvailableFrom = availableFrom.ToDateTime(TimeOnly.MinValue),
+                AvailableTo = availableTo.ToDateTime(TimeOnly.MinValue),
+                CreationDate = DateTime.Now,
+                Discount = discount / 100m,
+                EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                IsActive = true,
+                IsRejected = false,
+                ModificationDate = DateTime.Now,
+                OfferDescrition = offerDescription,
+                OfferName = offerName,
+                ProductId = productId
+            };
+            if(await offerServices.AddOffersAsync(model))
+            {
+                offers = await offerServices.GetAllOffersForGridAsync();
+                await gridOffersViewModel.RefreshDataAsync();
+                offersToApprove = await offerServices.GetAllOffersAsync();
+                foreach (var item in offersToApprove)
+                {
+                    item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
+                }
+                StateHasChanged();
+                ShowMessage(ToastType.Success, "Success!", "Offer has been added to review by your manager!");
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding an offer");
+        }
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
+    private bool CheckVariablesAreSet()
+    {
+        if (availableFrom.ToDateTime(TimeOnly.MinValue) < DateTime.Today || availableTo < availableFrom)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Incorrect dates!");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(offerName))
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Offer name cannot be empty!");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(offerDescription))
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Offer description name cannot be empty!");
+            return false;
+        }
+        if (discount < 0 || discount > 100)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Incorrect discount!");
+            return false;
+        }
+        return true;
+    }
     #endregion
 
     #region Approvals
 
-    public async Task ApproveOffer()
-    {
+    private List<Offers> offersToApprove = new List<Offers>();
+    private string rejectReason;
+    private Modal modal = default!;
 
+    public async Task ApproveOffer(int id)
+    {
+        try
+        {
+            var offer = await offerServices.GetOffersAsync(id);
+            offer.IsActive = false;
+            if(await offerServices.UpdateOffersAsync(offer))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Offer has been accepted!");
+                offers = await offerServices.GetAllOffersForGridAsync();
+                offersToApprove = await offerServices.GetAllOffersAsync();
+                foreach (var item in offersToApprove)
+                {
+                    item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
+                }
+                await gridOffersViewModel.RefreshDataAsync();
+                StateHasChanged();
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while approving the offer!");
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
     }
 
     public async Task DeclineOffer()
     {
+        try
+        {
+            if(rejectReason != null)
+            {
+                var offer = await offerServices.GetOffersAsync(currentModalId);
+                offer.IsActive = false;
+                offer.IsRejected = true;
+                offer.RejectReason = rejectReason;
+                if (await offerServices.UpdateOffersAsync(offer))
+                {
+                    ShowMessage(ToastType.Success, "Success!", "Offer has been declined!");
+                    offers = await offerServices.GetAllOffersForGridAsync();
+                    offersToApprove = await offerServices.GetAllOffersAsync();
+                    foreach (var item in offersToApprove)
+                    {
+                        item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
+                    }
+                    await OnHideModalClick();
+                    await gridOffersViewModel.RefreshDataAsync();
+                    StateHasChanged();
+                    return;
+                }
+                await OnHideModalClick();
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while declining the offer!");
+                return;
+            }
+            await OnHideModalClick();
+            ShowMessage(ToastType.Warning, "Warning!", "You need to specify the reason!");
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
+    }
 
+    private async Task OnShowModalClick(int id)
+    {
+        currentModalId = id;
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
     }
 
     #endregion

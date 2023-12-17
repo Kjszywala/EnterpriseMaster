@@ -8,5 +8,7 @@
         public DateTime? AvailableFrom { get; set; }
         public DateTime? AvailableTo { get; set; }
         public decimal? Discount { get; set; }
+        public bool? Active { get; set; }
+        public bool? Rejected { get; set; }
     }
 }

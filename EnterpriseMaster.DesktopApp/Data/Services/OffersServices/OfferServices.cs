@@ -40,7 +40,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
             try
             {
                 var offers = (await offerServices.GetAllAsync())
-                    .Where(item => item.IsActive == true)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -55,7 +54,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
                         Discount = item.Discount,
                         OfferDescrition = item.OfferDescrition,
                         OfferName = item.OfferName,
-                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName
+                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName,
+                        Active = item.IsActive,
+                        Rejected = item.IsRejected
                     });
                 }
 

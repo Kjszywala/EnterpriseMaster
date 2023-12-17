@@ -54,3 +54,62 @@
         width: 100%;
     }
 }
+.form-column {
+    float: left;
+    width: 33.33%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+textarea {
+    width: 100%;
+    box-sizing: border-box; /* Ensure that padding and border are included in the width */
+    resize: vertical; /* Allow vertical resizing */
+    /* Additional styling, you can customize these styles based on your design */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.agenda-item {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block; /* Display items inline */
+    width: 120px; /* Set a fixed width for each item */
+}
+/* Primary (default) color for "Pending" */
+.agenda-item.pending {
+    background-color: #84aed1;
+    color: #fff;
+}
+
+/* Danger color for "Rejected" */
+.agenda-item.rejected {
+    background-color: #bf6f85;
+    color: #fff;
+}
+
+/* Success color for "Accepted" */
+.agenda-item.accepted {
+    background-color: #93c9a2;
+    color: #fff;
+}
