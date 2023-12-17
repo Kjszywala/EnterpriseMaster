@@ -1,5 +1,6 @@
 ﻿@page "/offers"
 @using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.OffersServices;
 @inherits MainLayout
@@ -40,7 +41,7 @@
                 <GridColumn TItem="OffersViewModel" HeaderText="Available To" PropertyName="AvailableTo" SortKeySelector="item => item.AvailableTo">
                     @context.AvailableTo
                 </GridColumn>
-                <GridColumn TItem="OffersViewModel" HeaderText="Descrition" PropertyName="OfferDescrition" SortKeySelector="item => item.OfferDescrition">
+                <GridColumn TItem="OffersViewModel" HeaderText="Description" PropertyName="OfferDescrition" SortKeySelector="item => item.OfferDescrition">
                     @context.OfferDescrition
                 </GridColumn>
                 <GridColumn TItem="OffersViewModel" HeaderText="Discount" PropertyName="Discount" SortKeySelector="item => item.Discount">
@@ -98,6 +99,37 @@
             customerInformation = await offerServices.GetAllOffersForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(customerInformation));
+    }
+
+    #endregion
+
+    #region Create Offers
+
+    private Products product;
+    private DateTime availableFrom = DateTime.Now;
+    private DateTime availableTo = DateTime.Now;
+    private string offerName;
+    private string offerDescription;
+    private string RejectReason;
+    public int Discount;
+
+    public async Task AddOfferToApprovals()
+    {
+
+    }
+
+    #endregion
+
+    #region Approvals
+
+    public async Task ApproveOffer()
+    {
+
+    }
+
+    public async Task DeclineOffer()
+    {
+
     }
 
     #endregion
