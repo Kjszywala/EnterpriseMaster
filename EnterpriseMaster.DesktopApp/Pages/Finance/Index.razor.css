@@ -173,3 +173,75 @@ hr {
     border-radius: 8px;
     margin-top: 10px;
 }
+
+.labelForDateFrom,
+.labelForDateTo,
+.dateFrom,
+.dateTo {
+    display: inline-block;
+    margin-bottom: 10px; /* Adjust as needed */
+}
+
+.labelForDateTo {
+    margin-left: 15px;
+    width: 30px;
+}
+
+
+    .labelForDateFrom label,
+    .labelForDateTo label {
+        display: inline-block;
+        width: 50px; /* Adjust as needed */
+    }
+
+.dateFrom DateInput,
+.dateTo DateInput {
+    display: inline-block;
+    width: 150px; /* Adjust as needed */
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.showGridDates {
+    display: inline-block;
+    clear: both;
+    margin-left: 10px;
+}
+.containerPanelReports {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.topPanelReportsBottom {
+    background-color: #f0f0f0;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 30vh;
+    margin-bottom: 20px;
+}
+.form-container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    color: black;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-control {
+    background-color: white;
+}
+.classHigh{
+    margin-top: -4px;
+}

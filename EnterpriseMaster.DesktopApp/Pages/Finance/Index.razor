@@ -5,6 +5,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
+@using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @inherits MainLayout
 @inject FinanceService financeService
 @inject OrderService orderService
@@ -38,7 +39,7 @@
                 <GridColumn TItem="PaymentViewModel" HeaderText="Product" PropertyName="Product" SortKeySelector="item => item.Product">
                     @context.Product
                 </GridColumn>
-                <GridColumn TItem="PaymentViewModel" HeaderText="Order Code" PropertyName="SalesOrdersCode" SortKeySelector="item => item.SalesOrdersCode">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Order Number" PropertyName="SalesOrdersCode" SortKeySelector="item => item.SalesOrdersCode">
                     @context.SalesOrdersCode
                 </GridColumn>
                 <GridColumn TItem="PaymentViewModel" HeaderText="Invoices Code" PropertyName="InvoicesCode" SortKeySelector="item => item.InvoicesCode">
@@ -51,7 +52,7 @@
                     @context.TotalAmount
                 </GridColumn>
                 <GridColumn TItem="PaymentViewModel" HeaderText="Payment Status" PropertyName="PaymentStatus" SortKeySelector="item => item.PaymentStatus">
-                    @context.PaymentStatus
+                    <span class="@OrderStatusClasses.GetClassForPaymentStatus(context.PaymentStatus)" style="width: 150px; text-align: center;">@context.PaymentStatus</span>
                 </GridColumn>
             </Grid>
         </Content>
@@ -164,11 +165,117 @@
         </TitleTemplate>
         <Content>
             <br />
+            <div class="mb-3">
+                <div class="labelForDateFrom">
+                    <label>From:</label>
+                </div>
+                <div class="dateFrom">
+                    <DateInput id="from" TValue="DateOnly" @bind-Value="@dateFrom" Placeholder="Enter Date" />
+                </div>
+                <div class="labelForDateTo">
+                    <label>To:</label>
+                </div>
+                <div class="dateTo">
+                    <DateInput id="to" TValue="DateOnly" @bind-Value="@dateTo" Placeholder="Enter Date" />
+                </div>
+                <div class="showGridDates">
+                    <Button Color="ButtonColor.Success" @onclick="RefreshDataReport"> Show Payments Between Dates </Button>
+                </div>
+            </div>
+            <Grid TItem="PaymentViewModel"
+                  @ref="gridPaymentsReportViewModel"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="PaymentsReportViewModelDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="PaymentViewModel" HeaderText="Payment Method" PropertyName="PaymentMethod" SortKeySelector="item => item.PaymentMethod">
+                    @context.PaymentMethod
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Product" PropertyName="Product" SortKeySelector="item => item.Product">
+                    @context.Product
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Order Code" PropertyName="SalesOrdersCode" SortKeySelector="item => item.SalesOrdersCode">
+                    @context.SalesOrdersCode
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Invoices Code" PropertyName="InvoicesCode" SortKeySelector="item => item.InvoicesCode">
+                    @context.InvoicesCode
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
+                    @context.Quantity
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Price Paid" PropertyName="TotalAmount" SortKeySelector="item => item.TotalAmount">
+                    @context.TotalAmount
+                </GridColumn>
+                <GridColumn TItem="PaymentViewModel" HeaderText="Payment Status" PropertyName="PaymentStatus" SortKeySelector="item => item.PaymentStatus">
+                    <span class="@OrderStatusClasses.GetClassForPaymentStatus(context.PaymentStatus)" style="width: 150px; text-align: center;">@context.PaymentStatus</span>
+                </GridColumn>
+            </Grid>
             <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+                <div class="containerPanelReports">
+                    <div class="topPanelReportsBottom">
+                        <div class="container-fluid form-container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <form>
+                                        <div class="form-group classHigh">
+                                            <label for="biggestPurchase" class="form-label">Largest Purchase:</label>
+                                            <input type="text" class="form-control" id="biggestPurchase" value="@largestSinglePayment" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="quesntityTogether" class="form-label">Total Quantity:</label>
+                                            <input type="text" class="form-control" id="quesntityTogether" value="@paymentsTotal" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="totalCost" class="form-label">Most Frequently Order Part:</label>
+                                            <input type="text" class="form-control" id="totalCost" value="@mostFrequentlySellPart" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="mostOrderingPart" class="form-label">Most Frequently Payment Method:</label>
+                                            <input type="text" class="form-control" id="mostOrderingPart" value="@mostFrequentlyPaymentMethod" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="biggestQuantity" class="form-label">Largest Single Quantity:</label>
+                                            <input type="text" class="form-control" id="biggestQuantity" value="@largestQuantity" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="mostSameQuantityType" class="form-label">Quantity Total:</label>
+                                            <input type="text" class="form-control" id="mostSameQuantityType" value="@quantityTotal" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <Dropdown>
+                                <DropdownToggleButton Color="ButtonColor.Success"> Generate Report </DropdownToggleButton>
+                                <DropdownMenu>
+                                    <DropdownItem @onclick="GenerateReportCsv" Type="ButtonType.Link">CSV</DropdownItem>
+                                    <DropdownItem @onclick="GenerateReportPdf" Type="ButtonType.Link">PDF</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Content>
@@ -500,6 +607,75 @@
     private string RemoveNonNumeric(string input)
     {
         return new string(input.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
+    }
+
+    #endregion
+
+    #region Report
+
+    private List<PaymentViewModel> paymentsReport = new List<PaymentViewModel>();
+    private Grid<PaymentViewModel> gridPaymentsReportViewModel;
+    private DateOnly dateFrom = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly dateTo = DateOnly.FromDateTime(DateTime.Now);
+    private string largestSinglePayment;
+    private string paymentsTotal;
+    private string mostFrequentlySellPart;
+    private string mostFrequentlyPaymentMethod;
+    private string largestQuantity;
+    private string quantityTotal;
+
+    private async Task<GridDataProviderResult<PaymentViewModel>> PaymentsReportViewModelDataProvider(GridDataProviderRequest<PaymentViewModel> request)
+    {
+        if (paymentsReport is null)
+            RefreshDataReport();
+
+        return await Task.FromResult(request.ApplyTo(paymentsReport));
+    }
+
+    private async Task RefreshDataReport()
+    {
+        try
+        {
+            paymentsReport = await financeService.GetAllPaymentsForGridBasedOnDatesAsync(dateFrom.ToDateTime(TimeOnly.MinValue), dateTo.ToDateTime(TimeOnly.MinValue));
+
+            if (paymentsReport.Count > 0)
+            {
+                largestSinglePayment = paymentsReport.OrderByDescending(item => item.TotalAmount).FirstOrDefault().TotalAmount.ToString();
+                paymentsTotal = paymentsReport.Sum(item => item.TotalAmount).ToString();
+                mostFrequentlySellPart = paymentsReport
+                    .GroupBy(item => item.Product)
+                    .OrderByDescending(group => group.Count())
+                    .Select(group => group.Key)
+                    .FirstOrDefault();
+                mostFrequentlyPaymentMethod = paymentsReport
+                    .GroupBy(item => item.PaymentMethod)
+                    .OrderByDescending(group => group.Count())
+                    .Select(group => group.Key)
+                    .FirstOrDefault();
+                largestQuantity = paymentsReport.Max(item => item.Quantity).ToString();
+                quantityTotal = paymentsReport.Sum(item => item.Quantity).ToString();
+                await gridPaymentsReportViewModel.RefreshDataAsync();
+                StateHasChanged();
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No payments has been found!");
+            }
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
+    }
+
+    public async Task GenerateReportCsv()
+    {
+        
+    }
+
+    public async Task GenerateReportPdf()
+    {
+
     }
 
     #endregion

@@ -105,6 +105,43 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             }
         }
 
+        public async Task<List<PaymentViewModel>> GetAllPaymentsForGridBasedOnDatesAsync(DateTime dateFrom, DateTime dateTo)
+        {
+            try
+            {
+                var paymentList = (await paymentServices.GetAllAsync())
+                    .Where(item => item.ModificationDate > dateFrom && item.ModificationDate < dateTo)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
+
+                var paymentListViewModel = new List<PaymentViewModel>();
+
+                foreach (var item in paymentList)
+                {
+                    var salesOrder = (await purchaseOrdersServices.GetAsync(item.PurchaseOrderId.Value));
+                    paymentListViewModel.Add(new PaymentViewModel
+                    {
+                        PaymentId = item.Id,
+                        InvoicesCode = item.InvoicesId != null ? (await invoicesServices.GetAsync(item.InvoicesId.Value)).InvoiceNumber : "None",
+                        PaymentMethod = (await paymentMethodsServices.GetAsync(item.PaymentMethodId.Value)).PaymentType,
+                        PurchaseOrderCode = (await purchaseOrdersServices.GetAsync(item.PurchaseOrderId.Value)).PurchaseOrderNumber,
+                        SalesOrdersCode = salesOrder.PurchaseOrderNumber,
+                        TotalAmount = salesOrder.PricePaid,
+                        Product = (await partsServices.GetAsync(salesOrder.PartId.Value)).PartName,
+                        Quantity = salesOrder.Quantity,
+                        PaymentStatus = (await paymentStatusService.GetAsync(item.PaymentStatuId.Value)).Status
+                    });
+                }
+
+                return paymentListViewModel;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
         public async Task<List<PaymentsMonthly>> CalculateMonthlySumAsync()
         {
             var payments = await GetAllPaymentsAsync();

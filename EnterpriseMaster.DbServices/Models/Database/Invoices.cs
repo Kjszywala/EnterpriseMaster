@@ -29,5 +29,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalAmount { get; set; }
         public List<Payments>? Payments { get; set; }
+        public List<PaymentReports>? PaymentReports { get; set; }
     }
 }
