@@ -11,6 +11,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
         private readonly IProductsServices productsServices;
         private readonly ICategoriesServices categoriesServices;
         private readonly IQuantityTypesServices quantityTypesServices;
+        private readonly IInventoryReportsService inventoryReportsService;
 
         #endregion
 
@@ -20,12 +21,14 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             IErrorLogsServices _errorLogsServices, 
             IProductsServices _productsServices, 
             ICategoriesServices _categoriesServices, 
-            IQuantityTypesServices _quantityTypesServices)
+            IQuantityTypesServices _quantityTypesServices,
+            IInventoryReportsService _inventoryReportsService)
         {
             errorLogsServices = _errorLogsServices;
             productsServices = _productsServices;
             categoriesServices = _categoriesServices;
             quantityTypesServices = _quantityTypesServices;
+            inventoryReportsService = _inventoryReportsService;
         }
 
         #endregion
@@ -154,6 +157,23 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             try
             {
                 return (await categoriesServices.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
+        #region Reports
+
+        public async Task<bool> AddReportAsync(InventoryReports reports)
+        {
+            try
+            {
+                return (await inventoryReportsService.AddAsync(reports));
             }
             catch (Exception e)
             {

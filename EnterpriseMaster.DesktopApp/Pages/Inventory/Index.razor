@@ -1,9 +1,14 @@
 ﻿@page "/inventory"
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation.Models;
 @inherits MainLayout
 @inject InventoryService inventoryService
+@inject Helpers.Interfaces.IFolderPick _folderPicker
+@inject EmployeeService employeeService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -596,7 +601,65 @@
 
     private async Task GenerateReportPdf()
     {
+        try
+        {
+            if (inventoryReport.Count == 0)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
+                return;
+            }
+            var path = _folderPicker.DisplayFolderPicker();
+            preloadService.Show(SpinnerColor.Dark);
+            var guid = Guid.NewGuid();
+            if (path != null)
+            {
+                var inventoryReportsModel = new InventoryReportModel
+                {
+                    EmployeeEmail = Config.Email,
+                    CreationDate = DateTime.Now,
+                    HaviestItem = heaviestItem,
+                    LargestUnitInStock = largestUnitInStock,
+                    MostExpensiveItem = mostExpensiveItem,
+                    Products = inventoryReport,
+                    ReportNumber = guid.ToString(),
+                    TotalInStock = totalInStock
+                };
 
+                foreach (var item in inventoryReport)
+                {
+                    var inventoryReport = new InventoryReports()
+                    {
+                        CreationDate = DateTime.Now,
+                        ModificationDate = DateTime.Now,
+                        EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                        IsActive = true,
+                        HaviestItem = heaviestItem,
+                        LargestUnitInStock = largestUnitInStock,
+                        MostExpensiveItem = mostExpensiveItem,
+                        TotalInStock = totalInStock,
+                        ReportNumber = guid.ToString(),
+                        ProductId = item.Id,
+                        EmployeeEmail = Config.Email
+                    };
+                    await inventoryService.AddReportAsync(inventoryReport);
+                }
+
+                var report = new CreateInventoryReport($"{path}\\report_{DateTime.Now:yyyyMMdd_HHmmss}.pdf", inventoryReportsModel);
+                report.Create();
+
+                // code here ...
+                preloadService.Hide();
+                ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
     }
 
     private async Task GenerateReportCsv()

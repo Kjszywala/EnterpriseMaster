@@ -25,5 +25,6 @@
         public List<PurchaseOrderReports>? PurchaseOrderReports { get; set; }
         public List<EmployeeRoles>? EmployeeRoles { get; set; }
         public List<Offers>? Offers { get; set; }
+        public List<InventoryReports>? InventoryReports { get; set; }
     }
 }
