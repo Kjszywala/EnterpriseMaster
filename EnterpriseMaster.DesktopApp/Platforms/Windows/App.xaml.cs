@@ -17,7 +17,6 @@ namespace EnterpriseMaster.DesktopApp.WinUI
         /// </summary>
         public App()
         {
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             this.InitializeComponent();
         }
 
