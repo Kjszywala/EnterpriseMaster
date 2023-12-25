@@ -105,8 +105,12 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
 
                 column.Item().Element(ComposeTable);
 
-                var total = model.TotalInStock;
-                column.Item().AlignRight().Text($"Total in stock: {total}$").FontSize(14);
+                decimal number = 0;
+                foreach(var item in model.Products)
+                {
+                    number += item.UnitsInStock * item.Price;
+                }
+                column.Item().AlignRight().Text($"Total $ in stock: {number.ToString("F2")}$").FontSize(14);
 
                 column.Item().PaddingTop(25).Element(ComposeComments);
             });
@@ -147,7 +151,7 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                     table.Cell().Element(CellStyle).Text(item.ProductName);
                     table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price}$");
                     table.Cell().Element(CellStyle).AlignRight().Text(item.UnitsInStock);
-                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price * item.UnitsInStock}$");
+                    table.Cell().Element(CellStyle).AlignRight().Text($"{(item.Price * item.UnitsInStock).ToString("F2")}$");
 
                     static QuestPDF.Infrastructure.IContainer CellStyle(QuestPDF.Infrastructure.IContainer container)
                     {
