@@ -270,11 +270,87 @@
         </TitleTemplate>
         <Content>
             <br />
+            <Grid TItem="Products"
+                  @ref="gridProductsReportViewModel"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="ProductsReportViewModelDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  Responsive="true">
+                <GridColumn TItem="Products" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Units In Stock" PropertyName="UnitsInStock" SortKeySelector="item => item.UnitsInStock">
+                    @context.UnitsInStock
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Manufacturer" PropertyName="Manufacturer" SortKeySelector="item => item.Manufacturer">
+                    @context.Manufacturer
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
+                    @context.ProductCode
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description">
+                    @context.Description
+                </GridColumn>
+                <GridColumn TItem="Products" HeaderText="Weight" PropertyName="Weight" SortKeySelector="item => item.Weight">
+                    @context.Weight kg
+                </GridColumn>
+            </Grid>
             <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+                <div class="containerPanelReports">
+                    <div class="topPanelReportsBottom">
+                        <div class="container-fluid form-container">
+                            <div class="row">
+                                <div class="col-md-4 column">
+                                    <form>
+                                        <div class="form-group classHigh">
+                                            <label for="biggestPurchase" class="form-label">Largest Unit In Stock:</label>
+                                            <input type="text" class="form-control" id="biggestPurchase" value="@largestUnitInStock" style="width: 100%;" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4 column">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="totalCost" class="form-label">Heaviest Item:</label>
+                                            <input type="text" class="form-control" id="totalCost" value="@heaviestItem kg" style="width: 100%;" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="mostOrderingPart" class="form-label">Total In Stock:</label>
+                                            <input type="text" class="form-control" id="mostOrderingPart" value="@totalInStock" style="width: 100%;" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-4 column">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="biggestQuantity" class="form-label">Most Expensive Item:</label>
+                                            <input type="text" class="form-control" id="biggestQuantity" value="$ @mostExpensiveItem" style="width: 100%;" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <Dropdown>
+                                <DropdownToggleButton Color="ButtonColor.Success"> Generate Report </DropdownToggleButton>
+                                <DropdownMenu>
+                                    <DropdownItem @onclick="GenerateReportCsv" Type="ButtonType.Link">CSV</DropdownItem>
+                                    <DropdownItem @onclick="GenerateReportPdf" Type="ButtonType.Link">PDF</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Content>
@@ -293,23 +369,17 @@
         quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
         foreach (var product in products)
         {
-            foreach (var category in categories)
-            {
-                if (product.CategoryId == category.Id)
-                {
-                    product.Category = category;
-                }
-            }
-
-            foreach (var quantityType in quantityTypes)
-            {
-                if (product.QuantityTypeId == quantityType.Id)
-                {
-                    product.QuantityType = quantityType;
-                }
-            }
+            product.Category = await inventoryService.GetCategoriesAsync(product.CategoryId.Value);
+            product.QuantityType = await inventoryService.GetQuantityTypesAsync(product.QuantityTypeId.Value);
         }
+        inventoryReport = products;
+        largestUnitInStock = products.OrderByDescending(item => item.UnitsInStock).FirstOrDefault().UnitsInStock.ToString();
+        heaviestItem = products.OrderByDescending(item => item.Weight).FirstOrDefault().Weight.ToString();
+        mostExpensiveItem = products.OrderByDescending(item => item.Price).FirstOrDefault().Price.ToString();
+        totalInStock = products.Sum(item => item.UnitsInStock).ToString();
         await gridProducts.RefreshDataAsync();
+        await gridProductsReportViewModel.RefreshDataAsync();
+        StateHasChanged();
     }
 
     #region Stock List
@@ -319,8 +389,8 @@
 
     private async Task<GridDataProviderResult<Products>> ProductsDataProvider(GridDataProviderRequest<Products> request)
     {
-        if (products is null) // pull employees only one time for client-side filtering, sorting, and paging
-            products = await inventoryService.GetAllProductsAsync(); // call a service or an API to pull the employees
+        if (products is null)
+            products = await inventoryService.GetAllProductsAsync();
 
         return await Task.FromResult(request.ApplyTo(products));
     }
@@ -501,7 +571,38 @@
 
     #region Inventory Reports
 
+    private List<Products> inventoryReport = new List<Products>();
+    private Grid<Products> gridProductsReportViewModel;
 
+    private string largestUnitInStock;
+    private string heaviestItem;
+    private string mostExpensiveItem;
+    private string totalInStock;
+
+    private async Task<GridDataProviderResult<Products>> ProductsReportViewModelDataProvider(GridDataProviderRequest<Products> request)
+    {
+        if (inventoryReport is null)
+        {
+            inventoryReport = await inventoryService.GetAllProductsAsync();
+            foreach (var product in inventoryReport)
+            {
+                product.Category = await inventoryService.GetCategoriesAsync(product.CategoryId.Value);
+                product.QuantityType = await inventoryService.GetQuantityTypesAsync(product.QuantityTypeId.Value);
+            }
+        }
+
+        return await Task.FromResult(request.ApplyTo(inventoryReport));
+    }
+
+    private async Task GenerateReportPdf()
+    {
+
+    }
+
+    private async Task GenerateReportCsv()
+    {
+        
+    }
 
     #endregion
 

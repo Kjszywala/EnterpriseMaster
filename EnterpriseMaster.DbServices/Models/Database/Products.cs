@@ -26,5 +26,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public List<PurchaseOrders>? PurchaseOrders { get; set; }
         public List<ProductionOrders>? ProductionOrders { get; set; }
         public List<Parts>? Parts { get; set; }
+        public List<InventoryReports>? InventoryReports { get; set; }
 	}
 }
