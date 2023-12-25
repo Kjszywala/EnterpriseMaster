@@ -81,7 +81,7 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                     .Text(text =>
                     {
                         text.Span("Haviest Weight: ").Bold();
-                        text.Span($"{model.HaviestItem}");
+                        text.Span($"{model.HaviestItem} kg");
                         text.EmptyLine();
                         text.Span("Largest Units In Stock: ").Bold();
                         text.Span($"{model.LargestUnitInStock}");
@@ -99,7 +99,7 @@ namespace EnterpriseMaster.DesktopApp.Helpers.PdfCreation
                         text.Span($"{model.TotalInStock}");
                         text.EmptyLine();
                         text.Span("Most Expensive Item: ").Bold();
-                        text.Span($"{model.MostExpensiveItem}");
+                        text.Span($"$ {model.MostExpensiveItem}");
                     });
                 });
 

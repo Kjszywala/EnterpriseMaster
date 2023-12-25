@@ -15,6 +15,8 @@ using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
 using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
+
 namespace EnterpriseMaster.DesktopApp
 {
     public static class MauiProgram
