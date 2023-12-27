@@ -83,23 +83,179 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+            <div class="containerpanel">
+                <div class="toppanel-panel">
+                    <br />
+                    <Grid TItem="ShippersViewModel"
+                          @ref="gridShippers"
+                          AllowFiltering="true"
+                          AllowPaging="true"
+                          AllowSorting="true"
+                          AllowRowClick="true"
+                          DataProvider="ShippersViewModelDataProvider"
+                          Class="table table-hover table-bordered table-striped"
+                          FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                          HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                          PageSize="5"
+                          PageSizeSelectorVisible="true"
+                          PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                          PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                          ItemsPerPageText="Items per page"
+                          Responsive="true">
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Company Name" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
+                            @context.CompanyName
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Contact Name" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
+                            @context.ContactName
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
+                            @context.Email
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
+                            @context.Phone
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="House Number" PropertyName="HouseNumber" SortKeySelector="item => item.HouseNumber">
+                            @context.HouseNumber
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Street" PropertyName="Street" SortKeySelector="item => item.Street">
+                            @context.Street
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Post Code" PropertyName="PostCode" SortKeySelector="item => item.PostCode">
+                            @context.PostCode
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
+                            @context.City
+                        </GridColumn>
+                    </Grid>
+                </div>
+                <div class="bottomPanel-panel">
+                    <div class="bottomPanel-left">
+                        <h3>Add New Shipper</h3>
+                        <hr />
+                        <div class="containerSupplierAdd">
+                            <div class="topSupplierAdd">
+                                <div class="top-leftSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="companyName" placeholder="enter company name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="contactName" placeholder="enter contact name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="phone" placeholder="enter phone" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="email" placeholder="enter email" />
+                                    </div>
+                                </div>
+                                <div class="top-rightSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="houseNumber" placeholder="enter house number" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="street" placeholder="enter street" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="city" placeholder="enter city" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="postalCode" placeholder="enter postal code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="country" placeholder="enter country" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottomSupplierAdd">
+                                <button class="button-36" @onclick="addShipper">Add New Shipper</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottomPanel-right">
+                        <div class="column-containerSupplierAdd">
+                            <div class="columnSupplierAdd">
+                                <h3>Edit Shipper</h3>
+                            </div>
+                            <div class="columnSupplierAdd">
+                                <div class="row">
+                                    <div class="col col-dropdown">
+                                        @if (shippers == null)
+                                        {
+                                            <p>loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeedropdown" class="dropdown-style" @onchange="OnShipperSelected">
+                                                <option>Select Shipper</option>
+                                                @foreach (var access in shippers)
+                                                {
+                                                    <option value="@access.Id">@access.ContactName (@access.CompanyName)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="containerSupplierAdd">
+                            <div class="topSupplierAdd">
+                                <div class="top-leftSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="companyNameEdit" placeholder="enter company name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="contactNameEdit" placeholder="enter contact name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="phoneEdit" placeholder="enter phone" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="emailEdit" placeholder="enter email" />
+                                    </div>
+                                </div>
+                                <div class="top-rightSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="houseNumberEdit" placeholder="enter house number" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="streetEdit" placeholder="enter street" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="cityEdit" placeholder="enter city" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="postalCodeEdit" placeholder="enter postal code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="countryEdit" placeholder="enter country" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottomSupplierAdd">
+                                <button class="button-36" @onclick="editShipper">Update Shipper</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Content>
     </Tab>
 </Tabs>
-
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
     protected async override void OnInitialized()
     {
         salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
-
+        shippersList = await orderService.GetAllShippersForGridAsync();
+        shippers = await orderService.GetAllShippersAsync();
+        foreach(var item in shippers)
+        {
+            item.ShippersAddresses = await orderService.GetShipperAddressAsync(item.ShippersAddressId.Value);
+        }
         await gridOrderViewModel.RefreshDataAsync();
+        await gridShippers.RefreshDataAsync();
     }
 
     #region OrderViewModel
@@ -112,6 +268,355 @@
             salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(salesOrders));
+    }
+
+    #endregion
+
+    #region Shippers
+
+    private List<ShippersViewModel> shippersList = new List<ShippersViewModel>();
+    private List<Shippers> shippers = new List<Shippers>();
+    private Grid<ShippersViewModel> gridShippers;
+
+    private async Task<GridDataProviderResult<ShippersViewModel>> ShippersViewModelDataProvider(GridDataProviderRequest<ShippersViewModel> request)
+    {
+        if (shippersList is null)
+            shippersList = await orderService.GetAllShippersForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(shippersList));
+    }
+
+    private string companyName;
+    private string contactName;
+    private string phone;
+    private string email;
+    private string houseNumber;
+    private string street;
+    private string city;
+    private string postalCode;
+    private string country;
+
+    private string companyNameEdit;
+    private string contactNameEdit;
+    private string phoneEdit;
+    private string emailEdit;
+    private string houseNumberEdit;
+    private string cityEdit;
+    private string streetEdit;
+    private string postalCodeEdit;
+    private string countryEdit;
+    private int selectedShipperId;
+
+    private async Task editShipper()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidShipperEdit())
+            {
+                return;
+            }
+            var shipper = await orderService.GetShipperAsync(selectedShipperId);
+            var address = await orderService.GetShipperAddressAsync(shipper.ShippersAddressId.Value);
+
+            address.Street = streetEdit;
+            address.City = cityEdit;
+            address.HouseNumber = houseNumberEdit;
+            address.Country = countryEdit;
+            address.PostCode = postalCodeEdit;
+            address.ModificationDate = DateTime.Now;
+
+            var added = await orderService.UpdateShipperAddressAsync(address);
+
+            if (!added)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a shippers address!");
+                preloadService.Hide();
+                return;
+            }
+
+            shipper.Email = emailEdit;
+            shipper.IsActive = true;
+            shipper.ModificationDate = DateTime.Now;
+            shipper.Phone = phoneEdit;
+            shipper.ModificationDate = DateTime.Now;
+
+            if (await orderService.UpdateShipperAsync(shipper))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Shipper updated successfully!");
+                preloadService.Hide();
+                shippers = await orderService.GetAllShippersAsync();
+                StateHasChanged();
+                shippersList = await orderService.GetAllShippersForGridAsync();
+                await gridShippers.RefreshDataAsync();
+                return;
+            };
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a shipper!");
+            preloadService.Hide();
+            StateHasChanged();
+            await gridShippers.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a shipper!");
+            preloadService.Hide();
+        }
+    }
+
+    private async Task addShipper()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidShipper())
+            {
+                return;
+            }
+
+            var address = new ShippersAddresses()
+                {
+                    City = city,
+                    Country = country,
+                    CreationDate = DateTime.Now,
+                    ModificationDate = DateTime.Now,
+                    IsActive = true,
+                    HouseNumber = houseNumber,
+                    PostCode = postalCode,
+                    Street = street,
+                };
+
+            var added = await orderService.AddShipperAddressAsync(address);
+            int supplierAddressId;
+            if (added)
+            {
+                supplierAddressId = (await orderService.GetAllShipperAddressAsync()).Where(item =>
+                    item.HouseNumber == houseNumber &&
+                    item.Country == country &&
+                    item.CreationDate == address.CreationDate &&
+                    item.PostCode == postalCode &&
+                    item.Street == street)
+                    .FirstOrDefault().Id;
+            }
+            else
+            {
+                ShowMessage(ToastType.Info, "Warning!", "Something went wrong!");
+                preloadService.Hide();
+                return;
+            }
+
+            var shipper = new Shippers()
+            {
+                CompanyName = companyName,
+                ContactName = contactName,
+                CreationDate = DateTime.Now,
+                Email = email,
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                Phone = phone,
+                ShippersAddressId = supplierAddressId
+            };
+
+            if (await orderService.AddShipperAsync(shipper))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Shipper added successfully!");
+                preloadService.Hide();
+                shippers = await orderService.GetAllShippersAsync();
+                StateHasChanged();
+                companyName = "";
+                contactName = "";
+                phone = "";
+                email = "";
+                houseNumber = "";
+                street = "";
+                city = "";
+                postalCode = "";
+                country = "";
+                shippersList = await orderService.GetAllShippersForGridAsync();
+                await gridShippers.RefreshDataAsync();
+                return;
+            };
+
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a shipper!");
+            preloadService.Hide();
+            StateHasChanged();
+            await gridShippers.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a shipper!");
+            preloadService.Hide();
+        }
+    }
+
+    private async void OnShipperSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedShipperId = selectedId;
+        }
+        var shipperEdit = await orderService.GetShipperAsync(selectedShipperId);
+        var address = await orderService.GetShipperAddressAsync(shipperEdit.ShippersAddressId.Value);
+        companyNameEdit = shipperEdit.CompanyName;
+        contactNameEdit = shipperEdit.ContactName;
+        phoneEdit = shipperEdit.Phone;
+        emailEdit = shipperEdit.Email;
+        houseNumberEdit = address.HouseNumber;
+        streetEdit = address.Street;
+        cityEdit = address.City;
+        postalCodeEdit = address.PostCode;
+        countryEdit = address.Country;
+
+        StateHasChanged();
+    }
+
+    #endregion
+
+    #region Helpers
+
+    public bool IsValidShipper()
+    {
+        if (string.IsNullOrWhiteSpace(companyName))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(contactName))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Contact Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phone))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Phone cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Email cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(houseNumber))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "House Number cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(street))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Street cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "City cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(postalCode))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Postal Code cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(country))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Country cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
+
+    public bool IsValidShipperEdit()
+    {
+        if (string.IsNullOrWhiteSpace(companyNameEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(contactNameEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Contact Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phoneEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Phone cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(emailEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Email cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(houseNumberEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "House Number cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(streetEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Street cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(cityEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "City cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(postalCodeEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Postal Code cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(countryEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Country cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // Additional validation for selectedShipperId if needed
+        if (selectedShipperId <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Invalid Shipper selected!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
     }
 
     #endregion

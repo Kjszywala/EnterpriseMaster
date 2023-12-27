@@ -8,5 +8,7 @@
         public string? Email { get; set; }
         public int? ShippingAddressId { get; set; }
         public ShippingAddresses? ShippersAddress { get; set; }
+        public int? ShippersAddressId { get; set; }
+        public ShippersAddresses? ShippersAddresses { get; set; }
     }
 }

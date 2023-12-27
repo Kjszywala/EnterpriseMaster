@@ -1,2 +1,260 @@
-﻿body {
+﻿.containerPanel {
+    width: 100%;
+    max-width: 1200px; /* Set a maximum width if needed */
+    margin: 0 auto; /* Center the container horizontally */
+    display: flex;
+    flex-direction: column; /* Default to a column layout */
 }
+
+.topPanel-panel {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+}
+
+.bottomPanel-panel {
+    display: flex;
+    flex-direction: row;
+}
+
+.bottomPanel-left,
+.bottomPanel-right {
+    flex: 1;
+    padding: 20px;
+}
+
+.bottomPanel-left {
+    background-color: #f0f0f0;
+    color: #fff;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+}
+
+.bottomPanel-right {
+    background-color: #f0f0f0;
+    color: #fff;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+}
+
+@media (max-width: 768px) {
+    .bottomPanel-panel {
+        flex-direction: column; /* Stack items vertically */
+    }
+
+    .bottomPanel-left,
+    .bottomPanel-right {
+        width: 100%;
+    }
+}
+
+
+.containerSupplierAdd {
+    display: flex;
+    flex-direction: column;
+}
+
+.topSupplierAdd {
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+h3 {
+    color: black;
+}
+
+.top-leftSupplierAdd, .top-rightSupplierAdd {
+    flex: 1;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px; /* Add padding as needed */
+}
+
+    .top-leftSupplierAdd input,
+    .top-rightSupplierAdd input {
+        width: 100%;
+        padding: 8px; /* Adjust padding as needed */
+        margin-bottom: 10px; /* Adjust margin as needed */
+        box-sizing: border-box;
+    }
+
+.bottomSupplierAdd {
+    flex: 1;
+    width: 100%;
+    max-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CSS */
+.button-36 {
+    background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: "Inter UI","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    height: 50px;
+    width: 250px;
+    padding: 0 1.6rem;
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+    transition: all .5s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+    .button-36:hover {
+        box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+        transition-duration: .1s;
+    }
+
+@media (min-width: 768px) {
+    .button-36 {
+        padding: 0 2.6rem;
+    }
+}
+
+.column-containerSupplierAdd {
+    display: flex;
+}
+
+.columnSupplierAdd {
+    width: 50%;
+}
+
+.row {
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center;
+}
+
+.col-dropdown {
+    text-align: center; /* Center text within the column */
+}
+
+.dropdown-style {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Style for the loading paragraph */
+.row p {
+    margin: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+p {
+    color: #888;
+    margin: 0;
+    text-align: center;
+}
+
+bb-grid-pagination-text {
+    color: black;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+label {
+    color: black;
+}
+/* CSS */
+.button-41 {
+    background-color: initial;
+    background-image: linear-gradient(-180deg, #00D775, #00BD68);
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 24px; /* Adjusted height */
+    line-height: 24px; /* Adjusted line-height */
+    outline: 0;
+    overflow: hidden;
+    padding: 0 10px; /* Adjusted padding */
+    pointer-events: auto;
+    position: relative;
+    text-align: center;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle; /* Center text vertically */
+    white-space: nowrap;
+    width: 100%;
+    z-index: 9;
+    border: 0;
+}
+
+    .button-41:hover {
+        background: #00bd68;
+    }
+/* CSS */
+.button-42 {
+    background-color: initial;
+    background-image: linear-gradient(-180deg, #FF7E31, #E62C03);
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 24px; /* Adjusted height */
+    line-height: 24px; /* Adjusted line-height */
+    outline: 0;
+    overflow: hidden;
+    padding: 0 10px; /* Adjusted padding */
+    pointer-events: auto;
+    position: relative;
+    text-align: center;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle; /* Center text vertically */
+    white-space: nowrap;
+    width: 100%;
+    z-index: 9;
+    border: 0;
+}
+
+    .button-42:hover {
+        box-shadow: rgba(253, 76, 0, 0.5) 0 3px 8px;
+    }
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+    .button-container button {
+        margin-top: 10px; /* Adjust the space between buttons */
+    }

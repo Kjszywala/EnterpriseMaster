@@ -77,6 +77,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IQuantityTypesServices, QuantityTypesServices>();
             builder.Services.AddScoped<ISaleCartsServices, SaleCartsServices>();
             builder.Services.AddScoped<IShippersServices, ShippersServices>();
+            builder.Services.AddScoped<IShippersAddressesService, ShippersAddressesService>();
             builder.Services.AddScoped<IShippingAddressesServices, ShippingAddressesServices>();
             builder.Services.AddScoped<ISubscriptionOrdersServices, SubscriptionOrdersServices>();
             builder.Services.AddScoped<ISubscriptionTypesServices, SubscriptionTypesServices>();
