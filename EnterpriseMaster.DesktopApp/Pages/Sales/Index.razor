@@ -59,7 +59,7 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Braces" /> Returns and Refunds
+            <Icon Name="IconName.Braces" /> Make An Order
         </TitleTemplate>
         <Content>
             <p class="mt-2">
@@ -72,9 +72,163 @@
             <Icon Name="IconName.Diagram2" /> Customer Management
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="containerpanel">
+                <div class="toppanel-panel">
+                    <br />
+                    <Grid TItem="ShippersViewModel"
+                          @ref="gridShippers"
+                          AllowFiltering="true"
+                          AllowPaging="true"
+                          AllowSorting="true"
+                          AllowRowClick="true"
+                          DataProvider="ShippersViewModelDataProvider"
+                          Class="table table-hover table-bordered table-striped"
+                          FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                          HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                          PageSize="5"
+                          PageSizeSelectorVisible="true"
+                          PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                          PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                          ItemsPerPageText="Items per page"
+                          Responsive="true">
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Company Name" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
+                            @context.CompanyName
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Contact Name" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
+                            @context.ContactName
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
+                            @context.Email
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
+                            @context.Phone
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="House Number" PropertyName="HouseNumber" SortKeySelector="item => item.HouseNumber">
+                            @context.HouseNumber
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Street" PropertyName="Street" SortKeySelector="item => item.Street">
+                            @context.Street
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="Post Code" PropertyName="PostCode" SortKeySelector="item => item.PostCode">
+                            @context.PostCode
+                        </GridColumn>
+                        <GridColumn TItem="ShippersViewModel" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
+                            @context.City
+                        </GridColumn>
+                    </Grid>
+                </div>
+                <div class="bottomPanel-panel">
+                    <div class="bottomPanel-left">
+                        <h3>Add New Customer</h3>
+                        <hr />
+                        <div class="containerSupplierAdd">
+                            <div class="topSupplierAdd">
+                                <div class="top-leftSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="companyName" placeholder="enter company name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="contactName" placeholder="enter contact name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="phone" placeholder="enter phone" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="email" placeholder="enter email" />
+                                    </div>
+                                </div>
+                                <div class="top-rightSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="houseNumber" placeholder="enter house number" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="street" placeholder="enter street" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="city" placeholder="enter city" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="postalCode" placeholder="enter postal code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="country" placeholder="enter country" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottomSupplierAdd">
+                                <button class="button-36" @onclick="addShipper">Add New Shipper</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottomPanel-right">
+                        <div class="column-containerSupplierAdd">
+                            <div class="columnSupplierAdd">
+                                <h3>Edit Customer</h3>
+                            </div>
+                            <div class="columnSupplierAdd">
+                                <div class="row">
+                                    <div class="col col-dropdown">
+                                        @if (shippers == null)
+                                        {
+                                            <p>loading...</p>
+                                        }
+                                        else
+                                        {
+                                            <select id="employeedropdown" class="dropdown-style" @onchange="OnShipperSelected">
+                                                <option>Select Shipper</option>
+                                                @foreach (var access in shippers)
+                                                {
+                                                    <option value="@access.Id">@access.ContactName (@access.CompanyName)</option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="containerSupplierAdd">
+                            <div class="topSupplierAdd">
+                                <div class="top-leftSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="companyNameEdit" placeholder="enter company name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="contactNameEdit" placeholder="enter contact name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="phoneEdit" placeholder="enter phone" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="emailEdit" placeholder="enter email" />
+                                    </div>
+                                </div>
+                                <div class="top-rightSupplierAdd">
+                                    <div class="mb-3">
+                                        <input @bind="houseNumberEdit" placeholder="enter house number" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="streetEdit" placeholder="enter street" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="cityEdit" placeholder="enter city" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="postalCodeEdit" placeholder="enter postal code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input @bind="countryEdit" placeholder="enter country" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottomSupplierAdd">
+                                <button class="button-36" @onclick="editShipper">Update Shipper</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -239,6 +393,16 @@
                     </div>
                 </div>
             </div>
+        </Content>
+    </Tab>
+    <Tab>
+        <TitleTemplate>
+            <Icon Name="IconName.Braces" /> Returns and Refunds
+        </TitleTemplate>
+        <Content>
+            <p class="mt-2">
+                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
+            </p>
         </Content>
     </Tab>
 </Tabs>
@@ -468,6 +632,24 @@
 
         StateHasChanged();
     }
+
+    #endregion
+
+    #region CustomerManagement
+
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string CompanyName { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public int? CompanyId { get; set; }
+    public Companies? Company { get; set; }
+    public int? BillingAddressId { get; set; }
+    public BillingAddresses? BillingAddress { get; set; }
+    public int? ShippingAddressId { get; set; }
+    public ShippingAddresses? ShippingAddress { get; set; }
+    public int? CustomerAddressId { get; set; }
+    public CustomerAddresses? CustomerAddress { get; set; }
 
     #endregion
 
