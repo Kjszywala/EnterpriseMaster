@@ -19,6 +19,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<BillingAddresses> BillingAddresses { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
         public virtual DbSet<CaseStatus> CaseStatus { get; set; }
+        public virtual DbSet<CustomerFeedbacks> CustomerFeedbacks { get; set; }
         public virtual DbSet<CustomerInformation> CustomerInformation { get; set; }
         public virtual DbSet<EmployeeAddresses> EmployeeAddresses { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }

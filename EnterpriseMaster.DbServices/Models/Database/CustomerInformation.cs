@@ -17,5 +17,6 @@
         public CustomerAddresses? CustomerAddress { get; set; }
         public List<SalesOrders>? SalesOrders { get; set; }
         public List<Invoices>? Invoices { get; set; }
+        public List<CustomerFeedbacks>? CustomerFeedbacks { get; set; }
 	}
 }

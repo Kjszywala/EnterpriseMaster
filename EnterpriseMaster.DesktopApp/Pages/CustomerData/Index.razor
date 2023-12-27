@@ -50,22 +50,38 @@
     </Tab>
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.PersonUp" /> Manage Customers
-        </TitleTemplate>
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
             <Icon Name="IconName.Rss" /> Customer Feedback
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            @if(feedbacks.Count > 0)
+            {
+                <Accordion Class="container" AlwaysOpen="true">
+                    @foreach (var item in feedbacks)
+                    {
+                        var name = item.Customer != null ? $"{item.Customer.FirstName} {item.Customer.LastName} || Email: {item.Customer.Email} || {item.ModificationDate.ToString("yyyy-MM-dd hh:mm")}" : $"Anonymous user || {item.ModificationDate.ToString("yyyy-MM-dd hh:mm")}";
+                        <AccordionItem Title=@name IsActive="true">
+                            <Content>
+                                <b>@item.FeedbackText</b>
+                                <div class="star-rating" style="white-space: nowrap;">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        <span>@(i <= item.Rating ? "\u2605" : "\u2606")</span>
+                                    }
+                                </div>
+                            </Content>
+                        </AccordionItem>
+                    }
+                </Accordion>
+            }
+            else
+            {
+                <Alert Color="AlertColor.Info" Class="container">
+                    <h4 class="alert-heading">No Feedback Available</h4>
+                    <p>There are currently no feedback available. Check back later for updates.</p>
+                    <hr>
+                </Alert>
+            }
         </Content>
     </Tab>
 </Tabs>
@@ -73,8 +89,16 @@
     protected async override void OnInitialized()
     {
         customerInformation = await customerService.GetAllCustomerInformationForGridAsync();
-
+        feedbacks = (await customerService.GetAllCustomerFeedbacksAsync()).OrderByDescending(item => item.ModificationDate).ToList();
+        foreach(var item in feedbacks)
+        {
+            if(item.CustomerId != null)
+            {
+                item.Customer = await customerService.GetCustomerInformationAsync(item.CustomerId.Value);
+            }
+        }
         await gridCustomerDataViewModel.RefreshDataAsync();
+        StateHasChanged();
     }
 
     #region CustomerDataViewModel
@@ -88,6 +112,12 @@
 
         return await Task.FromResult(request.ApplyTo(customerInformation));
     }
+
+    #endregion
+
+    #region Customer Feedback
+
+    private List<CustomerFeedbacks> feedbacks = new List<CustomerFeedbacks>();
 
     #endregion
 }

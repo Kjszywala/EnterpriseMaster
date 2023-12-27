@@ -1,2 +1,31 @@
-﻿body {
+﻿.star-rating {
+    unicode-bidi: bidi-override;
+    color: gold; /* Set the star color to gold */
+    font-size: 20px;
+    width: 150px; /* Adjust as needed */
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.star-rating span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+}
+
+.star-rating span:hover:before,
+.star-rating span:hover ~ span:before {
+    content: '\2605'; /* Unicode character for a solid star */
+    position: absolute;
+    color: gold; /* Set the star color to gold when hovered */
+}
+
+.star-rating span:before {
+    content: '\2606'; /* Unicode character for an outlined star */
+    position: absolute;
+}
+.container {
+    display: flex;
+    height: 100%;
 }

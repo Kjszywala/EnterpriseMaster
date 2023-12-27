@@ -16,6 +16,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices
         private readonly IShippingAddressesServices shippingAddressesServices;
         private readonly ISalesOrdersServices salesOrdersServices;
         private readonly IInvoicesServices invoicesServices;
+        private readonly ICustomerFeedbacksService customerFeedbacksService;
 
         #endregion
 
@@ -29,7 +30,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices
             IBillingAddressesServices _billingAddressesServices, 
             IShippingAddressesServices _shippingAddressesServices, 
             ISalesOrdersServices _salesOrdersServices, 
-            IInvoicesServices _invoicesServices)
+            IInvoicesServices _invoicesServices,
+            ICustomerFeedbacksService _customerFeedbacksService)
         {
             errorLogsServices = _errorLogsServices;
             informationServices = _informationServices;
@@ -39,11 +41,81 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices
             shippingAddressesServices = _shippingAddressesServices;
             salesOrdersServices = _salesOrdersServices;
             invoicesServices = _invoicesServices;
+            customerFeedbacksService = _customerFeedbacksService;
         }
 
         #endregion
 
         #region Methods
+
+        #region Customerfeedbacks
+
+        public async Task<List<CustomerFeedbacks>> GetAllCustomerFeedbacksAsync()
+        {
+            try
+            {
+                return (await customerFeedbacksService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<CustomerFeedbacks> GetCustomerFeedbacksAsync(int id)
+        {
+            try
+            {
+                return (await customerFeedbacksService.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> AddCustomerFeedbacksAsync(CustomerFeedbacks customer)
+        {
+            try
+            {
+                return (await customerFeedbacksService.AddAsync(customer));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> UpdateCustomerFeedbacksAsync(CustomerFeedbacks customer)
+        {
+            try
+            {
+                return (await customerFeedbacksService.EditAsync(customer.Id, customer));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> RemoveCustomerFeedbacksAsync(int id)
+        {
+            try
+            {
+                return (await customerFeedbacksService.RemoveAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
 
         #region informationServices
 
