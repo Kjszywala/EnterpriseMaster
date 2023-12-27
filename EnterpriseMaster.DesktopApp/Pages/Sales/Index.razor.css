@@ -263,3 +263,35 @@ label {
     justify-content: center;
     color: black;
 }
+
+/*make animate order styles*/
+
+#salesOrderContainer {
+    padding: 20px;
+}
+
+.sales-order-form {
+    max-width: 600px;
+    margin: auto;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}

@@ -1,5 +1,4 @@
-﻿using EnterpriseMaster.DbServices.Services;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EnterpriseMaster.DbServices.Models.Database

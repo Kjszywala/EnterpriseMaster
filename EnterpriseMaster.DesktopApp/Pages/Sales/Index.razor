@@ -2,13 +2,19 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
+@using EnterpriseMaster.DesktopApp.Helpers.Enums;
+@using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @inherits MainLayout
 @inject SalesService orderService
 @inject CustomerDataService customerDataService
 @inject OrderService orderAddressesService
+@inject InventoryService inventoryService
+@inject EmployeeService employeeService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -55,7 +61,9 @@
                     @context.QuantityType
                 </GridColumn>
                 <GridColumn TItem="OrderViewModel" HeaderText="Order Status" PropertyName="OrderStatus" SortKeySelector="item => item.OrderStatus">
-                    @context.OrderStatus
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <span class="@OrderStatusClasses.GetClassForOrderStatus(context.OrderStatus)" style="width: 150px; text-align: center;">@context.OrderStatus</span>
+                    </div>
                 </GridColumn>
             </Grid>
         </Content>
@@ -65,9 +73,92 @@
             <Icon Name="IconName.Braces" /> Make An Order
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <div id="salesOrderContainer">
+                <div class="sales-order-form">
+
+                    <!-- Sales Order Number -->
+                    <label for="salesOrderNumber">Sales Order Number:</label>
+                    <input type="text" id="salesOrderNumber" name="salesOrderNumber" class="form-control" disabled="disabled" placeholder="@guid" />
+
+                    <label for="customerSelect">Select Customer:</label>
+                    <div class="col col-dropdown">
+                        @if (customersForSelect == null)
+                        {
+                            <p>loading...</p>
+                        }
+                        else
+                        {
+                            <select id="customerSelect" class="dropdown-style" @onchange="OnCustomerOrderSelected">
+                                <option>Select Customer</option>
+                                @foreach (var access in customersForSelect)
+                                {
+                                    <option value="@access.Id">@access.FirstName @access.LastName (@access.Email)</option>
+                                }
+                            </select>
+                        }
+                    </div>
+
+                    <!-- Quantity -->
+
+                    <br />
+                    <label for="quantity">Quantity:</label>
+                    <NumberInput TValue="int" @bind-Value="@quantitySalesOrder" Placeholder="Enter amount" />
+
+                    <label for="QuantitySelect">Select Quantity Type:</label>
+                    <div class="col col-dropdown">
+                        @if (quantityTypes == null)
+                        {
+                            <p>loading...</p>
+                        }
+                        else
+                        {
+                            <select id="quantityTypes" class="dropdown-style" @onchange="OnQuantityTypeSelected">
+                                <option>Select Quantity Type</option>
+                                @foreach (var access in quantityTypes)
+                                {
+                                    <option value="@access.Id">@access.Type</option>
+                                }
+                            </select>
+                        }
+                    </div>
+
+                    <!-- Discount -->
+                    <label for="discount">Discount:</label>
+                    <NumberInput TValue="int" @bind-Value="@discountForOrder" Placeholder="Enter amount" />
+
+                    <label for="productSelect">Select Product:</label>
+                    <div class="col col-dropdown">
+                        @if (productsForOrder == null)
+                        {
+                            <p>loading...</p>
+                        }
+                        else
+                        {
+                            <select id="productSelect" class="dropdown-style" @onchange="OnProductSelected">
+                                <option>Select Product</option>
+                                @foreach (var access in productsForOrder)
+                                {
+                                    <option value="@access.Id">@access.ProductName (@access.ProductCode)</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                    <br />
+                    <!-- Delivery Date -->
+                    <label for="deliveryDate">Delivery Date:</label>
+                    <DateInput id="deliveryDate" TValue="DateOnly" @bind-Value="@deliveryDate" Placeholder="Enter Date" />
+                    <br />
+                    <!-- Payment Term -->
+                    <label for="paymentTerm">Payment Term:</label>
+                    <DateInput id="paymentTerm" TValue="DateOnly" @bind-Value="@paymentTerm" Placeholder="Enter Date" />
+
+                    <br />
+                    <!-- Submit Button -->
+                    <div class="bottomSupplierAdd">
+                        <button class="button-36" @onclick="makeAnOrder">Make An Order</button>
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -521,6 +612,9 @@
         shippers = await orderService.GetAllShippersAsync();
         customerInformation = await customerDataService.GetAllCustomerInformationAsync();
         customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
+        customersForSelect = customerInformation;
+        quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
+        productsForOrder = await inventoryService.GetAllProductsAsync();
         foreach(var item in shippers)
         {
             item.ShippersAddresses = await orderService.GetShipperAddressAsync(item.ShippersAddressId.Value);
@@ -530,6 +624,99 @@
         await gridCustomerManagement.RefreshDataAsync();
         StateHasChanged();
     }
+
+    #region Make an order
+
+    private DateOnly deliveryDate = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly paymentTerm = DateOnly.FromDateTime(DateTime.Now);
+    private List<CustomerInformation> customersForSelect = new List<CustomerInformation>();
+    private int selectedCustomerForSelect;
+    private int quantitySalesOrder = 0;
+    private List<QuantityTypes> quantityTypes = new List<QuantityTypes>();
+    private int selectedQuantityType;
+    private int discountForOrder = 0;
+    private List<Products> productsForOrder = new List<Products>();
+    private int selectedProduct;
+    private Guid guid = Guid.NewGuid();
+
+    private async Task makeAnOrder()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidSalesOrder())
+            {
+                return;
+            }
+            var customer = await customerDataService.GetCustomerInformationAsync(selectedCustomerForSelect);
+            var quantityType = await inventoryService.GetQuantityTypesAsync(selectedQuantityType);
+            var product = await inventoryService.GetProductAsync(selectedProduct);
+
+            var order = new SalesOrders()
+            {
+                BillingAddressId = customer.BillingAddressId,
+                CreationDate = DateTime.Now,
+                ModificationDate = DateTime.Now,
+                CustomerInformationId = customer.Id,
+                DeliveryDate = deliveryDate.ToDateTime(TimeOnly.MinValue),
+                Discount = discountForOrder,
+                PaymentTerm = paymentTerm.ToDateTime(TimeOnly.MinValue),
+                EmployeeId = (await employeeService.GetEmployeesAsync()).Where(item2 => item2.UserId == Config.UserId).FirstOrDefault().Id,
+                IsActive = true,
+                OrderDate = DateTime.Now,
+                OrderStatuseId = (int)StatusForOrder.Open,
+                QuantityTypeId = selectedQuantityType,
+                SalesOrderNumber = guid.ToString(),
+                Quantity = quantitySalesOrder,
+                PricePaid = quantitySalesOrder * product.Price,
+                ProductId = selectedProduct,
+                RejectedReason = ""
+
+            };
+            if (!await orderAddressesService.AddSalesOrderAsync(order))
+            {
+                ShowMessage(ToastType.Info, "Warning!", "Something went wrong!");
+                preloadService.Hide();
+                return;
+            }
+            preloadService.Hide();
+            ShowMessage(ToastType.Success, "Success!", "Sales order added successfully!");
+            salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while makin an order!");
+            preloadService.Hide();
+        }
+    }
+
+    private async void OnProductSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedProduct = selectedId;
+        }
+    }
+
+    private async void OnCustomerOrderSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedCustomerForSelect = selectedId;
+        }
+    }
+
+    private async void OnQuantityTypeSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedQuantityType = selectedId;
+        }
+    }
+
+    #endregion
 
     #region OrderViewModel
 
@@ -1099,6 +1286,58 @@
     #endregion
 
     #region Helpers
+
+    public bool IsValidSalesOrder()
+    {
+        // Validate selectedProduct
+        if (selectedProduct <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Please select a product!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // Validate selectedQuantityType
+        if (selectedQuantityType <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Please select a quantity type!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // Validate discountForOrder
+        if (discountForOrder < 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Discount must be zero or greater!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // Validate selectedCustomerForSelect
+        if (selectedCustomerForSelect <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Please select a customer!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // Validate quantitySalesOrder
+        if (quantitySalesOrder <= 0)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Quantity in sales order must be greater than zero!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (deliveryDate.ToDateTime(TimeOnly.MinValue) < paymentTerm.ToDateTime(TimeOnly.MinValue))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Payment Term cannot be later than Delivery Date!");
+            preloadService.Hide();
+            return false;
+        }
+
+        return true;
+    }
 
     public bool IsValidAddress(Addresses address)
     {
