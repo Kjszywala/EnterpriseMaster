@@ -2,10 +2,13 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 @inherits MainLayout
 @inject SalesService orderService
+@inject CustomerDataService customerDataService
+@inject OrderService orderAddressesService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -76,13 +79,13 @@
             <div class="containerpanel">
                 <div class="toppanel-panel">
                     <br />
-                    <Grid TItem="ShippersViewModel"
-                          @ref="gridShippers"
+                    <Grid TItem="CustomerDataViewModel"
+                          @ref="gridCustomerManagement"
                           AllowFiltering="true"
                           AllowPaging="true"
                           AllowSorting="true"
                           AllowRowClick="true"
-                          DataProvider="ShippersViewModelDataProvider"
+                          DataProvider="CustomersViewModelDataProvider"
                           Class="table table-hover table-bordered table-striped"
                           FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                           HeaderRowCssClass="bg-dark text-white border-bottom-0"
@@ -92,29 +95,17 @@
                           PaginationItemsTextFormat="{0} - {1} of {2} pages"
                           ItemsPerPageText="Items per page"
                           Responsive="true">
-                        <GridColumn TItem="ShippersViewModel" HeaderText="Company Name" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
-                            @context.CompanyName
+                        <GridColumn TItem="CustomerDataViewModel" HeaderText="First Name" PropertyName="FirstName" SortKeySelector="item => item.FirstName">
+                            @context.FirstName
                         </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="Contact Name" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
-                            @context.ContactName
+                        <GridColumn TItem="CustomerDataViewModel" HeaderText="Last Name" PropertyName="LastName" SortKeySelector="item => item.LastName">
+                            @context.LastName
                         </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
+                        <GridColumn TItem="CustomerDataViewModel" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
                             @context.Email
                         </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
+                        <GridColumn TItem="CustomerDataViewModel" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
                             @context.Phone
-                        </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="House Number" PropertyName="HouseNumber" SortKeySelector="item => item.HouseNumber">
-                            @context.HouseNumber
-                        </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="Street" PropertyName="Street" SortKeySelector="item => item.Street">
-                            @context.Street
-                        </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="Post Code" PropertyName="PostCode" SortKeySelector="item => item.PostCode">
-                            @context.PostCode
-                        </GridColumn>
-                        <GridColumn TItem="ShippersViewModel" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
-                            @context.City
                         </GridColumn>
                     </Grid>
                 </div>
@@ -126,38 +117,95 @@
                             <div class="topSupplierAdd">
                                 <div class="top-leftSupplierAdd">
                                     <div class="mb-3">
-                                        <input @bind="companyName" placeholder="enter company name" />
+                                        <input @bind="firstNameCustomer" placeholder="enter first name" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="contactName" placeholder="enter contact name" />
+                                        <input @bind="lastNameCustomer" placeholder="enter last name" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="phone" placeholder="enter phone" />
+                                        <input @bind="emailCustomer" placeholder="enter email" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="email" placeholder="enter email" />
+                                        <input @bind="phoneCustomer" placeholder="enter phone" />
                                     </div>
                                 </div>
                                 <div class="top-rightSupplierAdd">
                                     <div class="mb-3">
-                                        <input @bind="houseNumber" placeholder="enter house number" />
+                                        <input @bind="customerAddressCustomer.HouseNumber" placeholder="enter house number" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="street" placeholder="enter street" />
+                                        <input @bind="customerAddressCustomer.Street" placeholder="enter street" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="city" placeholder="enter city" />
+                                        <input @bind="customerAddressCustomer.City" placeholder="enter city" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="postalCode" placeholder="enter postal code" />
+                                        <input @bind="customerAddressCustomer.PostCode" placeholder="enter postal code" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="country" placeholder="enter country" />
+                                        <input @bind="customerAddressCustomer.Country" placeholder="enter country" />
                                     </div>
                                 </div>
                             </div>
+                            <hr />
+                            <div class="centered-container">
+                                <Switch Class="mt-3" Value="billingAddressSameAsCustomerAddress" Label="Billing Address Same As Customer Address?" ValueExpression="() => billingAddressSameAsCustomerAddress" ValueChanged="SwitchChangedBilling" />
+                            </div>
+                            @if (!billingAddressSameAsCustomerAddress)
+                            {
+                                <div class="topSupplierAdd">
+                                    <div class="top-leftSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomer.HouseNumber" placeholder="enter house number" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomer.Street" placeholder="enter street" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomer.City" placeholder="enter city" />
+                                        </div>
+                                    </div>
+                                    <div class="top-rightSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomer.PostCode" placeholder="enter postal code" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomer.Country" placeholder="enter country" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <hr />
+                            <div class="centered-container">
+                                <Switch Class="mt-3" Value="shippingAddressSameAsCustomerAddress" Label="Shipping Address Same As Customer Address?" ValueExpression="() => shippingAddressSameAsCustomerAddress" ValueChanged="SwitchChangedShipping" />
+                            </div>
+                            @if (!shippingAddressSameAsCustomerAddress)
+                            {
+                                <div class="topSupplierAdd">
+                                    <div class="top-leftSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomer.HouseNumber" placeholder="enter house number" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomer.Street" placeholder="enter street" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomer.City" placeholder="enter city" />
+                                        </div>
+                                    </div>
+                                    <div class="top-rightSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomer.PostCode" placeholder="enter postal code" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomer.Country" placeholder="enter country" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <br />
                             <div class="bottomSupplierAdd">
-                                <button class="button-36" @onclick="addShipper">Add New Shipper</button>
+                                <button class="button-36" @onclick="addCustomer">Add New Customer</button>
                             </div>
                         </div>
                     </div>
@@ -175,11 +223,11 @@
                                         }
                                         else
                                         {
-                                            <select id="employeedropdown" class="dropdown-style" @onchange="OnShipperSelected">
-                                                <option>Select Shipper</option>
-                                                @foreach (var access in shippers)
+                                            <select id="employeedropdown" class="dropdown-style" @onchange="OnCustomerSelected">
+                                                <option>Select Customer</option>
+                                                @foreach (var access in customerInformation)
                                                 {
-                                                    <option value="@access.Id">@access.ContactName (@access.CompanyName)</option>
+                                                    <option value="@access.Id">@access.Email (@access.FirstName @access.LastName)</option>
                                                 }
                                             </select>
                                         }
@@ -192,38 +240,95 @@
                             <div class="topSupplierAdd">
                                 <div class="top-leftSupplierAdd">
                                     <div class="mb-3">
-                                        <input @bind="companyNameEdit" placeholder="enter company name" />
+                                        <input @bind="firstNameCustomerEdit" placeholder="enter first name" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="contactNameEdit" placeholder="enter contact name" />
+                                        <input @bind="lastNameCustomerEdit" placeholder="enter last name" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="phoneEdit" placeholder="enter phone" />
+                                        <input @bind="emailCustomerEdit" placeholder="enter email" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="emailEdit" placeholder="enter email" />
+                                        <input @bind="phoneCustomerEdit" placeholder="enter phone" />
                                     </div>
                                 </div>
                                 <div class="top-rightSupplierAdd">
                                     <div class="mb-3">
-                                        <input @bind="houseNumberEdit" placeholder="enter house number" />
+                                        <input @bind="customerAddressCustomerEdit.HouseNumber" placeholder="enter house number" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="streetEdit" placeholder="enter street" />
+                                        <input @bind="customerAddressCustomerEdit.Street" placeholder="enter street" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="cityEdit" placeholder="enter city" />
+                                        <input @bind="customerAddressCustomerEdit.City" placeholder="enter city" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="postalCodeEdit" placeholder="enter postal code" />
+                                        <input @bind="customerAddressCustomerEdit.PostCode" placeholder="enter postal code" />
                                     </div>
                                     <div class="mb-3">
-                                        <input @bind="countryEdit" placeholder="enter country" />
+                                        <input @bind="customerAddressCustomerEdit.Country" placeholder="enter country" />
                                     </div>
                                 </div>
                             </div>
+                            <hr />
+                            <div class="centered-container">
+                                <Switch Class="mt-3" Value="billingAddressSameAsCustomerAddressEdit" Label="Billing Address Same As Customer Address?" ValueExpression="() => billingAddressSameAsCustomerAddressEdit" ValueChanged="SwitchChangedBillingEdit" />
+                            </div>
+                            @if (!billingAddressSameAsCustomerAddressEdit)
+                            {
+                                <div class="topSupplierAdd">
+                                    <div class="top-leftSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomerEdit.HouseNumber" placeholder="enter house number" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomerEdit.Street" placeholder="enter street" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomerEdit.City" placeholder="enter city" />
+                                        </div>
+                                    </div>
+                                    <div class="top-rightSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomerEdit.PostCode" placeholder="enter postal code" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="billingAddressCustomerEdit.Country" placeholder="enter country" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <hr />
+                            <div class="centered-container">
+                                <Switch Class="mt-3" Value="shippingAddressSameAsCustomerAddressEdit" Label="Shipping Address Same As Customer Address?" ValueExpression="() => shippingAddressSameAsCustomerAddressEdit" ValueChanged="SwitchChangedShippingEdit" />
+                            </div>
+                            @if (!shippingAddressSameAsCustomerAddressEdit)
+                            {
+                                <div class="topSupplierAdd">
+                                    <div class="top-leftSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomerEdit.HouseNumber" placeholder="enter house number" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomerEdit.Street" placeholder="enter street" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomerEdit.City" placeholder="enter city" />
+                                        </div>
+                                    </div>
+                                    <div class="top-rightSupplierAdd">
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomerEdit.PostCode" placeholder="enter postal code" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <input @bind="shippingAddressCustomerEdit.Country" placeholder="enter country" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <br />
                             <div class="bottomSupplierAdd">
-                                <button class="button-36" @onclick="editShipper">Update Shipper</button>
+                                <button class="button-36" @onclick="editCustomer">Update Customer</button>
                             </div>
                         </div>
                     </div>
@@ -414,12 +519,16 @@
         salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
         shippersList = await orderService.GetAllShippersForGridAsync();
         shippers = await orderService.GetAllShippersAsync();
+        customerInformation = await customerDataService.GetAllCustomerInformationAsync();
+        customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
         foreach(var item in shippers)
         {
             item.ShippersAddresses = await orderService.GetShipperAddressAsync(item.ShippersAddressId.Value);
         }
         await gridOrderViewModel.RefreshDataAsync();
         await gridShippers.RefreshDataAsync();
+        await gridCustomerManagement.RefreshDataAsync();
+        StateHasChanged();
     }
 
     #region OrderViewModel
@@ -637,23 +746,462 @@
 
     #region CustomerManagement
 
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string CompanyName { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
-    public int? CompanyId { get; set; }
-    public Companies? Company { get; set; }
-    public int? BillingAddressId { get; set; }
-    public BillingAddresses? BillingAddress { get; set; }
-    public int? ShippingAddressId { get; set; }
-    public ShippingAddresses? ShippingAddress { get; set; }
-    public int? CustomerAddressId { get; set; }
-    public CustomerAddresses? CustomerAddress { get; set; }
+    private List<CustomerDataViewModel> customerManagementViewModels = new List<CustomerDataViewModel>();
+    private List<CustomerInformation> customerInformation = new List<CustomerInformation>();
+    private Grid<CustomerDataViewModel> gridCustomerManagement;
+
+    private async Task<GridDataProviderResult<CustomerDataViewModel>> CustomersViewModelDataProvider(GridDataProviderRequest<CustomerDataViewModel> request)
+    {
+        if (customerManagementViewModels is null)
+            customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(customerManagementViewModels));
+    }
+
+    private string firstNameCustomer;
+    private string lastNameCustomer;
+    private string companyNameCustomer;
+    private string emailCustomer;
+    private string phoneCustomer;
+    private int companyIdCustomer;
+    private Companies companyCustomer = new Companies();
+    private int billingAddressIdCustomer;
+    private BillingAddresses billingAddressCustomer = new BillingAddresses();
+    private int shippingAddressIdCustomer;
+    private ShippingAddresses shippingAddressCustomer = new ShippingAddresses();
+    private int customerAddressIdCustomer;
+    private CustomerAddresses customerAddressCustomer = new CustomerAddresses();
+    private bool billingAddressSameAsCustomerAddress = true;
+    private bool shippingAddressSameAsCustomerAddress = true;
+
+    private void SwitchChangedBilling(bool value)
+    {
+        billingAddressSameAsCustomerAddress = value;
+    }
+
+    private void SwitchChangedShipping(bool value)
+    {
+        shippingAddressSameAsCustomerAddress = value;
+    }
+
+    private int selectedCustomer;
+    private string firstNameCustomerEdit;
+    private string lastNameCustomerEdit;
+    private string companyNameCustomerEdit;
+    private string emailCustomerEdit;
+    private string phoneCustomerEdit;
+    private int companyIdCustomerEdit;
+    private Companies companyCustomerEdit = new Companies();
+    private int billingAddressIdCustomerEdit;
+    private BillingAddresses billingAddressCustomerEdit = new BillingAddresses();
+    private int shippingAddressIdCustomerEdit;
+    private ShippingAddresses shippingAddressCustomerEdit = new ShippingAddresses();
+    private int customerAddressIdCustomerEdit;
+    private CustomerAddresses customerAddressCustomerEdit = new CustomerAddresses();
+    private bool billingAddressSameAsCustomerAddressEdit = true;
+    private bool shippingAddressSameAsCustomerAddressEdit = true;
+
+    private void SwitchChangedBillingEdit(bool value)
+    {
+        billingAddressSameAsCustomerAddressEdit = value;
+    }
+
+    private void SwitchChangedShippingEdit(bool value)
+    {
+        shippingAddressSameAsCustomerAddressEdit = value;
+    }
+
+    private async void OnCustomerSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedCustomer = selectedId;
+        }
+        var customerEdit = await customerDataService.GetCustomerInformationAsync(selectedCustomer);
+        customerAddressCustomerEdit = await customerDataService.GetCustomerAddressesAsync(customerEdit.CustomerAddressId.Value);
+        shippingAddressCustomerEdit = await orderAddressesService.GetShippingAddressAsync(customerEdit.ShippingAddressId.Value);
+        billingAddressCustomerEdit = await orderAddressesService.GetBillingAddressAsync(customerEdit.BillingAddressId.Value);
+        firstNameCustomerEdit = customerEdit.FirstName;
+        lastNameCustomerEdit = customerEdit.LastName;
+        phoneCustomerEdit = customerEdit.Phone;
+        emailCustomerEdit = customerEdit.Email;
+
+        StateHasChanged();
+    }
+
+    private async Task addCustomer()
+    {
+        try
+        {
+            int currentBillingAddressId;
+            int currentShippingAddressId;
+            int currentCustomerAddressId;
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidCustomer() && !IsValidAddress(customerAddressCustomer))
+            {
+                return;
+            }
+
+            if (billingAddressSameAsCustomerAddress)
+            {
+                billingAddressCustomer = new BillingAddresses()
+                {
+                    City = customerAddressCustomer.City,
+                    Country = customerAddressCustomer.Country,
+                    CreationDate = DateTime.Now,
+                    HouseNumber = customerAddressCustomer.HouseNumber,
+                    IsActive = true,
+                    ModificationDate = DateTime.Now,
+                    PostCode = customerAddressCustomer.PostCode,
+                    Street = customerAddressCustomer.Street
+                };
+                if (!IsValidAddress(billingAddressCustomer))
+                {
+                    return;
+                }
+
+                if (!await orderAddressesService.AddBillingAddressAsync(billingAddressCustomer))
+                {
+                    ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding billing address!");
+                    preloadService.Hide();
+                    return;
+                }
+            }
+            else
+            {
+                if (!IsValidAddress(billingAddressCustomer))
+                {
+                    return;
+                }
+                billingAddressCustomer.ModificationDate = DateTime.Now;
+                billingAddressCustomer.CreationDate = DateTime.Now;
+                billingAddressCustomer.IsActive = true;
+                if (!await orderAddressesService.AddBillingAddressAsync(billingAddressCustomer))
+                {
+                    ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding billing address!");
+                    preloadService.Hide();
+                    return;
+                }
+            }
+
+            if (shippingAddressSameAsCustomerAddress)
+            {
+                shippingAddressCustomer = new ShippingAddresses()
+                {
+                    City = customerAddressCustomer.City,
+                    Country = customerAddressCustomer.Country,
+                    CreationDate = DateTime.Now,
+                    HouseNumber = customerAddressCustomer.HouseNumber,
+                    IsActive = true,
+                    ModificationDate = DateTime.Now,
+                    PostCode = customerAddressCustomer.PostCode,
+                    Street = customerAddressCustomer.Street
+                };
+                if (!IsValidAddress(shippingAddressCustomer))
+                {
+                    return;
+                }
+
+                if (!await orderAddressesService.AddShippingAddressAsync(shippingAddressCustomer))
+                {
+                    ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding shipping address!");
+                    preloadService.Hide();
+                    return;
+                }
+            }
+            else
+            {
+                if (!IsValidAddress(shippingAddressCustomer))
+                {
+                    return;
+                }
+                shippingAddressCustomer.ModificationDate = DateTime.Now;
+                shippingAddressCustomer.CreationDate = DateTime.Now;
+                shippingAddressCustomer.IsActive = true;
+                if (!await orderAddressesService.AddShippingAddressAsync(shippingAddressCustomer))
+                {
+                    ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding shipping address!");
+                    preloadService.Hide();
+                    return;
+                }
+            }
+            currentBillingAddressId = (await orderAddressesService.GetAllBillingAddressesAsync())
+                .FirstOrDefault(item =>
+                    item.City == billingAddressCustomer.City &&
+                    item.Country == billingAddressCustomer.Country &&
+                    item.Street == billingAddressCustomer.Street &&
+                    item.HouseNumber == billingAddressCustomer.HouseNumber &&
+                    item.PostCode == billingAddressCustomer.PostCode)
+                .Id;
+
+            currentShippingAddressId = (await orderAddressesService.GetAllShippingAddressesAsync())
+                .FirstOrDefault(item =>
+                    item.City == shippingAddressCustomer.City &&
+                    item.Country == shippingAddressCustomer.Country &&
+                    item.Street == shippingAddressCustomer.Street &&
+                    item.HouseNumber == shippingAddressCustomer.HouseNumber &&
+                    item.PostCode == shippingAddressCustomer.PostCode)
+                .Id;
+
+            customerAddressCustomer.ModificationDate = DateTime.Now;
+            customerAddressCustomer.CreationDate = DateTime.Now;
+            customerAddressCustomer.IsActive = true;
+
+            if (!await customerDataService.AddCustomerAddressesAsync(customerAddressCustomer))
+            {
+                ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding customer address!");
+                preloadService.Hide();
+                return;
+            }
+            currentCustomerAddressId = (await customerDataService.GetAllCustomerAddressesAsync())
+              .FirstOrDefault(item =>
+                  item.City == customerAddressCustomer.City &&
+                  item.Country == customerAddressCustomer.Country &&
+                  item.Street == customerAddressCustomer.Street &&
+                  item.HouseNumber == customerAddressCustomer.HouseNumber &&
+                  item.PostCode == customerAddressCustomer.PostCode)
+              .Id;
+            var customer = new CustomerInformation()
+            {
+                BillingAddressId = currentBillingAddressId,
+                CreationDate = DateTime.Now,
+                CustomerAddressId = currentCustomerAddressId,
+                FirstName = firstNameCustomer,
+                LastName = lastNameCustomer,
+                Email = emailCustomer,
+                Phone = phoneCustomer,
+                ShippingAddressId = currentShippingAddressId,
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                CompanyName = "None"
+            };
+
+            if (await customerDataService.AddCustomerInformationAsync(customer))
+            {
+                ShowMessage(ToastType.Success, "Success!", "Customer added successfully!");
+                preloadService.Hide();
+                customerInformation = await customerDataService.GetAllCustomerInformationAsync();
+                customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
+                StateHasChanged();
+                billingAddressCustomer = new BillingAddresses();
+                shippingAddressCustomer = new ShippingAddresses();
+                customerAddressCustomer = new CustomerAddresses();
+                firstNameCustomer = "";
+                lastNameCustomer = "";
+                emailCustomer = "";
+                phoneCustomer = "";
+                await gridCustomerManagement.RefreshDataAsync();
+                return;
+            };
+
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a customer!");
+            preloadService.Hide();
+            StateHasChanged();
+            await gridCustomerManagement.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a customer!");
+            preloadService.Hide();
+        }
+    }
+
+    private async Task editCustomer()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!IsValidCustomerEdit() && 
+                IsValidAddress(customerAddressCustomerEdit) && 
+                IsValidAddress(shippingAddressCustomerEdit) &&
+                IsValidAddress(billingAddressCustomerEdit))
+            {
+                return;
+            }
+            var customerEdit = await customerDataService.GetCustomerInformationAsync(selectedCustomer);
+            customerEdit.ModificationDate = DateTime.Now;
+            customerAddressCustomerEdit.ModificationDate = DateTime.Now;
+            if (!await customerDataService.UpdateCustomerAddressesAsync(customerAddressCustomerEdit))
+            {
+                ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding customer address!");
+                preloadService.Hide();
+                return;
+            }
+            if (shippingAddressSameAsCustomerAddressEdit)
+            {
+                shippingAddressCustomerEdit.Street = customerAddressCustomerEdit.Street;
+                shippingAddressCustomerEdit.City = customerAddressCustomerEdit.City;
+                shippingAddressCustomerEdit.Country = customerAddressCustomerEdit.Country;
+                shippingAddressCustomerEdit.HouseNumber = customerAddressCustomerEdit.HouseNumber;
+                shippingAddressCustomerEdit.ModificationDate = DateTime.Now;
+                shippingAddressCustomerEdit.PostCode = customerAddressCustomerEdit.PostCode;
+
+                if (!IsValidAddress(shippingAddressCustomerEdit))
+                {
+                    return;
+                }
+            }
+            shippingAddressCustomerEdit.ModificationDate = DateTime.Now;
+            if (!await orderAddressesService.UpdateShippingAddressAsync(shippingAddressCustomerEdit))
+            {
+                ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding shipping address!");
+                preloadService.Hide();
+                return;
+            }
+            if (billingAddressSameAsCustomerAddressEdit)
+            {
+                billingAddressCustomerEdit.Street = customerAddressCustomerEdit.Street;
+                billingAddressCustomerEdit.City = customerAddressCustomerEdit.City;
+                billingAddressCustomerEdit.Country = customerAddressCustomerEdit.Country;
+                billingAddressCustomerEdit.HouseNumber = customerAddressCustomerEdit.HouseNumber;
+                billingAddressCustomerEdit.ModificationDate = DateTime.Now;
+                billingAddressCustomerEdit.PostCode = customerAddressCustomerEdit.PostCode;
+
+                if(!IsValidAddress(billingAddressCustomerEdit))
+                {
+                    return;
+                }
+            }
+            billingAddressCustomerEdit.ModificationDate = DateTime.Now;
+            if (!await orderAddressesService.UpdateBillingAddressAsync(billingAddressCustomerEdit))
+            {
+                ShowMessage(ToastType.Danger, "Danger!", "Something went wrong while adding billing address!");
+                preloadService.Hide();
+                return;
+            }
+
+            customerEdit.FirstName = firstNameCustomerEdit;
+            customerEdit.LastName = lastNameCustomerEdit;
+            customerEdit.Email = emailCustomerEdit;
+            customerEdit.Phone = phoneCustomerEdit;
+
+            if (!await customerDataService.UpdateCustomerInformationAsync(customerEdit))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a customer!");
+                preloadService.Hide();
+                return;
+            }
+            ShowMessage(ToastType.Success, "Success!", "Customer added successfully!");
+            preloadService.Hide();
+            customerInformation = await customerDataService.GetAllCustomerInformationAsync();
+            customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
+            StateHasChanged();
+            await gridCustomerManagement.RefreshDataAsync();
+            return;
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a customer!");
+            preloadService.Hide();
+        }
+    }
 
     #endregion
 
     #region Helpers
+
+    public bool IsValidAddress(Addresses address)
+    {
+        if (string.IsNullOrWhiteSpace(address.HouseNumber))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "House Number cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(address.Street))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Street cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(address.City))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "City cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(address.PostCode))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Postal Code cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(address.Country))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Country cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+        return true;
+    }
+
+    public bool IsValidCustomer()
+    {
+        if (string.IsNullOrWhiteSpace(firstNameCustomer))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(lastNameCustomer))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Contact Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phoneCustomer))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Phone cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(emailCustomer))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Email cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+        return true;
+    }
+
+    public bool IsValidCustomerEdit()
+    {
+        if (string.IsNullOrWhiteSpace(firstNameCustomerEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(lastNameCustomerEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Contact Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phoneCustomerEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Phone cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(emailCustomerEdit))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Email cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+        return true;
+    }
 
     public bool IsValidShipper()
     {

@@ -258,3 +258,8 @@ label {
     .button-container button {
         margin-top: 10px; /* Adjust the space between buttons */
     }
+.centered-container {
+    display: flex;
+    justify-content: center;
+    color: black;
+}
