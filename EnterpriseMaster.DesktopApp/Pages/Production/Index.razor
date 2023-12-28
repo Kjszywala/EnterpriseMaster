@@ -64,9 +64,52 @@
             <Icon Name="IconName.SignRailRoad" /> Production Tracking
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="container">
+                <div class="half-height">
+                    <BarChart @ref="barChart" Class="mb-4" />
+                </div>
+                <div class="custom-height">
+                    <br />
+                    <Grid TItem="ProductionOrdersViewModel"
+                          @ref="gridOrderInProgressViewModel"
+                          AllowFiltering="true"
+                          AllowPaging="true"
+                          AllowSorting="true"
+                          AllowRowClick="true"
+                          DataProvider="OrderInProgressViewModelDataProvider"
+                          Class="table table-hover table-bordered table-striped"
+                          FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                          HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                          PageSize="5"
+                          PageSizeSelectorVisible="true"
+                          PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                          PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                          ItemsPerPageText="Items per page"
+                          Responsive="true">
+                        <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
+                            @context.ProductName
+                        </GridColumn>
+                        <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
+                            @context.ProductCode
+                        </GridColumn>
+                        <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
+                            @context.Quantity
+                        </GridColumn>
+                        <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Order Date" PropertyName="OrderDate" SortKeySelector="item => item.OrderDate">
+                            @context.OrderDate
+                        </GridColumn>
+                        <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Due Date" PropertyName="DueDate" SortKeySelector="item => item.DueDate">
+                            @context.DueDate
+                        </GridColumn>
+                        <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Order Status" PropertyName="ProductionOrderStatus" SortKeySelector="item => item.ProductionOrderStatus">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <span class="@OrderStatusClasses.GetClassForOrderStatus(context.ProductionOrderStatus)" style="width: 150px; text-align: center;">@context.ProductionOrderStatus</span>
+                            </div>
+                        </GridColumn>
+                    </Grid>
+                </div>
+            </div>
         </Content>
     </Tab>
 </Tabs>
@@ -122,7 +165,9 @@
         try
         {
             productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+            gridListProductionOrdersViewModel = (await productionService.GetAllProductionOrdersForGridAsync()).Where(item => item.ProductionOrderStatus == "In Progress").ToList();
             await gridOrderViewModel.RefreshDataAsync();
+            await gridOrderInProgressViewModel.RefreshDataAsync();
             StateHasChanged();
         }
         catch (Exception e)
@@ -209,7 +254,9 @@
                 return;
             }
             productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+            gridListProductionOrdersViewModel = (await productionService.GetAllProductionOrdersForGridAsync()).Where(item => item.ProductionOrderStatus == "In Progress").ToList();
             await gridOrderViewModel.RefreshDataAsync();
+            await gridOrderInProgressViewModel.RefreshDataAsync();
             ShowMessage(ToastType.Success, "Success!", "Production order updated successfully");
             await modal?.HideAsync();
             preloadService.Hide();
@@ -257,4 +304,100 @@
         }
     }
     #endregion
+
+    #region Production tracking
+
+    private BarChart barChart;
+    private Grid<ProductionOrdersViewModel> gridOrderInProgressViewModel = new Grid<ProductionOrdersViewModel>();
+    private List<ProductionOrdersViewModel> gridListProductionOrdersViewModel = new List<ProductionOrdersViewModel>();
+    private List<ProductionOrders> ordersInThisMonth = new List<ProductionOrders>();
+
+    private async Task<GridDataProviderResult<ProductionOrdersViewModel>> OrderInProgressViewModelDataProvider(GridDataProviderRequest<ProductionOrdersViewModel> request)
+    {
+        if (gridListProductionOrdersViewModel is null)
+            gridListProductionOrdersViewModel = (await productionService.GetAllProductionOrdersForGridAsync()).Where(item => item.ProductionOrderStatus == "In Progress").ToList();
+
+        return await Task.FromResult(request.ApplyTo(gridListProductionOrdersViewModel));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await RenderManhattanAsync();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task RenderManhattanAsync()
+    {
+        // Get the current month and year
+        DateTime currentDate = DateTime.Now;
+        int currentMonth = currentDate.Month;
+        int currentYear = currentDate.Year;
+
+        // Calculate the number of days in the current month
+        int daysInCurrentMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+        var listOfDays = new List<string>();
+        for(int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            listOfDays.Add(i.ToString());
+        }
+
+        ordersInThisMonth = (await productionService.GetAllProductionOrdersAsync()).Where(
+            item => item.ModificationDate.Year == DateTime.Now.Year &&
+            item.ModificationDate.Month == DateTime.Now.Month).ToList();
+
+        // Initialize a list to store daily order counts
+        var completedOrderQuantities = new List<double>();
+
+        // Populate completed order quantities based on each day of the month
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            // Sum the quantities of completed orders with order status "Complete" for each day
+            double quantityCompletedForDay = ordersInThisMonth
+                .Where(item => item.ModificationDate.Day == i && item.ProductionOrderStatusId == (int)StatusForProductionOrder.Completed)
+                .Sum(item => item.Quantity);
+
+            completedOrderQuantities.Add(quantityCompletedForDay);
+        }
+
+        var data = new ChartData
+        {
+            Labels = listOfDays,
+            Datasets = new List<IChartDataset>()
+            {
+                new BarChartDataset()
+                {
+                    Label = DateTime.Now.ToString("MMMM"),
+                    Data = completedOrderQuantities,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }
+            }
+        };
+
+        var options = new BarChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Text = "Items produced dailey";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Text = "Days In Current Month";
+        options.Scales.X.Title.Display = true;
+
+        options.Scales.Y.Title.Text = "Items Done";
+        options.Scales.Y.Title.Display = true;
+
+        await barChart.InitializeAsync(data, options);
+    }
+
+    #endregion
+
 }
