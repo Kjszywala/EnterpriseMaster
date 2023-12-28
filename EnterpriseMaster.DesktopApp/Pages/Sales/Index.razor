@@ -877,17 +877,26 @@
                 Quantity = salesOrderModal.Quantity
             };
 
+            if(salesOrderModal.OrderStatuseId >= (int)StatusForOrder.InProgress)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Order is already in production!");
+                preloadService.Hide();
+                await OnHideModalClick();
+                return;
+            }
+
             salesOrderModal.OrderStatuseId = (int)StatusForOrder.InProgress;
             salesOrderModal.ModificationDate = DateTime.Now;
-            if(!await orderService.UpdateSalesOrdersAsync(salesOrderModal))
+
+            if (!await productionService.AddProductionOrderAsync(productionOrder))
             {
                 ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a sales order!");
                 preloadService.Hide();
                 await OnHideModalClick();
                 return;
             }
-
-            if (!await productionService.AddProductionOrderAsync(productionOrder))
+            salesOrderModal.ProductionOrderId = (await productionService.GetAllProductionOrdersAsync()).OrderByDescending(item => item.Id).FirstOrDefault().Id;
+            if (!await orderService.UpdateSalesOrdersAsync(salesOrderModal))
             {
                 ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a sales order!");
                 preloadService.Hide();

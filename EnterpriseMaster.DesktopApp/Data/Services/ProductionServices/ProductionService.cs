@@ -1,5 +1,7 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DbServices.Services;
+using EnterpriseMaster.DesktopApp.Data.Models;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
 {
@@ -11,6 +13,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
         private readonly ISalesOrdersServices salesOrdersServices;
         private readonly IProductionOrderStatusService productionOrderStatusService;
         private readonly IProductionOrderService productionOrderService;
+        private readonly IProductsServices productsServices;
 
         #endregion
 
@@ -20,12 +23,14 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
             IErrorLogsServices _errorLogsServices,
             ISalesOrdersServices _salesOrdersServices, 
             IProductionOrderStatusService _productionOrderStatusService, 
-            IProductionOrderService _productionOrderService)
+            IProductionOrderService _productionOrderService,
+            IProductsServices _productsServices)
         {
             errorLogsServices = _errorLogsServices;
             salesOrdersServices = _salesOrdersServices;
             productionOrderStatusService = _productionOrderStatusService;
             productionOrderService = _productionOrderService;
+            productsServices = _productsServices;
         }
 
         #endregion
@@ -82,6 +87,38 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
         #endregion
 
         #region ProductionOrders
+
+        public async Task<List<ProductionOrdersViewModel>> GetAllProductionOrdersForGridAsync()
+        {
+            try
+            {
+                var orders = (await productionOrderService.GetAllAsync())
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
+
+                var orderViewModelList = new List<ProductionOrdersViewModel>();
+                foreach (var item in orders)
+                {
+                    orderViewModelList.Add(new ProductionOrdersViewModel
+                    {
+                        Quantity = item.Quantity,
+                        Id = item.Id,
+                        DueDate = item.DueDate,
+                        OrderDate = item.OrderDate,
+                        ProductCode = (await productsServices.GetAsync(item.ProductId.Value)).ProductCode,
+                        ProductionOrderStatus = (await productionOrderStatusService.GetAsync(item.ProductionOrderStatusId.Value)).Status,
+                        ProductName = (await productsServices.GetAsync(item.ProductId.Value)).ProductName
+                    });
+                }
+
+                return orderViewModelList;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
         public async Task<List<ProductionOrders>> GetAllProductionOrdersAsync()
         {

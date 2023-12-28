@@ -1,6 +1,16 @@
 ﻿@page "/production"
 @using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
+@using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
+@using EnterpriseMaster.DesktopApp.Helpers.Enums;
+@using EnterpriseMaster.DesktopApp.Helpers.Methods;
 @inherits MainLayout
+@inject ProductionService productionService
+@inject InventoryService inventoryService
+@inject OrderService orderService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -8,9 +18,45 @@
             <Icon Name="IconName.Send" /> Manufacturing Planning
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <Grid TItem="ProductionOrdersViewModel"
+                  @ref="gridOrderViewModel"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="OrderViewModelDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  OnRowClick="OnShowModalClick"
+                  Responsive="true">
+                <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
+                    @context.ProductName
+                </GridColumn>
+                <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Product Code" PropertyName="ProductCode" SortKeySelector="item => item.ProductCode">
+                    @context.ProductCode
+                </GridColumn>
+                <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Quantity" PropertyName="Quantity" SortKeySelector="item => item.Quantity">
+                    @context.Quantity
+                </GridColumn>
+                <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Order Date" PropertyName="OrderDate" SortKeySelector="item => item.OrderDate">
+                    @context.OrderDate
+                </GridColumn>
+                <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Due Date" PropertyName="DueDate" SortKeySelector="item => item.DueDate">
+                    @context.DueDate
+                </GridColumn>
+                <GridColumn TItem="ProductionOrdersViewModel" HeaderText="Order Status" PropertyName="ProductionOrderStatus" SortKeySelector="item => item.ProductionOrderStatus">
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <span class="@OrderStatusClasses.GetClassForOrderStatus(context.ProductionOrderStatus)" style="width: 150px; text-align: center;">@context.ProductionOrderStatus</span>
+                    </div>
+                </GridColumn>
+            </Grid>
         </Content>
     </Tab>
     <Tab>
@@ -23,28 +69,192 @@
             </p>
         </Content>
     </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.Controller" /> Quality Control
-        </TitleTemplate>
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.BoundingBox" /> Resource Management
-        </TitleTemplate>
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
 </Tabs>
+<Modal @ref="modal" Title="Production Order" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" id="productName" name="productName" value="@productionOrdersModal.Product.ProductName" disabled />
+                </div>
 
+                <div class="form-group">
+                    <label for="productCode">Product Code:</label>
+                    <input type="text" id="productCode" name="productCode" value="@productionOrdersModal.Product.ProductCode" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="text" id="quantity" name="quantity" value="@productionOrdersModal.Quantity" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="orderDate">Order Date:</label>
+                    <input type="text" id="orderDate" name="orderDate" value="@productionOrdersModal.OrderDate" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="text" id="dueDate" name="dueDate" value="@productionOrdersModal.DueDate" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="productionOrderStatus">Production Order Status:</label>
+                    <input type="text" id="productionOrderStatus" name="productionOrderStatus" value="@productionOrdersModal.ProductionOrderStatus.Status" disabled />
+                </div>
+            </form>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Success" @onclick="SetToComplete">Complete</Button>
+        <Button Color="ButtonColor.Warning" @onclick="SetInProgress">Set In Progress</Button>
+        <Button Color="ButtonColor.Warning" @onclick="Reject">Reject</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
+    protected async override void OnInitialized()
+    {
+        try
+        {
+            productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
 
+    #region Manufacture Planing
+
+    private List<ProductionOrdersViewModel> productionOrders = new List<ProductionOrdersViewModel>();
+    private Grid<ProductionOrdersViewModel> gridOrderViewModel = new Grid<ProductionOrdersViewModel>();
+    private ProductionOrders productionOrdersModal = new ProductionOrders();
+    private Modal modal;
+
+    private async Task<GridDataProviderResult<ProductionOrdersViewModel>> OrderViewModelDataProvider(GridDataProviderRequest<ProductionOrdersViewModel> request)
+    {
+        if (productionOrders is null)
+            productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+
+        return await Task.FromResult(request.ApplyTo(productionOrders));
+    }
+
+    private async Task OnShowModalClick(GridRowEventArgs<ProductionOrdersViewModel> args)
+    {
+        productionOrdersModal = await productionService.GetProductionOrderAsync((int)args.Item.Id);
+        productionOrdersModal.Product = await inventoryService.GetProductAsync(productionOrdersModal.ProductId.Value);
+        productionOrdersModal.ProductionOrderStatus = await productionService.GetProductionOrderStatuAsync(productionOrdersModal.ProductionOrderStatusId.Value);
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+    }
+
+    private async Task SetToComplete()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            productionOrdersModal.ProductionOrderStatusId = (int)StatusForProductionOrder.Completed;
+            productionOrdersModal.ModificationDate = DateTime.Now;
+            if(!await productionService.UpdateProductionOrderAsync(productionOrdersModal))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating an order");
+                preloadService.Hide();
+                return;
+            }
+            var salesOrder = (await orderService.GetAllSalesOrdersAsync()).FirstOrDefault(item => item.ProductionOrderId == productionOrdersModal.Id);
+            salesOrder.OrderStatuseId = (int)StatusForOrder.Completed;
+            if (!await orderService.UpdateSalesOrderAsync(salesOrder))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a sales order");
+                preloadService.Hide();
+                return;
+            }
+            productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            ShowMessage(ToastType.Success, "Success!", "Production order updated successfully");
+            await modal?.HideAsync();
+            preloadService.Hide();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+
+    private async Task SetInProgress()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            productionOrdersModal.ProductionOrderStatusId = (int)StatusForProductionOrder.InProgress;
+            productionOrdersModal.ModificationDate = DateTime.Now;
+            if (!await productionService.UpdateProductionOrderAsync(productionOrdersModal))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating an order");
+                preloadService.Hide();
+                return;
+            }
+            productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            ShowMessage(ToastType.Success, "Success!", "Production order updated successfully");
+            await modal?.HideAsync();
+            preloadService.Hide();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+
+    private async Task Reject()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            productionOrdersModal.ProductionOrderStatusId = (int)StatusForProductionOrder.Rejected;
+            productionOrdersModal.ModificationDate = DateTime.Now;
+            if (!await productionService.UpdateProductionOrderAsync(productionOrdersModal))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating an order");
+                preloadService.Hide();
+                return;
+            }
+            var salesOrder = (await orderService.GetAllSalesOrdersAsync()).FirstOrDefault(item => item.ProductionOrderId == productionOrdersModal.Id);
+            salesOrder.OrderStatuseId = (int)StatusForOrder.Rejected;
+            if (!await orderService.UpdateSalesOrderAsync(salesOrder))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a sales order");
+                preloadService.Hide();
+                return;
+            }
+            productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            ShowMessage(ToastType.Success, "Success!", "Production order updated successfully");
+            await modal?.HideAsync();
+            preloadService.Hide();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+    #endregion
 }
