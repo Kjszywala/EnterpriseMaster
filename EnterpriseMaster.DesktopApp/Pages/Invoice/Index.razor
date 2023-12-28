@@ -2,14 +2,28 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
+@using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
+@using EnterpriseMaster.DesktopApp.Helpers.Enums;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation;
+@using EnterpriseMaster.DesktopApp.Helpers.PdfCreation.Models;
 @inherits MainLayout
 @inject InvoicesMenuService invoiceService
+@inject OrderService orderService
+@inject InventoryService inventoryService
+@inject SalesService salesService
+@inject CustomerDataService customerDataService
+@inject Helpers.Interfaces.IFolderPick _folderPicker
+@inject EmployeeService employeeService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Diagram3" /> InvoiceViewModel
+            <Icon Name="IconName.Diagram3" /> Invoices
         </TitleTemplate>
         <Content>
             <br />
@@ -58,27 +72,49 @@
             <Icon Name="IconName.Braces" /> Invoice Generation
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.Diagram2" /> Automated Invoicing
-        </TitleTemplate>
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <Card>
+                <CardHeader>
+                    Generate invoice for sales orders.
+                </CardHeader>
+                <CardBody>
+                    <CardTitle>Select Sales Order</CardTitle>
+                    <CardText>
+                        @if (salesOrdersList == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <select class="styled-select" @onchange="OnSalesOrderAddSelected">
+                                <option value="">Select Sales Order</option>
+                                @foreach (var item in salesOrdersList)
+                                {
+                                    <option value="@item.Id">Product Name: @item.Product.ProductName || Customer Email: @item.CustomerInformation.Email || Order Number: (@item.SalesOrderNumber)</option>
+                                }
+                            </select>
+                        }
+                    </CardText>
+                    <Button Color="ButtonColor.Primary" @onclick="generateInvoice" Type="ButtonType.Link">Generate</Button>
+                </CardBody>
+            </Card>
         </Content>
     </Tab>
 </Tabs>
 
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
     protected async override void OnInitialized()
     {
         invoices = await invoiceService.GetAllInvoicesForGridAsync();
+        salesOrdersList = (await orderService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
+        foreach(var item in salesOrdersList)
+        {
+            item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
+            item.OrderStatuse = await salesService.GetOrderStatusAsync(item.OrderStatuseId.Value);
+            item.CustomerInformation = await customerDataService.GetCustomerInformationAsync(item.CustomerInformationId.Value);
+        }
 
         await gridInvoiceViewModel.RefreshDataAsync();
     }
@@ -93,6 +129,135 @@
             invoices = await invoiceService.GetAllInvoicesForGridAsync();
 
         return await Task.FromResult(request.ApplyTo(invoices));
+    }
+
+    #endregion
+
+    #region Invoice generation
+
+    private int selectedSalesOrder;
+    private List<SalesOrders> salesOrdersList = new List<SalesOrders>();
+
+    private void OnSalesOrderAddSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedSalesOrder = selectedId;
+        }
+    }
+
+    private async Task generateInvoice()
+    {
+        try
+        {
+            var salesOrder = await orderService.GetSalesOrderAsync(selectedSalesOrder);
+            salesOrder.Product = await inventoryService.GetProductAsync(salesOrder.ProductId.Value);
+            if (salesOrder == null)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "No orders has been found!");
+                return;
+            }
+            var path = _folderPicker.DisplayFolderPicker();
+            preloadService.Show(SpinnerColor.Dark);
+            var guid = Guid.NewGuid();
+            if (path != null)
+            {
+                var user = await employeeService.GetUserBasedOnEmail(Config.Email);
+                var companyAddress = await employeeService.GetUserAddressBasedOnIdAsync(user.UserAddressId.Value);
+                var customerInformation = await customerDataService.GetCustomerInformationAsync(salesOrder.CustomerInformationId.Value);
+                var customerInformationAddress = await customerDataService.GetBillingAddressesAsync(customerInformation.BillingAddressId.Value);
+                var customerInformationShippingAddress = await customerDataService.GetShippingAddressesAsync(customerInformation.ShippingAddressId.Value);
+                var address = new Address()
+                {
+                    City = companyAddress.City,
+                    CompanyName = user.CompanyName,
+                    Email = Config.Email,
+                    Phone = "7775390152",
+                    State = companyAddress.State,
+                    Street = companyAddress.Street
+                };
+                var addressCustomer = new Address()
+                {
+                    City = customerInformationAddress.City,
+                    CompanyName = customerInformation.CompanyName ?? "None",
+                    Email = Config.Email,
+                    Phone = customerInformation.Phone,
+                    State = customerInformationAddress.Country,
+                    Street = customerInformationAddress.Street
+                };
+                var guid2 = Guid.NewGuid();
+                var orderItems = new List<OrderItem>();
+                orderItems.Add(new OrderItem()
+                {
+                    Name = salesOrder.Product.ProductName,
+                    Price = salesOrder.Product.Price,
+                    Quantity = salesOrder.Quantity
+                });
+                var invoiceModel = new InvoiceModel()
+                {
+                    IssueDate = DateTime.Now,
+                    SellerAddress = address,
+                    DueDate = salesOrder.DeliveryDate,
+                    InvoiceNumber = guid2.ToString(),
+                    Items = orderItems,
+                    Comments = "Thank you for choosing our services! We appreciate your business and look forward to serving you again.",
+                    CustomerAddress = addressCustomer
+                };
+
+                var dateTime = DateTime.Now;
+                var report = new CreatePdf($"{path}\\report_{dateTime:yyyyMMdd_HHmmss}.pdf", invoiceModel, address, addressCustomer, orderItems);
+                report.Create();
+                System.Threading.Thread.Sleep(1000);
+                var invoiceItem = new InvoiceItem()
+                {
+                    CreationDate = dateTime,
+                    IsActive = true,
+                    ModificationDate = dateTime,
+                    Quantity = salesOrder.Quantity,
+                    ProductId = salesOrder.ProductId,
+                    UnitPrice = salesOrder.Product.Price
+                };
+
+                await invoiceService.AddInvoiceItemAsync(invoiceItem);
+                var itemInvoice = (await invoiceService.GetAllInvoiceItemAsync()).FirstOrDefault(item => item.ModificationDate == dateTime && item.CreationDate == dateTime);
+                var invoiceModelToAdd = new Invoices()
+                {
+                    InvoiceNumber = guid2.ToString(),
+                    Image = File.ReadAllBytes($"{path}\\report_{dateTime:yyyyMMdd_HHmmss}.pdf"),
+                    SalesOrderId = salesOrder.Id,
+                    PaymentMethodId = 1,
+                    InvoiceStatusId = 3,
+                    CustomerInformationId = salesOrder.CustomerInformationId,
+                    BillingAddressId = customerInformationAddress.Id,
+                    ShippingAddressId = customerInformationShippingAddress.Id,
+                    DueDate = salesOrder.DeliveryDate,
+                    TotalAmount = salesOrder.PricePaid,
+                    CreationDate = DateTime.Now,
+                    ModificationDate = DateTime.Now,
+                    IsActive = true,
+                    InvoiceItemId = itemInvoice.Id
+                };
+                if(!await invoiceService.AddInvoiceAsync(invoiceModelToAdd))
+                {
+                    preloadService.Hide();
+                    ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding invoice!");
+                    return;
+                }
+                // code here ...
+                preloadService.Hide();
+                invoices = await invoiceService.GetAllInvoicesForGridAsync();
+                await gridInvoiceViewModel.RefreshDataAsync();
+                ShowMessage(ToastType.Success, "Success!", "Your report has been created!");
+                return;
+            }
+            ShowMessage(ToastType.Warning, "Warning!", "No path has been chosen!");
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
     }
 
     #endregion

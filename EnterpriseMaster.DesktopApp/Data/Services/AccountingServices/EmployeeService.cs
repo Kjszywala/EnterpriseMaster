@@ -193,6 +193,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
                 .FirstOrDefault();
         }
 
+        public async Task<UsersAdresses> GetUserAddressBasedOnIdAsync(int id)
+        {
+            return (await usersAdressesService.GetAsync(id));
+        }
+
         public async Task<List<Employees>> GetAllEmployeesBasedOnCompanyName()
         {
             return (await employeeService.GetAllAsync()).Where(item => item.CompanyId == Config.CompanyId).ToList();

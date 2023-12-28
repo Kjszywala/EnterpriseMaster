@@ -2,7 +2,7 @@
 {
     public class InvoiceModel
     {
-        public int InvoiceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; }
 
