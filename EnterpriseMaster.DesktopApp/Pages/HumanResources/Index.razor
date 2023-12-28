@@ -31,7 +31,7 @@
                   ItemsPerPageText="Items per page"
                   OnRowClick="OnShowModalClick"
                   Responsive="true">
-                <GridColumn TItem="JobOffers" HeaderText="Job Title " PropertyName="JobTitle " SortKeySelector="item => item.JobTitle ">
+                <GridColumn TItem="JobOffers" HeaderText="Job Title " PropertyName="JobTitle " SortKeySelector="item => item.JobTitle">
                     @context.JobTitle
                 </GridColumn>
                 <GridColumn TItem="JobOffers" HeaderText="Location" PropertyName="Location" SortKeySelector="item => item.Location">
@@ -134,19 +134,111 @@
             <Icon Name="IconName.PersonCircle" /> Training and Development
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
-        </Content>
-    </Tab>
-    <Tab>
-        <TitleTemplate>
-            <Icon Name="IconName.TicketPerforated" /> Performance Management
-        </TitleTemplate>
-        <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="containerPanel">
+                <div class="topPanel-panel">
+                    <Grid TItem="Trainings"
+                          @ref="gridTrainings"
+                          AllowFiltering="true"
+                          AllowPaging="true"
+                          AllowSorting="true"
+                          AllowRowClick="true"
+                          DataProvider="TrainingsOffersDataProvider"
+                          Class="table table-hover table-bordered table-striped"
+                          FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                          HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                          PageSize="5"
+                          PageSizeSelectorVisible="true"
+                          PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                          PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                          ItemsPerPageText="Items per page"
+                          OnRowClick="OnShowModalTrainingClick"
+                          Responsive="true">
+                        <GridColumn TItem="Trainings" HeaderText="Target Audience" PropertyName="TargetAudience" SortKeySelector="item => item.TargetAudience">
+                            @context.TargetAudience
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Location" PropertyName="Location" SortKeySelector="item => item.Location">
+                            @context.Location
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description">
+                            @context.Description
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Posted Date" PropertyName="PostedDate" SortKeySelector="item => item.CreationDate">
+                            @FormatDateTime(context.StartDate)
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Start Date" PropertyName="StartDate" SortKeySelector="item => item.StartDate">
+                            @FormatDateTime(context.StartDate)
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Prerequisites" PropertyName="Prerequisites" SortKeySelector="item => item.Prerequisites">
+                            @context.Prerequisites
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Format" PropertyName="Format" SortKeySelector="item => item.Format">
+                            @context.Format
+                        </GridColumn>
+                        <GridColumn TItem="Trainings" HeaderText="Registration Deadlinee" PropertyName="RegistrationDeadline" SortKeySelector="item => item.RegistrationDeadline">
+                            @FormatDateTime(context.RegistrationDeadline)
+                        </GridColumn>
+                    </Grid>
+                </div>
+                <div class="bottomPanel-panel">
+                    <div class="bottomPanel-left">
+                        <label for="targetAudience">Title:</label>
+                        <input type="text" id="targetAudience" @bind="training.Notes" name="targetAudience">
+
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" rows="4" @bind="training.Description" required></textarea>
+
+                        <label for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" name="startDate" @bind-value="training.StartDate" required>
+
+                        <label for="endDate">End Date:</label>
+                        <input type="date" id="endDate" name="endDate" @bind-value="training.EndDate" required>
+
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" @bind="training.Location" name="location">
+
+                        <label for="registrationDeadline">Registration Deadline:</label>
+                        <input type="date" id="registrationDeadline" name="registrationDeadline" @bind-value="training.RegistrationDeadline" required>
+
+                        <label for="materials">Materials:</label>
+                        <textarea id="materials" name="materials" @bind="training.Materials" rows="4"></textarea>
+                    </div>
+                    <div class="bottomPanel-right">
+
+                        <label for="instructor">Instructor:</label>
+                        <input type="text" id="instructor" @bind="training.Instructor" name="instructor">
+
+                        <label for="status">Status:</label>
+                        <input type="text" id="status" @bind="training.Status" name="status">
+
+                        <label for="category">Category:</label>
+                        <input type="text" id="category" @bind="training.Category" name="category">
+
+                        <label for="certification">Certification:</label>
+                        <select id="certification" value="@training.Certification" @onchange="UpdateCertification" name="certification">
+                            <option >Select Option</option>
+                            <option value=true>Yes</option>
+                            <option value=false>No</option>
+                        </select>
+
+                        <label for="organizer">Organizer:</label>
+                        <input type="text" id="organizer" @bind="training.Organizer" name="organizer">
+
+                        <label for="prerequisites">Prerequisites:</label>
+                        <textarea id="prerequisites" @bind="training.Prerequisites" name="prerequisites" rows="4"></textarea>
+
+                        <label for="format">Format:</label>
+                        <input type="text" id="format" @bind="training.Format" name="format">
+
+                        <label for="targetAudience">Target Audience:</label>
+                        <input type="text" id="targetAudience" @bind="training.TargetAudience" name="targetAudience">
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex;justify-content: center;align-items: center;">
+                <button class="button-36" role="button" @onclick="AddTraining"> Create New Training </button>
+            </div>
         </Content>
     </Tab>
 </Tabs>
@@ -258,6 +350,100 @@
         <Button Color="ButtonColor.Info" @onclick="OnHideModalClick">Close</Button>
     </FooterTemplate>
 </Modal>
+<Modal @ref="modalTraining" Title="Training Details" Size="ModalSize.ExtraLarge">
+    <BodyTemplate>
+        <div class="job-details-container">
+            <div class="job-details-column">
+                <div class="job-detail">
+                    <label for="jobTitle">Title:</label>
+                    <p id="jobTitle">@trainingModal.Notes</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="companyName">Description:</label>
+                    <p id="companyName">@trainingModal.Description </p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="location">Location:</label>
+                    <p id="location">@trainingModal.Location</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="jobDescription">StartDate:</label>
+                    <p id="jobDescription">@FormatDateTime((DateTime)@trainingModal.StartDate)</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="requirements">EndDate:</label>
+                    <p id="requirements">@FormatDateTime((DateTime)@trainingModal.EndDate)</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="applicationLink">Location:</label>
+                    <p id="applicationLink">@trainingModal.Location</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="salary">Instructor:</label>
+                    <p id="salary">@trainingModal.Instructor</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="employmentType">Registration Deadline:</label>
+                    <p id="employmentType">@FormatDateTime((DateTime)@trainingModal.RegistrationDeadline)</p>
+                </div>
+            </div>
+
+            <div class="job-details-column">
+                <div class="job-detail">
+                    <label for="postedDate">Materials:</label>
+                    <p id="postedDate">@trainingModal.Materials</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="expirationDate">Status:</label>
+                    <p id="expirationDate">@trainingModal.Status</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="contactEmail">Category:</label>
+                    <p id="contactEmail">@trainingModal.Category</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="contactPhone">Certification:</label>
+                    <p id="contactPhone">@trainingModal.Certification</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="status">Organizer:</label>
+                    <p id="status">@trainingModal.Organizer</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="applicationDeadline">Prerequisites:</label>
+                    <p id="applicationDeadline">@trainingModal.Prerequisites</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="responsibilities">Format:</label>
+                    <p id="responsibilities">@trainingModal.Format</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="benefits">TargetAudience:</label>
+                    <p id="benefits">@trainingModal.TargetAudience</p>
+                </div>
+            </div>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Danger" @onclick="RemoveTraining">Remove</Button>
+        <Button Color="ButtonColor.Info" @onclick="OnHideModalTrainingClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
 <Preload />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
@@ -268,7 +454,13 @@
         jobOffer.CreationDate = DateTime.Now;
         jobOffer.ExpirationDate = DateTime.Now;
         jobOffer.ApplicationDeadline = DateTime.Now;
+        trainingsOffers = await hrService.GetAllTrainingsAsync();
+        training.StartDate = DateTime.Now;
+        training.EndDate = DateTime.Now;
+        training.CreationDate = DateTime.Now;
+        training.RegistrationDeadline = DateTime.Now;
         await gridJobOffers.RefreshDataAsync();
+        await gridTrainings.RefreshDataAsync();
         StateHasChanged();
     }
 
@@ -318,6 +510,7 @@
             preloadService.Hide();
             jobOffers = await hrService.GetAllJobOffersAsync();
             await gridJobOffers.RefreshDataAsync();
+            await OnHideModalClick();
             StateHasChanged();
         }
         catch(Exception e)
@@ -371,6 +564,113 @@
             StateHasChanged();
         }
         catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+
+    #endregion
+
+    #region Traning
+
+    private List<Trainings> trainingsOffers = new List<Trainings>();
+    private Trainings training = new Trainings();
+    private Trainings trainingModal = new Trainings();
+    private Grid<Trainings> gridTrainings;
+    private Modal modalTraining;
+
+    private async Task<GridDataProviderResult<Trainings>> TrainingsOffersDataProvider(GridDataProviderRequest<Trainings> request)
+    {
+        if (trainingsOffers is null)
+            trainingsOffers = await hrService.GetAllTrainingsAsync();
+
+        return await Task.FromResult(request.ApplyTo(trainingsOffers));
+    }
+
+    private async Task OnShowModalTrainingClick(GridRowEventArgs<Trainings> args)
+    {
+        trainingModal = await hrService.GetTrainingAsync((int)args.Item.Id);
+        await modalTraining?.ShowAsync();
+    }
+
+    private async Task OnHideModalTrainingClick()
+    {
+        await modalTraining?.HideAsync();
+    }
+
+    private void UpdateCertification(ChangeEventArgs e)
+    {
+        if (bool.TryParse(e.Value?.ToString(), out var result))
+        {
+            training.Certification = result;
+        }
+    }
+
+    private async Task AddTraining()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            training.IsActive = true;
+            training.ModificationDate = DateTime.Now;
+            if (!IsValidTrainingAdd(training))
+            {
+                return;
+            }
+            if (!await hrService.AddTrainingAsync(training))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a training!");
+                preloadService.Hide();
+                return;
+            }
+            var news = new WhatsNew()
+            {
+                CreationDate = DateTime.Now,
+                Description = training.Description,
+                Title = $"Registration deadline: {training.RegistrationDeadline}",
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                Notes = "New Training Opportunity"
+            };
+            if (!await newsServices.AddNews(news))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a news!");
+                preloadService.Hide();
+                return;
+            }
+            ShowMessage(ToastType.Success, "Success!", "Training posted successfully!");
+            preloadService.Hide();
+            trainingsOffers = await hrService.GetAllTrainingsAsync();
+            await gridTrainings.RefreshDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+
+    private async Task RemoveTraining()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if (!await hrService.RemoveTrainingAsync(trainingModal.Id))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing a training!");
+                preloadService.Hide();
+                return;
+            }
+            ShowMessage(ToastType.Success, "Success!", "training removed successfully!");
+            preloadService.Hide();
+            trainingsOffers = await hrService.GetAllTrainingsAsync();
+            await gridTrainings.RefreshDataAsync();
+            await OnHideModalTrainingClick();
+            StateHasChanged();
+        }
+        catch(Exception e)
         {
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
             preloadService.Hide();
@@ -477,6 +777,110 @@
         if (string.IsNullOrWhiteSpace(jobOffer.Skills))
         {
             ShowMessage(ToastType.Info, "Warning!", "Skills cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
+
+    public bool IsValidTrainingAdd(Trainings training)
+    {
+        if (string.IsNullOrWhiteSpace(training.Description))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (training.StartDate > training.EndDate)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Start Date cannot be after End Date!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Location))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Location cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Instructor))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Instructor cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (training.StartDate < DateTime.Now)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Start Date must be in the future!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (training.RegistrationDeadline > training.StartDate)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Registration Deadline must be before Start Date!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Materials))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Materials cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Status))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Status cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Category))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Category cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (!training.Certification.HasValue)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Certification must be specified!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Organizer))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Organizer cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Prerequisites))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Prerequisites cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.Format))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Format cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(training.TargetAudience))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Target Audience cannot be empty!");
             preloadService.Hide();
             return false;
         }

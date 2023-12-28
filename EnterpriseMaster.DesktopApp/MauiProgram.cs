@@ -117,6 +117,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IInventoryReportsService, InventoryReportsService>();
             builder.Services.AddScoped<ICustomerFeedbacksService, CustomerFeedbacksService>();
             builder.Services.AddScoped<IJobOffersServices, JobOffersServices>();
+            builder.Services.AddScoped<ITrainingsServices, TrainingsServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

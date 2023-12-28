@@ -132,3 +132,64 @@ select {
         .job-detail a:hover {
             text-decoration: underline;
         }
+
+.containerPanel {
+    width: 100%;
+    margin: 0 auto; /* Center the container horizontally */
+    display: flex;
+    flex-direction: column; /* Default to a column layout */
+}
+
+.topPanel-panel {
+    background-color: #f0f0f0;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+}
+
+.bottomPanel-panel {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.bottomPanel-left,
+.bottomPanel-right {
+    flex: 1;
+    padding: 20px;
+}
+
+.bottomPanel-left {
+    background-color: #f0f0f0;
+    color: #fff;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+    color: black;
+}
+
+.bottomPanel-right {
+    background-color: #f0f0f0;
+    color: #fff;
+    margin: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    min-height: 40vh;
+    color: black;
+}
+
+@media (max-width: 768px) {
+    .bottomPanel-panel {
+        flex-direction: column; /* Stack items vertically */
+    }
+
+    .bottomPanel-left,
+    .bottomPanel-right {
+        width: 100%;
+    }
+}
