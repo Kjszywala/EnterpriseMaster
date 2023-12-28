@@ -7,6 +7,7 @@ using EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices;
 using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
 using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
 using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
+using EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices;
 using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 using EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices;
 using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
@@ -52,6 +53,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<AnalyticsService>();
             builder.Services.AddSingleton<SalesService>();
             builder.Services.AddSingleton<FinanceService>();
+            builder.Services.AddSingleton<HrService>();
             builder.Services.AddTransient<Helpers.Interfaces.IFolderPick, Helpers.Services.FolderPick>();
 
             // Db injection
@@ -114,6 +116,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddScoped<IPaymentReportsServices, PaymentReportsServices>();
             builder.Services.AddScoped<IInventoryReportsService, InventoryReportsService>();
             builder.Services.AddScoped<ICustomerFeedbacksService, CustomerFeedbacksService>();
+            builder.Services.AddScoped<IJobOffersServices, JobOffersServices>();
 
             //Business logic injection
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();

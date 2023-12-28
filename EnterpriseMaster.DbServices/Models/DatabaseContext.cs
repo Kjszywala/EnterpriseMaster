@@ -49,6 +49,7 @@ namespace EnterpriseMaster.DbServices.Models
         public virtual DbSet<Suppliers> Suppliers { get; set; }
         public virtual DbSet<SuppliersAddresses> SuppliersAddresses { get; set; }
         public virtual DbSet<SupportCases> SupportCases { get; set; }
+        public virtual DbSet<JobOffers> JobOffers { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<UserRoles> UserRoles { get; set; }
         public virtual DbSet<UsersAdresses> UsersAdresses { get; set; }

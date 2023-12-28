@@ -1,16 +1,61 @@
 ﻿@page "/hr"
 @using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices;
 @inherits MainLayout
+@inject HrService hrService
+@inject WhatsNewInfoService newsServices
 
 <Tabs EnableFadeEffect="true">
     <Tab>
         <TitleTemplate>
-            <Icon Name="IconName.Kanban" /> Employee Management
+            <Icon Name="IconName.Kanban" /> Job Offers
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <Grid TItem="JobOffers"
+                  @ref="gridJobOffers"
+                  AllowFiltering="true"
+                  AllowPaging="true"
+                  AllowSorting="true"
+                  AllowRowClick="true"
+                  DataProvider="JobOffersDataProvider"
+                  Class="table table-hover table-bordered table-striped"
+                  FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+                  HeaderRowCssClass="bg-dark text-white border-bottom-0"
+                  PageSize="5"
+                  PageSizeSelectorVisible="true"
+                  PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+                  PaginationItemsTextFormat="{0} - {1} of {2} pages"
+                  ItemsPerPageText="Items per page"
+                  OnRowClick="OnShowModalClick"
+                  Responsive="true">
+                <GridColumn TItem="JobOffers" HeaderText="Job Title " PropertyName="JobTitle " SortKeySelector="item => item.JobTitle ">
+                    @context.JobTitle
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Location" PropertyName="Location" SortKeySelector="item => item.Location">
+                    @context.Location
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Salary" PropertyName="Salary" SortKeySelector="item => item.Salary">
+                    @context.Salary
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Posted Date" PropertyName="PostedDate" SortKeySelector="item => item.CreationDate">
+                    @context.CreationDate.ToString("dd/MM/yyyy HH:mm")
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Expiration Date" PropertyName="ExpirationDate" SortKeySelector="item => item.ExpirationDate">
+                    @FormatDateTime((DateTime)context.ExpirationDate)
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Department" PropertyName="Department" SortKeySelector="item => item.Department">
+                    @context.Department
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Experience Level" PropertyName="ExperienceLevel" SortKeySelector="item => item.ExperienceLevel">
+                    @context.ExperienceLevel
+                </GridColumn>
+                <GridColumn TItem="JobOffers" HeaderText="Application Deadline" PropertyName="ApplicationDeadline" SortKeySelector="item => item.ApplicationDeadline">
+                    @FormatDateTime((DateTime)@context.ApplicationDeadline)
+                </GridColumn>
+            </Grid>
         </Content>
     </Tab>
     <Tab>
@@ -18,9 +63,70 @@
             <Icon Name="IconName.Compass" /> Recruitment
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <div class="container">
+                <div class="column">
+                    <label for="jobTitle">Job Title:</label>
+                    <input type="text" id="jobTitle" name="jobTitle" @bind="jobOffer.JobTitle" required>
+
+                    <label for="companyName">Company Name:</label>
+                    <input type="text" id="companyName" name="companyName" @bind="jobOffer.CompanyName" required>
+
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" @bind="jobOffer.Location" required>
+
+                    <label for="jobDescription">Job Description:</label>
+                    <textarea id="jobDescription" name="jobDescription" rows="4" @bind="jobOffer.JobDescription" required></textarea>
+                    <label for="requirements">Requirements:</label>
+                    <textarea id="requirements" name="requirements" rows="4" @bind="jobOffer.Requirements" required></textarea>
+
+                    <label for="applicationLink">Application Link:</label>
+                    <input type="url" id="applicationLink" name="applicationLink" @bind="jobOffer.ApplicationLink" placeholder="https://example.com/apply" required>
+
+                    <label for="salary">Salary:</label>
+                    <input type="number" id="salary" name="salary" @bind="jobOffer.Salary" required>
+
+                    <label for="employmentType">Employment Type:</label>
+                    <input type="text" id="employmentType" name="employmentType" @bind="jobOffer.EmploymentType" required>
+
+                    <label for="skills">Skills:</label>
+                    <textarea id="skills" name="skills" rows="4" @bind="jobOffer.Skills" required></textarea>
+                </div>
+
+                <div class="column">
+                    <label for="postedDate">Posted Date:</label>
+                    <input type="date" id="postedDate" name="postedDate" @bind-value="jobOffer.CreationDate" required>
+
+                    <label for="expirationDate">Expiration Date:</label>
+                    <input type="date" id="expirationDate" name="expirationDate" @bind-value="jobOffer.ExpirationDate" required>
+
+                    <label for="contactEmail">Contact Email:</label>
+                    <input type="email" id="contactEmail" name="contactEmail" @bind="jobOffer.ContactEmail" required>
+
+                    <label for="contactPhone">Contact Phone:</label>
+                    <input type="tel" id="contactPhone" name="contactPhone" @bind="jobOffer.ContactPhone" required>
+
+                    <label for="status">Status:</label>
+                    <input type="text" id="status" name="status" @bind="jobOffer.Status" required>
+
+                    <label for="applicationDeadline">Application Deadline:</label>
+                    <input type="date" id="applicationDeadline" name="applicationDeadline" @bind-value="jobOffer.ApplicationDeadline" required>
+
+                    <label for="responsibilities">Responsibilities:</label>
+                    <textarea id="responsibilities" name="responsibilities" rows="4" @bind="jobOffer.Responsibilities" required></textarea>
+
+                    <label for="benefits">Benefits:</label>
+                    <textarea id="benefits" name="benefits" rows="4" @bind="jobOffer.Benefits" required></textarea>
+
+                    <label for="department">Department:</label>
+                    <input type="text" id="department" name="department" @bind="jobOffer.Department" required>
+
+                    <label for="experienceLevel">Experience Level:</label>
+                    <input type="text" id="experienceLevel" name="experienceLevel" @bind="jobOffer.ExperienceLevel" required>
+                </div>
+            </div>
+            <div style="display: flex;justify-content: center;align-items: center;">
+                <button class="button-36" role="button" @onclick="AddJobOffer"> Create Job Offer </button>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -44,6 +150,340 @@
         </Content>
     </Tab>
 </Tabs>
+<Modal @ref="modal" Title="Job Details" Size="ModalSize.ExtraLarge">
+    <BodyTemplate>
+        <div class="job-details-container">
+            <div class="job-details-column">
+                <div class="job-detail">
+                    <label for="jobTitle">Job Title:</label>
+                    <p id="jobTitle">@jobOffersModal.JobTitle</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="companyName">Company Name:</label>
+                    <p id="companyName">@jobOffersModal.CompanyName</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="location">Location:</label>
+                    <p id="location">@jobOffersModal.Location</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="jobDescription">Job Description:</label>
+                    <p id="jobDescription">@jobOffersModal.JobDescription</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="requirements">Requirements:</label>
+                    <p id="requirements">@jobOffersModal.Requirements</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="applicationLink">Application Link:</label>
+                    <p id="applicationLink"><a href="@jobOffersModal.ApplicationLink" target="_blank">@jobOffersModal.ApplicationLink</a></p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="salary">Salary:</label>
+                    <p id="salary">@jobOffersModal.Salary</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="employmentType">Employment Type:</label>
+                    <p id="employmentType">@jobOffersModal.EmploymentType</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="skills">Skills:</label>
+                    <p id="skills">@jobOffersModal.Skills</p>
+                </div>
+            </div>
+
+            <div class="job-details-column">
+                <div class="job-detail">
+                    <label for="postedDate">Posted Date:</label>
+                    <p id="postedDate"> @FormatDateTime((DateTime)@jobOffersModal.CreationDate)</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="expirationDate">Expiration Date:</label>
+                    <p id="expirationDate"> @FormatDateTime((DateTime)@jobOffersModal.ExpirationDate)</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="contactEmail">Contact Email:</label>
+                    <p id="contactEmail">@jobOffersModal.ContactEmail</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="contactPhone">Contact Phone:</label>
+                    <p id="contactPhone">@jobOffersModal.ContactPhone</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="status">Status:</label>
+                    <p id="status">@jobOffersModal.Status</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="applicationDeadline">Application Deadline:</label>
+                    <p id="applicationDeadline"> @FormatDateTime((DateTime)@jobOffersModal.ApplicationDeadline)</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="responsibilities">Responsibilities:</label>
+                    <p id="responsibilities">@jobOffersModal.Responsibilities</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="benefits">Benefits:</label>
+                    <p id="benefits">@jobOffersModal.Benefits</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="department">Department:</label>
+                    <p id="department">@jobOffersModal.Department</p>
+                </div>
+
+                <div class="job-detail">
+                    <label for="experienceLevel">Experience Level:</label>
+                    <p id="experienceLevel">@jobOffersModal.ExperienceLevel</p>
+                </div>
+            </div>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Danger" @onclick="RemoveJobOffer">Remove</Button>
+        <Button Color="ButtonColor.Info" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+<Preload />
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 @code {
 
+    protected async override void OnInitialized()
+    {
+        jobOffers = await hrService.GetAllJobOffersAsync();
+        jobOffer.CreationDate = DateTime.Now;
+        jobOffer.ExpirationDate = DateTime.Now;
+        jobOffer.ApplicationDeadline = DateTime.Now;
+        await gridJobOffers.RefreshDataAsync();
+        StateHasChanged();
+    }
+
+    #region JobOffers
+
+    private List<JobOffers> jobOffers = new List<JobOffers>();
+    private Grid<JobOffers> gridJobOffers;
+    private JobOffers jobOffersModal;
+    private Modal modal;
+
+    private async Task<GridDataProviderResult<JobOffers>> JobOffersDataProvider(GridDataProviderRequest<JobOffers> request)
+    {
+        if (jobOffers is null)
+            jobOffers = await hrService.GetAllJobOffersAsync();
+
+        return await Task.FromResult(request.ApplyTo(jobOffers));
+    }
+
+    public string FormatDateTime(DateTime dateTime)
+    {
+        return dateTime.ToString("dd/MM/yyyy HH:mm");
+    }
+
+    private async Task OnShowModalClick(GridRowEventArgs<JobOffers> args)
+    {
+        jobOffersModal = await hrService.GetJobOfferAsync((int)args.Item.Id);
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+    }
+
+    private async Task RemoveJobOffer()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            if(!await hrService.RemoveJobOfferAsync(jobOffersModal.Id))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing a job offer!");
+                preloadService.Hide();
+                return;
+            }
+            ShowMessage(ToastType.Success, "Success!", "Job removed successfully!");
+            preloadService.Hide();
+            jobOffers = await hrService.GetAllJobOffersAsync();
+            await gridJobOffers.RefreshDataAsync();
+            StateHasChanged();
+        }
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+
+    #endregion
+
+    #region Recruitment
+
+    private JobOffers jobOffer = new JobOffers();
+    private async Task AddJobOffer()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            jobOffer.IsActive = true;
+            jobOffer.ModificationDate = DateTime.Now;
+            if (!IsValidJobOfferAdd(jobOffer))
+            {
+                return;
+            }
+            if(!await hrService.AddJobOfferAsync(jobOffer))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a job offer!");
+                preloadService.Hide();
+                return;
+            }
+            var news = new WhatsNew()
+            {
+                CreationDate = DateTime.Now,
+                Description = jobOffer.JobDescription,
+                Title = jobOffer.JobTitle,
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                Notes = "New Job Offer"
+            };
+            if(!await newsServices.AddNews(news))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while adding a news!");
+                preloadService.Hide();
+                return;
+            }
+            ShowMessage(ToastType.Success, "Success!", "Job posted successfully!");
+            preloadService.Hide();
+            jobOffers = await hrService.GetAllJobOffersAsync();
+            await gridJobOffers.RefreshDataAsync();
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
+        }
+    }
+
+    #endregion
+
+    #region helper
+
+    public bool IsValidJobOfferAdd(JobOffers jobOffer)
+    {
+        if (string.IsNullOrWhiteSpace(jobOffer.JobTitle))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Job Title cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.CompanyName))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Company Name cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.Location))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Location cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.JobDescription))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Job Description cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.Requirements))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Requirements cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.ApplicationLink))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Application Link cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (jobOffer.Salary <= 0.00m)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Salary must be greater than zero!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.EmploymentType))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Employment Type cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (!jobOffer.ExpirationDate.HasValue)
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Expiration Date cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.Responsibilities))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Responsibilities cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.Benefits))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Benefits cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.Department))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Department cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.ExperienceLevel))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Experience Level cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(jobOffer.Skills))
+        {
+            ShowMessage(ToastType.Info, "Warning!", "Skills cannot be empty!");
+            preloadService.Hide();
+            return false;
+        }
+
+        // All checks passed, the data is valid
+        return true;
+    }
+
+    #endregion
 }

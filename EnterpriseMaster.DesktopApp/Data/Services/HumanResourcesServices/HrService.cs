@@ -1,36 +1,37 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DbServices.Services;
 
-namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
+namespace EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices
 {
-    public class WhatsNewInfoService
+    public class HrService
     {
         #region Variables
 
-        private IErrorLogsServices errorLogsServices;
-        private IWhatsNewsServices whatsNewsServices;
+        private readonly IErrorLogsServices errorLogsServices;
+        private readonly IJobOffersServices jobOffersServices;
 
         #endregion
 
-        #region Ctor
+        #region Constructor
 
-        public WhatsNewInfoService(
-            IErrorLogsServices _errorLogsServices, 
-            IWhatsNewsServices _whatsNewsServices)
+        public HrService(IErrorLogsServices _errorLogsServices, IJobOffersServices _jobOffersServices)
         {
             errorLogsServices = _errorLogsServices;
-            whatsNewsServices = _whatsNewsServices;
+            jobOffersServices = _jobOffersServices;
         }
 
         #endregion
 
         #region Methods
 
-        public async Task<List<WhatsNew>> GetAllActiveNews()
+        #region Recruitment
+
+        public async Task<List<JobOffers>> GetAllJobOffersAsync()
         {
             try
             {
-                return (await whatsNewsServices.GetAllAsync()).Where(item => item.IsActive == true).OrderByDescending(item => item.ModificationDate).ToList();
+                return (await jobOffersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }
             catch (Exception e)
             {
@@ -39,16 +40,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             }
         }
 
-        public async Task<bool> AddNews(WhatsNew whatsNew)
+        public async Task<JobOffers> GetJobOfferAsync(int id)
         {
             try
             {
-                var response = await whatsNewsServices.AddAsync(whatsNew);
-                if (response)
-                {
-                    return true;
-                }
-                return false;
+                return (await jobOffersServices.GetAsync(id));
             }
             catch (Exception e)
             {
@@ -57,13 +53,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             }
         }
 
-        public async Task<WhatsNew> GetNews(int id)
+        public async Task<bool> AddJobOfferAsync(JobOffers jobOffer)
         {
             try
             {
-                var response = await whatsNewsServices.GetAsync(id);
-
-                return response;
+                return (await jobOffersServices.AddAsync(jobOffer));
             }
             catch (Exception e)
             {
@@ -72,13 +66,24 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             }
         }
 
-        public async Task<bool> RemoveNews(int id)
+        public async Task<bool> UpdateJobOfferAsync(JobOffers jobOffer)
         {
             try
             {
-                var response = await whatsNewsServices.RemoveAsync(id);
+                return (await jobOffersServices.EditAsync(jobOffer.Id, jobOffer));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
 
-                return response;
+        public async Task<bool> RemoveJobOfferAsync(int id)
+        {
+            try
+            {
+                return (await jobOffersServices.RemoveAsync(id));
             }
             catch (Exception e)
             {
@@ -89,5 +94,6 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 
         #endregion
 
+        #endregion
     }
 }
