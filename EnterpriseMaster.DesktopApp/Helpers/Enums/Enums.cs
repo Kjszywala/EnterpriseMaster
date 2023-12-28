@@ -24,4 +24,12 @@
     {
         Visa = 1
     }
+
+    public enum StatusForProductionOrder
+    {
+        Open = 1,
+        InProgress = 2,
+        Completed = 3,
+        Rejected = 4
+    }
 }

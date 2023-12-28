@@ -6,6 +6,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Services.CustomerDataServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @using EnterpriseMaster.DesktopApp.Helpers.Methods;
@@ -15,6 +16,7 @@
 @inject OrderService orderAddressesService
 @inject InventoryService inventoryService
 @inject EmployeeService employeeService
+@inject ProductionService productionService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -38,6 +40,7 @@
                   PageSizeSelectorItems="@(new int[] { 5,10,20 })"
                   PaginationItemsTextFormat="{0} - {1} of {2} pages"
                   ItemsPerPageText="Items per page"
+                  OnRowClick="OnShowModalClick"
                   Responsive="true">
                 <GridColumn TItem="OrderViewModel" HeaderText="Product Name" PropertyName="ProductName" SortKeySelector="item => item.ProductName">
                     @context.ProductName
@@ -604,6 +607,64 @@
 </Tabs>
 <Preload />
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
+<Modal @ref="salesOrderModalWindow" Title="@salesOrderModal.SalesOrderNumber" IsVerticallyCentered="true">
+    <BodyTemplate>
+        <div class="form-container">
+            <form>
+                <div class="form-group">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" id="productName" name="productName" value="@salesOrderModal.Product.ProductName" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label for="productCode">Product Code:</label>
+                    <input type="text" id="productCode" name="productCode" disabled value="@salesOrderModal.Product.ProductCode" />
+                </div>
+
+                <div class="form-group">
+                    <label for="pricePaid">Price To Paid:</label>
+                    <input type="text" id="pricePaid" name="pricePaid" disabled value="@salesOrderModal.PricePaid" />
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentTerm">Payment Term:</label>
+                    <input type="text" id="paymentTerm" name="paymentTerm" disabled value="@salesOrderModal.PaymentTerm" />
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="text" id="quantity" name="quantity" disabled value="@salesOrderModal.Quantity" />
+                </div>
+
+                <div class="form-group">
+                    <label for="quantityType">Quantity Type:</label>
+                    <input type="text" id="quantityType" name="quantityType" disabled value="@salesOrderModal.QuantityType.Type" />
+                </div>
+
+                <div class="form-group">
+                    <label for="orderStatus">Order Status:</label>
+                    <input type="text" id="orderStatus" name="orderStatus" disabled value="@salesOrderModal.OrderStatuse.Discription" />
+                </div>
+            </form>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Success" @onclick="proceedToProduction">Procceed To Production</Button>
+        <Button Color="ButtonColor.Warning" @onclick="OnShowModalRejectClick">Refund</Button>
+        <Button Color="ButtonColor.Info" @onclick="cancelOrder">Cancel</Button>
+        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+<Modal @ref="modal" Title="Reject Reason">
+    <BodyTemplate>
+        Specify the reject reason here:
+        <textarea class="form-control" id="exampleTextarea" @bind="rejectReason" rows="5"></textarea>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalRejectClick">Close</Button>
+        <Button Color="ButtonColor.Primary" @onclick="RejectReasonIsNotEmpty">Save</Button>
+    </FooterTemplate>
+</Modal>
 @code {
     protected async override void OnInitialized()
     {
@@ -722,6 +783,10 @@
 
     private List<OrderViewModel> salesOrders = new List<OrderViewModel>();
     private Grid<OrderViewModel> gridOrderViewModel;
+    private SalesOrders salesOrderModal = new SalesOrders();
+    private Modal salesOrderModalWindow;
+    private Modal modal;
+    private string rejectReason;
     private async Task<GridDataProviderResult<OrderViewModel>> OrderViewModelDataProvider(GridDataProviderRequest<OrderViewModel> request)
     {
         if (salesOrders is null)
@@ -729,6 +794,175 @@
 
         return await Task.FromResult(request.ApplyTo(salesOrders));
     }
+
+    private async Task OnShowModalClick(GridRowEventArgs<OrderViewModel> args)
+    {
+        salesOrderModal = await orderService.GetSalesOrdersAsync((int)args.Item.Id);
+        salesOrderModal.Product = await inventoryService.GetProductAsync(salesOrderModal.ProductId.Value);
+        salesOrderModal.OrderStatuse = await orderService.GetOrderStatusAsync(salesOrderModal.OrderStatuseId.Value);
+        salesOrderModal.QuantityType = await inventoryService.GetQuantityTypesAsync(salesOrderModal.ProductId.Value);
+        await salesOrderModalWindow?.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await salesOrderModalWindow?.HideAsync();
+    } 
+
+    private async Task OnShowModalRejectClick()
+    {
+        await modal?.ShowAsync();
+    }
+
+    private async Task OnHideModalRejectClick()
+    {
+        await modal?.HideAsync();
+    }
+
+    private async Task RejectReasonIsNotEmpty()
+    {
+        if (string.IsNullOrEmpty(rejectReason))
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Reject reason cannot be empty!");
+            return;
+        }
+        salesOrderModal.RejectedReason = rejectReason;
+        await returnAndRefund();
+        await modal?.HideAsync();
+        await OnHideModalClick();
+    }
+
+    private async Task proceedToProduction()
+    {
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            var productionOrder = new ProductionOrders()
+            {
+                CreationDate = DateTime.Now,
+                DueDate = salesOrderModal.DeliveryDate.AddDays(-3),
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                OrderDate = DateTime.Now,
+                ProductId = salesOrderModal.ProductId,
+                ProductionOrderStatusId = (int)StatusForProductionOrder.Open,
+                Quantity = salesOrderModal.Quantity
+            };
+
+            salesOrderModal.OrderStatuseId = (int)StatusForOrder.InProgress;
+            salesOrderModal.ModificationDate = DateTime.Now;
+            if(!await orderService.UpdateSalesOrdersAsync(salesOrderModal))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a sales order!");
+                preloadService.Hide();
+                await OnHideModalClick();
+                return;
+            }
+
+            if (!await productionService.AddProductionOrderAsync(productionOrder))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a sales order!");
+                preloadService.Hide();
+                await OnHideModalClick();
+                return;
+            }
+            productsForOrder = await inventoryService.GetAllProductsAsync();
+            salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
+            preloadService.Hide();
+            ShowMessage(ToastType.Success, "Succes!", "Production order created successfully!");
+            await gridOrderViewModel.RefreshDataAsync();
+            StateHasChanged();
+            await OnHideModalClick();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while accepting order to production!");
+            preloadService.Hide();
+        }
+    }
+
+    private async Task returnAndRefund()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(salesOrderModal.RejectedReason))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Reject reason cannot be empty!");
+                return;
+            }
+            salesOrderModal.ModificationDate = DateTime.Now;
+            salesOrderModal.OrderStatuseId = (int)StatusForOrder.Rejected;
+            if (!await orderService.UpdateSalesOrdersAsync(salesOrderModal))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while rejecting a sales order!");
+                preloadService.Hide();
+                await OnHideModalClick();
+                return;
+            }
+            var refund = new Refunds()
+            {
+                CreationDate = DateTime.Now,
+                IsActive = true,
+                ModificationDate = DateTime.Now,
+                RefundAmount = salesOrderModal.PricePaid,
+                RefundDate = DateTime.Now,
+                PaymentMethodId = 1,
+                Notes = rejectReason
+            };
+            if (!await orderService.AddRefundsAsync(refund))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while refunding a sales order!");
+                preloadService.Hide();
+                await OnHideModalClick();
+                return;
+            }
+
+            productsForOrder = await inventoryService.GetAllProductsAsync();
+            salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
+            preloadService.Hide();
+            await OnHideModalClick();
+            ShowMessage(ToastType.Success, "Succes!", "Sales order was refunded succesfully!");
+            await gridOrderViewModel.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while refunding!");
+            preloadService.Hide();
+        }
+    } 
+
+    private async Task cancelOrder()
+    {
+        try
+        {
+            salesOrderModal.ModificationDate = DateTime.Now;
+            salesOrderModal.OrderStatuseId = (int)StatusForOrder.OnHold;
+            if (!await orderService.UpdateSalesOrdersAsync(salesOrderModal))
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while canceling a sales order!");
+                preloadService.Hide();
+                await OnHideModalClick();
+                return;
+            }
+            productsForOrder = await inventoryService.GetAllProductsAsync();
+            salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
+            preloadService.Hide();
+            ShowMessage(ToastType.Success, "Succes!", "Sales order was canceled succesfully!");
+            await gridOrderViewModel.RefreshDataAsync();
+            await OnHideModalClick();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while refunding!");
+            preloadService.Hide();
+        }
+    }
+
+    #endregion
+
+    #region ReturnsAndRefunds
+
+
 
     #endregion
 

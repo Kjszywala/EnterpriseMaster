@@ -226,6 +226,23 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
 
         #endregion
 
+        #region Order Status
+
+        public async Task<OrderStatuses> GetOrderStatusAsync(int id)
+        {
+            try
+            {
+                return (await orderStatusesServices.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
         #region salesOrdersServices
 
         public async Task<List<OrderViewModel>> GetAllSalesOrdersForGridAsync()
@@ -243,6 +260,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
                 {
                     saleViewModelList.Add(new OrderViewModel
                     {
+                        Id = order.Id,
                         OrderStatus = (await orderStatusesServices.GetAsync(order.OrderStatuseId.Value)).Discription,
                         OrderNumber = order.SalesOrderNumber,
                         PaymentTerm = order.PaymentTerm,
@@ -282,6 +300,32 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.SalesServices
             try
             {
                 return (await salesOrdersServices.GetAsync(id));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> UpdateSalesOrdersAsync(SalesOrders shippers)
+        {
+            try
+            {
+                return (await salesOrdersServices.EditAsync(shippers.Id, shippers));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<bool> RemoveSalesOrdersAsync(int id)
+        {
+            try
+            {
+                return (await salesOrdersServices.RemoveAsync(id));
             }
             catch (Exception e)
             {
