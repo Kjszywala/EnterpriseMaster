@@ -599,9 +599,36 @@
             <Icon Name="IconName.Braces" /> Returns and Refunds
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            @if (refundsList.Count > 0)
+            {
+                <Accordion Class="container">
+                    @foreach (var item in refundsList)
+                    {
+                        <AccordionItem Title=@item.Notes>
+                            <Content>
+                                <b>Refund date: @item.RefundDate</b>
+                                <br />
+                                <div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Refund amount:</label>
+                                        <NumberInput TValue="decimal" @bind-Value="@item.RefundAmount" Placeholder="Enter amount" Disabled />
+                                    </div>
+                                </div>
+                            </Content>
+                        </AccordionItem>
+                    }
+                </Accordion>
+            }
+            else
+            {
+                <Alert Color="AlertColor.Info" Class="container">
+                    <h4 class="alert-heading">No Refunds Available</h4>
+                    <p>There are currently no refunds available. You're all caught up!</p>
+                    <hr>
+                    <p class="mb-0">Feel free to check back later or contact the relevant department for more information.</p>
+                </Alert>
+            }
         </Content>
     </Tab>
 </Tabs>
@@ -680,6 +707,7 @@
         {
             item.ShippersAddresses = await orderService.GetShipperAddressAsync(item.ShippersAddressId.Value);
         }
+        refundsList = await orderService.GetAllRefundsAsync();
         await gridOrderViewModel.RefreshDataAsync();
         await gridShippers.RefreshDataAsync();
         await gridCustomerManagement.RefreshDataAsync();
@@ -919,6 +947,7 @@
 
             productsForOrder = await inventoryService.GetAllProductsAsync();
             salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
+            refundsList = await orderService.GetAllRefundsAsync();
             preloadService.Hide();
             await OnHideModalClick();
             ShowMessage(ToastType.Success, "Succes!", "Sales order was refunded succesfully!");
@@ -962,7 +991,7 @@
 
     #region ReturnsAndRefunds
 
-
+    private List<Refunds> refundsList = new List<Refunds>();
 
     #endregion
 
