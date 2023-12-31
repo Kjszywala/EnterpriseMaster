@@ -1,6 +1,9 @@
 ﻿@page "/analytics"
 @using BlazorBootstrap
+@using EnterpriseMaster.DbServices.Models.Database;
+@using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
 @inherits MainLayout
+@inject TaskServices taskServices
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -8,9 +11,57 @@
             <Icon Name="IconName.Braces" /> Dashboard
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <div class="dashboardGrid">
+                <div class="dashboardBox1">
+                    <div class="dashbordContent">
+                        <div class="task-list">
+                            <div class="dashboardTitle">
+                                <h3>Tasks in this month</h3>
+                                <div class="spacer"></div>
+                                <div class="buttonsDiv">
+                                </div>
+                            </div>
+                            <hr class="dashboardHr" style="color:black;" />
+                            <BarChart @ref="barChart" Class="mb-4" Width="850"/>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardBox2">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Tasks Completed This Month</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+                        <BarChart @ref="barChartCompleted" Class="mb-4" Width="850" />
+                       
+                    </div>
+                </div>
+                <div class="dashboardBox3">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>All Tasks</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+                        <LineChart @ref="lineChart" Class="mb-4" Width="850" />
+                       
+                    </div>
+                </div>
+                <div class="dashboardBox4">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>All Completed Tasks</h3>
+                            <div class="spacer"></div>
+                            <div class="buttonsDiv">
+                            </div>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+                        <LineChart @ref="lineChartCompleted" Class="mb-4" Width="850" />
+                       
+                    </div>
+                </div>
+            </div>
+            <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
         </Content>
     </Tab>
     <Tab>
@@ -18,9 +69,53 @@
             <Icon Name="IconName.Diagram3" /> Purchase Orders
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="dashboardGrid">
+                <div class="dashboardBox1">
+                    <div class="dashbordContent">
+                        <div class="task-list">
+                            <div class="dashboardTitle">
+                                <h3>Tasks List For Today</h3>
+                                <div class="spacer"></div>
+                                <div class="buttonsDiv">
+                                </div>
+                            </div>
+                            <hr class="dashboardHr" style="color:black;" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardBox2">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Completed Tasks</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox3">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Tasks in Progress</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox4">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>What's new</h3>
+                            <div class="spacer"></div>
+                            <div class="buttonsDiv">
+                            </div>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -28,9 +123,53 @@
             <Icon Name="IconName.Diagram2" /> Finance
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="dashboardGrid">
+                <div class="dashboardBox1">
+                    <div class="dashbordContent">
+                        <div class="task-list">
+                            <div class="dashboardTitle">
+                                <h3>Tasks List For Today</h3>
+                                <div class="spacer"></div>
+                                <div class="buttonsDiv">
+                                </div>
+                            </div>
+                            <hr class="dashboardHr" style="color:black;" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardBox2">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Completed Tasks</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox3">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Tasks in Progress</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox4">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>What's new</h3>
+                            <div class="spacer"></div>
+                            <div class="buttonsDiv">
+                            </div>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab> 
     <Tab>
@@ -38,9 +177,53 @@
             <Icon Name="IconName.Diagram2" /> Inventory
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="dashboardGrid">
+                <div class="dashboardBox1">
+                    <div class="dashbordContent">
+                        <div class="task-list">
+                            <div class="dashboardTitle">
+                                <h3>Tasks List For Today</h3>
+                                <div class="spacer"></div>
+                                <div class="buttonsDiv">
+                                </div>
+                            </div>
+                            <hr class="dashboardHr" style="color:black;" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardBox2">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Completed Tasks</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox3">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Tasks in Progress</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox4">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>What's new</h3>
+                            <div class="spacer"></div>
+                            <div class="buttonsDiv">
+                            </div>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab> 
     <Tab>
@@ -48,9 +231,53 @@
             <Icon Name="IconName.Diagram2" /> Sales Orders
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="dashboardGrid">
+                <div class="dashboardBox1">
+                    <div class="dashbordContent">
+                        <div class="task-list">
+                            <div class="dashboardTitle">
+                                <h3>Tasks List For Today</h3>
+                                <div class="spacer"></div>
+                                <div class="buttonsDiv">
+                                </div>
+                            </div>
+                            <hr class="dashboardHr" style="color:black;" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardBox2">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Completed Tasks</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox3">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Tasks in Progress</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox4">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>What's new</h3>
+                            <div class="spacer"></div>
+                            <div class="buttonsDiv">
+                            </div>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
     <Tab>
@@ -58,13 +285,344 @@
             <Icon Name="IconName.Diagram2" /> Production
         </TitleTemplate>
         <Content>
-            <p class="mt-2">
-                <b>This is some placeholder content the Contact tab's associated content.</b> Clicking another tab will toggle the visibility of this one for the next.
-            </p>
+            <br />
+            <div class="dashboardGrid">
+                <div class="dashboardBox1">
+                    <div class="dashbordContent">
+                        <div class="task-list">
+                            <div class="dashboardTitle">
+                                <h3>Tasks List For Today</h3>
+                                <div class="spacer"></div>
+                                <div class="buttonsDiv">
+                                </div>
+                            </div>
+                            <hr class="dashboardHr" style="color:black;" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardBox2">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Completed Tasks</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox3">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>Tasks in Progress</h3>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+                <div class="dashboardBox4">
+                    <div class="dashbordContent">
+                        <div class="dashboardTitle">
+                            <h3>What's new</h3>
+                            <div class="spacer"></div>
+                            <div class="buttonsDiv">
+                            </div>
+                        </div>
+                        <hr class="dashboardHr" style="color:black;" />
+
+                    </div>
+                </div>
+            </div>
         </Content>
     </Tab>
 </Tabs>
 
 @code {
+    protected async override void OnInitialized()
+    {
 
+        StateHasChanged();
+    }
+
+    #region Tasks
+
+    private BarChart barChart;
+    private BarChart barChartCompleted;
+    private LineChart lineChart;
+    private LineChart lineChartCompleted;
+    private List<Tasks> tasksInThisMonth = new List<Tasks>();
+    private List<Tasks> tasksCompletedInThisMonth = new List<Tasks>();
+    private List<Tasks> tasks = new List<Tasks>();
+    private List<Tasks> tasksCompleted = new List<Tasks>();
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await RenderTasksAsync();
+            await RenderTasksCompletedAsync();
+            await RenderAllTasksAsync();
+            await RenderAllCompletedTasksAsync();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task RenderTasksAsync()
+    {
+        // Get the current month and year
+        DateTime currentDate = DateTime.Now;
+        int currentMonth = currentDate.Month;
+        int currentYear = currentDate.Year;
+
+        // Calculate the number of days in the current month
+        int daysInCurrentMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+        var listOfDays = new List<string>();
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            listOfDays.Add(i.ToString());
+        }
+
+        tasksInThisMonth = (await taskServices.GetAllTasks()).Where(
+            item => item.CreationDate.Year == DateTime.Now.Year &&
+            item.CreationDate.Month == DateTime.Now.Month).ToList();
+
+        // Initialize a list to store daily order counts
+        var completedOrderQuantities = new List<double>();
+
+        // Populate completed order quantities based on each day of the month
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = tasksInThisMonth
+                .Count(item => item.CreationDate.Day == i);
+
+            completedOrderQuantities.Add(tasksCreatedForDay);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new BarChartDataset()
+                {
+                    Label = DateTime.Now.ToString("MMMM"),
+                    Data = completedOrderQuantities,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }
+            }
+            };
+
+        var options = new BarChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Text = "Tasks In Current Month";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Text = "Tasks In Current Month";
+        options.Scales.X.Title.Display = true;
+
+        await barChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderTasksCompletedAsync()
+    {
+        // Get the current month and year
+        DateTime currentDate = DateTime.Now;
+        int currentMonth = currentDate.Month;
+        int currentYear = currentDate.Year;
+
+        // Calculate the number of days in the current month
+        int daysInCurrentMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+        var listOfDays = new List<string>();
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            listOfDays.Add(i.ToString());
+        }
+
+        tasksCompletedInThisMonth = (await taskServices.GetAllTasks()).Where(
+            item => item.ModificationDate.Year == DateTime.Now.Year &&
+            item.ModificationDate.Month == DateTime.Now.Month &&
+            item.TaskStatusId == 3).ToList();
+
+        // Initialize a list to store daily order counts
+        var completedOrderQuantities = new List<double>();
+
+        // Populate completed order quantities based on each day of the month
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = tasksCompletedInThisMonth
+                .Count(item => item.ModificationDate.Day == i);
+
+            completedOrderQuantities.Add(tasksCreatedForDay);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new BarChartDataset()
+                {
+                    Label = DateTime.Now.ToString("MMMM"),
+                    Data = completedOrderQuantities,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }
+            }
+            };
+
+        var options = new BarChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Text = "Completed Tasks In Current Month";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Text = "Completed Tasks In Current Month";
+        options.Scales.X.Title.Display = true;
+
+        await barChartCompleted.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllTasksAsync()
+    {
+
+        var tasks = (await taskServices.GetAllTasks()).ToList();
+
+        // Find the first created task day
+        var earliestCreationDate = tasks.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = tasks
+                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+        {
+            Labels = listOfDays,
+            Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = DateTime.Now.ToString("MMMM"),
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+        };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Text = "All Tasks";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Text = "All Tasks";
+        options.Scales.X.Title.Display = true;
+
+        await lineChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllCompletedTasksAsync()
+    {
+
+        var tasks = (await taskServices.GetAllTasks()).Where(item => item.TaskStatusId == 3).ToList();
+
+        // Find the first created task day
+        var earliestCreationDate = tasks.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = tasks
+                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = DateTime.Now.ToString("MMMM"),
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Text = "All Completed Tasks";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Text = "All Completed Tasks";
+        options.Scales.X.Title.Display = true;
+
+        await lineChartCompleted.InitializeAsync(data, options);
+    }
+    #endregion
 }

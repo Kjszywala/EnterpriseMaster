@@ -1,5 +1,6 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
+using EnterpriseMaster.DbServices.Services;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 {
@@ -47,6 +48,20 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.TaskStatusId == 1)
                     .Where(item3 => item3.EmployeeId == currentEmployee.Id)
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<Tasks>> GetAllTasks()
+        {
+            try
+            {
+                return (await tasksServices.GetAllAsync())
                     .ToList();
             }
             catch (Exception e)
@@ -170,6 +185,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 task.IsCompleted = true;
                 task.IsActive = false;
                 task.TaskStatusId = 3;
+                task.ModificationDate = DateTime.Now;
                 var response = await tasksServices.EditAsync(id, task);
                 if (response)
                 {
