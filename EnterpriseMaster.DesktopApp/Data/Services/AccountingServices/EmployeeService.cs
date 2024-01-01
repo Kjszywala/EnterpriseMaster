@@ -163,6 +163,12 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AccountingServices
             return await usersServices.AddAsync(user);
         }
 
+        public async Task<Users> GetUserAsync(int id)
+        {
+
+            return await usersServices.GetAsync(id);
+        }
+
         public async Task<EmployeeAddresses> GetEmployeeAddressAsync(EmployeeAddresses employeeAddresses)
         {
             return (await employeeAddressesServices.GetAllAsync()).Where(item =>

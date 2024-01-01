@@ -3,6 +3,7 @@
 @using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
 @using EnterpriseMaster.DesktopApp.Data.Services.MainLayout;
+@using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @inherits LayoutComponentBase
 @inject MainLayoutService mainLayoutService;
 @inject LoginService loginService
@@ -80,144 +81,150 @@ else
                     <li><a class="link_name" href="#">Dashboard</a></li>
                 </ul>
             </li>
-            @*<li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-collection'></i>
-                        <span class="link_name">Category</span>
+            @if (Config.UserRoles.Contains((int)StatusForRoles.PurchaseOrders))
+            {
+                <li>
+                    <a href="/orders">
+                        <i><iconify-icon icon="material-symbols:draft-orders-outline"></iconify-icon></i>
+                        <span class="link_name">Purchase Orders</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Category</a></li>
-                    <li><a href="#">HTML & CSS</a></li>
-                    <li><a href="#">JavaScript</a></li>
-                    <li><a href="#">PHP & MySQL</a></li>
-                </ul>
-            </li>*@
-            @*<li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-book-alt'></i>
-                        <span class="link_name">Posts</span>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Purchase Orders</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Finance))
+            {
+                <li>
+                    <a href="/finance">
+                        <i><iconify-icon icon="streamline:shopping-jewelry-diamond-2-diamond-money-payment-finance-wealth"></iconify-icon></i>
+                        <span class="link_name">Finance</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Posts</a></li>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Login Form</a></li>
-                    <li><a href="#">Card Design</a></li>
-                </ul>
-            </li>*@
-            <li>
-                <a href="/orders">
-                    <i><iconify-icon icon="material-symbols:draft-orders-outline"></iconify-icon></i>
-                    <span class="link_name">Purchase Orders</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Purchase Orders</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/finance">
-                    <i><iconify-icon icon="streamline:shopping-jewelry-diamond-2-diamond-money-payment-finance-wealth"></iconify-icon></i>
-                    <span class="link_name">Finance</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Finance</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/offers">
-                    <i><iconify-icon icon="mdi:offer"></iconify-icon></i>
-                    <span class="link_name">Create Offers</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Create Offers</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/inventory">
-                    <i><iconify-icon icon="fluent-mdl2:product-variant"></iconify-icon></i>
-                    <span class="link_name">Inventory</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Inventory</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/invoices">
-                    <i><iconify-icon icon="iconamoon:invoice"></iconify-icon></i>
-                    <span class="link_name">Invoices</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Invoices</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/sales">
-                    <i><iconify-icon icon="icon-park-outline:sales-report"></iconify-icon></i>
-                    <span class="link_name">Sales Orders</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Sales Orders</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/analytics">
-                    <i><iconify-icon icon="grommet-icons:analytics"></iconify-icon></i>
-                    <span class="link_name">Analytics</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Analytics</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/hr">
-                    <i><iconify-icon icon="grommet-icons:resources"></iconify-icon></i>
-                    <span class="link_name">Human Resources</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Human Resources</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/production">
-                    <i><iconify-icon icon="streamline:money-graph-bar-increase-up-product-performance-increase-arrow-graph-business-chart"></iconify-icon></i>
-                    <span class="link_name">Production</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Production</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/accounting">
-                    <i><iconify-icon icon="material-symbols:account-tree-outline"></iconify-icon></i>
-                    <span class="link_name">Accounting</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Accounting</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/customerdata">
-                    <i><iconify-icon icon="carbon:user-data"></iconify-icon></i>
-                    <span class="link_name">Customer Data</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Customer Data</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="/salesactivities">
-                    <i><iconify-icon icon="mdi:sale-outline"></iconify-icon></i>
-                    <span class="link_name">Sales Activities</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Sales Activities</a></li>
-                </ul>
-            </li>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Finance</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.CreateOffers))
+            {
+                <li>
+                    <a href="/offers">
+                        <i><iconify-icon icon="mdi:offer"></iconify-icon></i>
+                        <span class="link_name">Create Offers</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Create Offers</a></li>
+                    </ul>
+                </li> 
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Inventory))
+            {
+                <li>
+                    <a href="/inventory">
+                        <i><iconify-icon icon="fluent-mdl2:product-variant"></iconify-icon></i>
+                        <span class="link_name">Inventory</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Inventory</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Invoices))
+            {
+                <li>
+                    <a href="/invoices">
+                        <i><iconify-icon icon="iconamoon:invoice"></iconify-icon></i>
+                        <span class="link_name">Invoices</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Invoices</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.SalesOrders))
+            {
+                <li>
+                    <a href="/sales">
+                        <i><iconify-icon icon="icon-park-outline:sales-report"></iconify-icon></i>
+                        <span class="link_name">Sales Orders</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Sales Orders</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Analytics))
+            {
+                <li>
+                    <a href="/analytics">
+                        <i><iconify-icon icon="grommet-icons:analytics"></iconify-icon></i>
+                        <span class="link_name">Analytics</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Analytics</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.HumanResources))
+            {
+                <li>
+                    <a href="/hr">
+                        <i><iconify-icon icon="grommet-icons:resources"></iconify-icon></i>
+                        <span class="link_name">Human Resources</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Human Resources</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Production))
+            {
+                <li>
+                    <a href="/production">
+                        <i><iconify-icon icon="streamline:money-graph-bar-increase-up-product-performance-increase-arrow-graph-business-chart"></iconify-icon></i>
+                        <span class="link_name">Production</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Production</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Accounting))
+            {
+                <li>
+                    <a href="/accounting">
+                        <i><iconify-icon icon="material-symbols:account-tree-outline"></iconify-icon></i>
+                        <span class="link_name">Accounting</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Accounting</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.CustomerData))
+            {
+                <li>
+                    <a href="/customerdata">
+                        <i><iconify-icon icon="carbon:user-data"></iconify-icon></i>
+                        <span class="link_name">Customer Data</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Customer Data</a></li>
+                    </ul>
+                </li>
+            }
+            @if (Config.UserRoles.Contains((int)StatusForRoles.SalesActivities))
+            {
+                <li>
+                    <a href="/salesactivities">
+                        <i><iconify-icon icon="mdi:sale-outline"></iconify-icon></i>
+                        <span class="link_name">Sales Activities</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Sales Activities</a></li>
+                    </ul>
+                </li>
+            }
             <li>
                 <div class="profile-details">
                     <div class="profile-content">

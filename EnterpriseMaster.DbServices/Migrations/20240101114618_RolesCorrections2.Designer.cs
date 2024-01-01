@@ -4,6 +4,7 @@ using EnterpriseMaster.DbServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriseMaster.DbServices.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240101114618_RolesCorrections2")]
+    partial class RolesCorrections2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2231,6 +2234,9 @@ namespace EnterpriseMaster.DbServices.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("UserRole")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -2922,9 +2928,6 @@ namespace EnterpriseMaster.DbServices.Migrations
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("UserRole")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("UsersId")
                         .HasColumnType("int");

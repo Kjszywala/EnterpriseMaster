@@ -1,6 +1,5 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
-using EnterpriseMaster.DbServices.Services;
 
 namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
 {

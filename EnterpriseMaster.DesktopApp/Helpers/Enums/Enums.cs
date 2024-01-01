@@ -32,4 +32,20 @@
         Completed = 3,
         Rejected = 4
     }
+
+    public enum StatusForRoles
+    {
+        PurchaseOrders = 1,
+        Finance = 2,
+        CreateOffers = 3,
+        Inventory = 4,
+        Invoices = 5,
+        SalesOrders = 6,
+        Analytics = 7,
+        HumanResources = 8,
+        Production = 9,
+        Accounting = 10,
+        CustomerData = 11,
+        SalesActivities = 12,
+    }
 }

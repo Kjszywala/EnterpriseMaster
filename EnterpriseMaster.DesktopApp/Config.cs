@@ -1,4 +1,6 @@
-﻿namespace EnterpriseMaster.DesktopApp
+﻿using EnterpriseMaster.DbServices.Models.Database;
+
+namespace EnterpriseMaster.DesktopApp
 {
     public class Config
     {
@@ -14,5 +16,6 @@
         public static string EmployeeAccess;
         public static int? CompanyId;
         public static byte[] UserImage;
+        public static List<int> UserRoles;
     }
 }

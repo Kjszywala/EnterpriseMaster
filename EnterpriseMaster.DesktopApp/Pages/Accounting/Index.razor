@@ -2,8 +2,12 @@
 @using BlazorBootstrap
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Services.AccountingServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.LoginService;
+@using EnterpriseMaster.DesktopApp.Data.Services.RolesServices;
 @inherits MainLayout
 @inject EmployeeService employeeService
+@inject RolesService rolesService
+@inject LoginService loginService
 
 <Tabs @ref="tabs" EnableFadeEffect="true">
     <Tab IsActive="true" Name="accounts">
@@ -319,10 +323,48 @@
         <Content>
             <br />
             <div class="container">
-                <div class="left-panel">1</div>
-                <div class="right-panel">
-                    <div class="top-right">2</div>
-                    <div class="bottom-right">3</div>
+                <div class="row">
+                    <div class="col col-dropdown">
+                        @if (employeesList == null)
+                        {
+                            <p>Loading...</p>
+                        }
+                        else
+                        {
+                            <select id="employeeDropdown" class="dropdown-style" @onchange="OnEmployeeRolesSelected">
+                                <option>Select an Employee</option>
+                                @foreach (var access in employeesList)
+                                {
+                                    <option value="@access.Id">@access.Email</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                </div>
+                <div class="permissions-table-panel">
+                    <table class="permissions-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Permission Name</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var item in rolesList)
+                            {
+                                <tr>
+                                    <td style="text-align: center;"><Switch @bind-Value="@item.UserRole" /></td>
+                                    <td><label>@item.Roles.Name</label></td>
+                                    <td>@item.Roles.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br />
+                <div class="bottomSupplierAdd">
+                    <button class="button-36" @onclick="savePermissions">Save Permissions</button>
                 </div>
             </div>
         </Content>
@@ -341,6 +383,7 @@
 
     private List<Employees> employees;
     private List<Employees> employeesList = new List<Employees>();
+    private List<UserRoles> rolesList = new List<UserRoles>();
     private Grid<Employees> gridEmployees;
 
     protected async override void OnInitialized()
@@ -498,25 +541,22 @@
         {
             if(editPassword == editConfirmPassword)
             {
-                user = new Users()
-                {
-                    Id = currentUser.Id,
-                    FirstName = firstNameEdit,
-                    BusinesArea = departmentEdit,
-                    Email = emailEdit,
-                    CompanyName = Config.Company,
-                    DateOfBirth = DateOfBirthEdit,
-                    IsActive = true,
-                    IsEmployee = true,
-                    ModificationDate = DateTime.Now,
-                    Position = positionEdit,
-                    SecondName = lastNameEdit,
-                    SubscriptionTypeId = Config.SubscriptionId,
-                    Password = BCrypt.Net.BCrypt.HashPassword(password),
-                    UserAddressId = fullUserAddress.Id,
-                    CompaniesId = currentUser.CompaniesId,
-                    CreationDate = currentUser.CreationDate
-                };
+                user = await employeeService.GetUserAsync(currentUser.Id);
+                user.FirstName = firstNameEdit;
+                user.BusinesArea = departmentEdit;
+                user.Email = emailEdit;
+                user.CompanyName = Config.Company;
+                user.DateOfBirth = DateOfBirthEdit;
+                user.IsActive = true;
+                user.IsEmployee = true;
+                user.ModificationDate = DateTime.Now;
+                user.Position = positionEdit;
+                user.SecondName = lastNameEdit;
+                user.SubscriptionTypeId = Config.SubscriptionId;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(editPassword);
+                user.UserAddressId = fullUserAddress.Id;
+                user.CompaniesId = currentUser.CompaniesId;
+                user.CreationDate = currentUser.CreationDate;
             }
             else
             {
@@ -565,9 +605,9 @@
         if (employeeResponse)
         {
             preloadService.Hide();
-            StateHasChanged();
             ShowMessage(ToastType.Success, "Success!", "Employee succesfully edited!");
             await gridEmployees.RefreshDataAsync();
+            StateHasChanged();
             return;
         };
         preloadService.Hide();
@@ -703,6 +743,18 @@
 
             if (await employeeService.AddEmployeesAsync(employee))
             {
+                foreach(var item in rolesList)
+                {
+                    await rolesService.AddUserRolesAsync(new UserRoles()
+                    {
+                        CreationDate = DateTime.Now,
+                        IsActive = true,
+                        ModificationDate = DateTime.Now,
+                        RoleId = item.Id,
+                        UserId = (await employeeService.GetUserBasedOnEmail(employee.Email)).Id,
+                        UserRole = false,
+                    });
+                }
                 preloadService.Hide();
                 ShowMessage(ToastType.Success, "Success!", "New employee has been added!");
                 await gridEmployees.RefreshDataAsync();
@@ -718,11 +770,49 @@
             ShowMessage(ToastType.Danger, "Something went wrong!", e.Message);
             return false;
         }
-       
+
     }
 
     #endregion
 
     #endregion
 
+    #region Roles
+
+    private int selectedEmployeeRolesId;
+
+    private async void OnEmployeeRolesSelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedEmployeeRolesId = selectedId;
+        }
+
+        var user = await employeeService.GetEmployeebyId(selectedEmployeeRolesId);
+        rolesList = (await rolesService.GetAllUserRolesAsync()).Where(item => item.UserId == user.UserId).ToList();
+        foreach(var item in rolesList)
+        {
+            item.Roles = await rolesService.GetRolesAsync(item.RoleId.Value);
+        }
+        StateHasChanged();
+    }
+
+    private async Task savePermissions()
+    {
+        try
+        {
+            foreach (var item in rolesList)
+            {
+                await rolesService.UpdateUserRolesAsync(item);
+            }
+            ShowMessage(ToastType.Success, "Success!", "Permissions updated!");
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Danger, "Something went wrong!", e.Message);
+            return;
+        }
+    }
+
+    #endregion
 }

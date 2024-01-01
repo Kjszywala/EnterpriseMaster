@@ -14,6 +14,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
         private IEmployeesServices employeesServices;
         private IEmployeeAccessesServices employeeAccessesServices;
         private ICompaniesServices companiesServices;
+        private IRolesService rolesService;
+        private IUserRolesService userRolesService;
 
         #endregion
 
@@ -25,7 +27,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
             IUsersServices _usersServices,
             IEmployeesServices _employeesServices,
             IEmployeeAccessesServices _employeeAccessesServices,
-            ICompaniesServices _companiesServices)
+            ICompaniesServices _companiesServices,
+            IRolesService _rolesService,
+            IUserRolesService _userRolesService)
         {
             authenticationLogic = _authenticationLogic;
             errorLogsServices = _errorLogsServices;
@@ -33,6 +37,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
             employeesServices = _employeesServices;
             employeeAccessesServices = _employeeAccessesServices;
             companiesServices = _companiesServices;
+            rolesService = _rolesService;
+            userRolesService = _userRolesService;
         }
 
         #endregion
@@ -63,6 +69,12 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.LoginService
                     Config.CompanyId = (await companiesServices.GetAllAsync()).Where(item => item.Name == Config.Company).FirstOrDefault().Id;
                     Config.EmployeeAccess = (await employeeAccessesServices.GetAllAsync()).Where(item => item.Id == currentEmployee.EmployeeAccessId).FirstOrDefault().Access;
                     Config.UserImage = users.Where(item => item.Email == user.Email).FirstOrDefault().Image;
+                    var userRoles = (await userRolesService.GetAllAsync()).Where(item => item.UserId == Config.UserId && item.UserRole == true).ToList();
+                    foreach(var userRole in userRoles)
+                    {
+                        userRole.Roles = await rolesService.GetAsync(userRole.RoleId.Value);
+                    }
+                    Config.UserRoles = userRoles.Select(item => item.Roles.Role).ToList();
                 }
                 return isAuthenticated;
             }

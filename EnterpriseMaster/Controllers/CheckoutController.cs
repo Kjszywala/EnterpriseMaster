@@ -16,6 +16,8 @@ namespace EnterpriseMaster.Controllers
         private ICheckoutLogic checkoutLogic;
         private IUsersServices usersServices;
         private IUsersAdressesServices usersAdressesServices;
+        private IRolesService rolesService;
+        private IUserRolesService userRolesService;
         #endregion
 
         #region Constructor
@@ -27,7 +29,9 @@ namespace EnterpriseMaster.Controllers
             IPaymentMethodsServices _paymentMethodsServices,
             ICheckoutLogic _checkoutLogic,
             IUsersServices _usersServices,
-            IUsersAdressesServices _usersAdressesServices)
+            IUsersAdressesServices _usersAdressesServices,
+            IRolesService _rolesService,
+            IUserRolesService _userRolesService)
         {
             subscriptionTypesServices = _subscriptionTypesServices;
             errorLogsServices = _errorLogsServices;
@@ -36,7 +40,8 @@ namespace EnterpriseMaster.Controllers
             checkoutLogic = _checkoutLogic;
             usersServices = _usersServices;
             usersAdressesServices = _usersAdressesServices;
-
+            rolesService = _rolesService;
+            userRolesService = _userRolesService;
         }
 
         #endregion
@@ -113,6 +118,23 @@ namespace EnterpriseMaster.Controllers
                 if (await usersServices.EditAsync(currentUser.Id, currentUser))
                 {
                     TempData["Success"] = "Congratulations! You can now download software in the Downloads section.";
+                    var roles = await rolesService.GetAllAsync();
+                    var userRoles = (await userRolesService.GetAllAsync()).Where(item => item.UserId == currentUser.Id);
+                    if(userRoles.Count() == 0)
+                    {
+                        foreach (var item in roles)
+                        {
+                            await userRolesService.AddAsync(new UserRoles()
+                            {
+                                CreationDate = DateTime.Now,
+                                IsActive = true,
+                                ModificationDate = DateTime.Now,
+                                RoleId = item.Id,
+                                UserId = currentUser.Id,
+                                UserRole = true,
+                            });
+                        }
+                    }
                 }
                 else
                 {

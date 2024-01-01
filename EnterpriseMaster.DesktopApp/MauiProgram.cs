@@ -54,6 +54,7 @@ namespace EnterpriseMaster.DesktopApp
             builder.Services.AddSingleton<SalesService>();
             builder.Services.AddSingleton<FinanceService>();
             builder.Services.AddSingleton<HrService>();
+            builder.Services.AddSingleton<EnterpriseMaster.DesktopApp.Data.Services.RolesServices.RolesService>();
             builder.Services.AddTransient<Helpers.Interfaces.IFolderPick, Helpers.Services.FolderPick>();
 
             // Db injection
