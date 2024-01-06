@@ -177,7 +177,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
 
         public async Task<List<PaymentsMonthly>> CalculateMonthlySumAsync()
         {
-            var payments = await GetAllPaymentsAsync();
+            var payments = (await GetAllPaymentsAsync()).Where(item => item.ModificationDate.Year == DateTime.Now.Year);
 
             var monthlySum = payments
                 .GroupBy(payment => new { Year = payment.ModificationDate.Year, Month = payment.ModificationDate.Month })

@@ -525,19 +525,20 @@
     private List<double> GetDataForMonths(List<PaymentsMonthly> monthlyPayments, List<string> labels)
     {
         var dataForMonths = new List<double>();
-
+        double runningTotal = 0.0;
         foreach (var label in labels)
         {
             var correspondingMonth = monthlyPayments.FirstOrDefault(monthlyPayment => System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(monthlyPayment.Month) == label);
 
             if (correspondingMonth != null)
             {
-                dataForMonths.Add((double)correspondingMonth.TotalAmount);
+                runningTotal += (double)correspondingMonth.TotalAmount;
+                dataForMonths.Add(runningTotal);
             }
             else
             {
                 // If there's no corresponding month, set the value to 0 or any default value as needed.
-                dataForMonths.Add(0.0);
+                dataForMonths.Add(runningTotal);
             }
         }
 
