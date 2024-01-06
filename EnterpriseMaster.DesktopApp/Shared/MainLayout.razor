@@ -81,7 +81,7 @@ else
                     <li><a class="link_name" href="#">Dashboard</a></li>
                 </ul>
             </li>
-            @if (Config.UserRoles.Contains((int)StatusForRoles.PurchaseOrders))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.PurchaseOrders) && Config.SubscriptionId == 1 || Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/orders">
@@ -93,7 +93,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.Finance))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Finance) && Config.SubscriptionId == 2)
             {
                 <li>
                     <a href="/finance">
@@ -105,7 +105,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.CreateOffers))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.CreateOffers) && Config.SubscriptionId == 1 || Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/offers">
@@ -117,7 +117,7 @@ else
                     </ul>
                 </li> 
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.Inventory))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Inventory) && Config.SubscriptionId == 1 || Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/inventory">
@@ -129,7 +129,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.Invoices))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Invoices) && Config.SubscriptionId == 1 || Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/invoices">
@@ -141,7 +141,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.SalesOrders))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.SalesOrders) && Config.SubscriptionId == 1 || Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/sales">
@@ -153,7 +153,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.Analytics))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Analytics) && Config.SubscriptionId == 2)
             {
                 <li>
                     <a href="/analytics">
@@ -165,7 +165,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.HumanResources))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.HumanResources) && Config.SubscriptionId == 2)
             {
                 <li>
                     <a href="/hr">
@@ -177,7 +177,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.Production))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Production) && Config.SubscriptionId == 2)
             {
                 <li>
                     <a href="/production">
@@ -189,7 +189,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.Accounting))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.Accounting) && Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/accounting">
@@ -201,7 +201,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.CustomerData))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.CustomerData) && Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/customerdata">
@@ -213,7 +213,7 @@ else
                     </ul>
                 </li>
             }
-            @if (Config.UserRoles.Contains((int)StatusForRoles.SalesActivities))
+            @if (Config.UserRoles.Contains((int)StatusForRoles.SalesActivities) && Config.SubscriptionId == 2 || Config.SubscriptionId == 3)
             {
                 <li>
                     <a href="/salesactivities">

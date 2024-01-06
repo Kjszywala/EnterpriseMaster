@@ -1622,7 +1622,6 @@
 
     private BarChart productionThisMonthChart;
     private LineChart productionOverallChart;
-    private LineChart productionQuantityChart;
 
     private async Task ProductionThisMonthChart()
     {
@@ -1726,7 +1725,7 @@
             {
                 new LineChartDataset()
                 {
-                    Label = "Quantity Sold",
+                    Label = "Production Overall",
                     Data = tasksCreatedForDays,
                     BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
                     BorderColor = new List<string>{ "rgb(88, 80, 141)" },

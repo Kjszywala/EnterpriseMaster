@@ -46,6 +46,7 @@ namespace EnterpriseMaster
             builder.Services.AddScoped<IQuantityTypesServices, QuantityTypesServices>();
             builder.Services.AddScoped<ISaleCartsServices, SaleCartsServices>();
             builder.Services.AddScoped<IShippersServices, ShippersServices>();
+            builder.Services.AddScoped<IShippersAddressesService, ShippersAddressesService>();
             builder.Services.AddScoped<IShippingAddressesServices, ShippingAddressesServices>();
             builder.Services.AddScoped<ISubscriptionOrdersServices, SubscriptionOrdersServices>();
             builder.Services.AddScoped<ISubscriptionTypesServices, SubscriptionTypesServices>();
@@ -56,6 +57,34 @@ namespace EnterpriseMaster
             builder.Services.AddScoped<IWhatsNewsServices, WhatsNewsServices>();
             builder.Services.AddScoped<ISupportCaseServices, SupportCaseServices>();
             builder.Services.AddScoped<ICaseStatusServices, CaseStatusServices>();
+            builder.Services.AddScoped<ITasksServices, TasksServices>();
+            builder.Services.AddScoped<ITasksStatusesService, TasksStatusesService>();
+            builder.Services.AddScoped<ICompaniesServices, CompaniesServices>();
+            builder.Services.AddScoped<ICompanyAddressServices, CompanyAddressServices>();
+            builder.Services.AddScoped<IEmployeeAccessesServices, EmployeeAccessesService>();
+            builder.Services.AddScoped<ISalesOrdersServices, SalesOrderServices>();
+            builder.Services.AddScoped<IPurchaseOrdersServices, PurchaseOrderServices>();
+            builder.Services.AddScoped<ICustomerAddressesService, CustomerAddressesServices>();
+            builder.Services.AddScoped<IOfferServices, OfferServices>();
+            builder.Services.AddScoped<IInvoiceItemService, InvoiceItemService>();
+            builder.Services.AddScoped<IInvoiceStatusService, InvoiceStatusServices>();
+            builder.Services.AddScoped<IProductionOrderService, ProductionOrderService>();
+            builder.Services.AddScoped<IProductionOrderStatusService, ProductionOrderStatusService>();
+            builder.Services.AddScoped<IRefudsServices, RefundServices>();
+            builder.Services.AddScoped<IReturnServices, ReturnServices>();
+            builder.Services.AddScoped<IReturnStatusService, ReturnStatusService>();
+            builder.Services.AddScoped<IPaymentServices, PaymentServices>();
+            builder.Services.AddScoped<IPartsServices, PartsServices>();
+            builder.Services.AddScoped<IPaymentStatusService, PaymentStatusService>();
+            builder.Services.AddScoped<IPurchaseOrderReportsService, PurchaseOrderReportsService>();
+            builder.Services.AddScoped<IRolesService, RolesService>();
+            builder.Services.AddScoped<IUserRolesService, UserRolesService>();
+            builder.Services.AddScoped<IEmployeeRolesService, EmployeeRolesService>();
+            builder.Services.AddScoped<IPaymentReportsServices, PaymentReportsServices>();
+            builder.Services.AddScoped<IInventoryReportsService, InventoryReportsService>();
+            builder.Services.AddScoped<ICustomerFeedbacksService, CustomerFeedbacksService>();
+            builder.Services.AddScoped<IJobOffersServices, JobOffersServices>();
+            builder.Services.AddScoped<ITrainingsServices, TrainingsServices>();
 
             // Add logic injection here
             builder.Services.AddScoped<IAuthenticationLogic, AuthenticationLogic>();
