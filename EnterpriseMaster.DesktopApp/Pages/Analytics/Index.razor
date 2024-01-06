@@ -3,7 +3,9 @@
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.FinanceServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.Inventory;
 @using EnterpriseMaster.DesktopApp.Data.Services.OrdersServices;
+@using EnterpriseMaster.DesktopApp.Data.Services.ProductionServices;
 @using EnterpriseMaster.DesktopApp.Data.Services.SalesServices;
 @using EnterpriseMaster.DesktopApp.Helpers.Enums;
 @inherits MainLayout
@@ -11,6 +13,8 @@
 @inject OrderService orderServices
 @inject FinanceService financeService
 @inject SalesService salesService
+@inject InventoryService inventoryService
+@inject ProductionService productionService
 
 <Tabs EnableFadeEffect="true">
     <Tab>
@@ -138,7 +142,7 @@
                     <div class="dashbordContent">
                         <div class="task-list">
                             <div class="dashboardTitle">
-                                <h3>All Payments</h3>
+                                <h3>All Spendings</h3>
                                 <div class="spacer"></div>
                                 <div class="buttonsDiv">
                                 </div>
@@ -151,7 +155,7 @@
                 <div class="dashboardBox2">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>Completed Sales Orders</h3>
+                            <h3>Completed Sales Orders This Month</h3>
                         </div>
                         <hr class="dashboardHr" style="color:black;" />
                         <BarChart @ref="barChartSalesOrdersCompleted" Class="mb-4" Width="850" />
@@ -169,7 +173,7 @@
                 <div class="dashboardBox4">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>All Spendings</h3>
+                            <h3>All Spendings By Quantity</h3>
                             <div class="spacer"></div>
                             <div class="buttonsDiv">
                             </div>
@@ -187,50 +191,39 @@
         </TitleTemplate>
         <Content>
             <br />
-            <div class="dashboardGrid">
-                <div class="dashboardBox1">
+            <div style="display:flex; height: 55vh;">
+                <div class="dashboardBox1" style="margin: 8px;">
                     <div class="dashbordContent">
                         <div class="task-list">
                             <div class="dashboardTitle">
-                                <h3>Tasks List For Today</h3>
+                                <h3>All Products In Stock</h3>
                                 <div class="spacer"></div>
                                 <div class="buttonsDiv">
                                 </div>
                             </div>
                             <hr class="dashboardHr" style="color:black;" />
-
+                            <LineChart @ref="inventoryStockLineChart" Class="mb-4" Width="850" />
                         </div>
                     </div>
                 </div>
-                <div class="dashboardBox2">
+                <div class="dashboardBox2" style="margin: 8px;">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>Completed Tasks</h3>
+                            <h3>Active Products Manufacturing</h3>
                         </div>
                         <hr class="dashboardHr" style="color:black;" />
+                        <LineChart @ref="inventoryProductsLineChart" Class="mb-4" Width="850" />
 
                     </div>
                 </div>
-                <div class="dashboardBox3">
-                    <div class="dashbordContent">
-                        <div class="dashboardTitle">
-                            <h3>Tasks in Progress</h3>
-                        </div>
-                        <hr class="dashboardHr" style="color:black;" />
-
+            </div>
+            <div style="display: flex;justify-content: center;align-items: center; margin: 25px;">
+                <div class="dashbordContent">
+                    <div class="dashboardTitle">
+                        <h3>Purchase Order Reports Created</h3>
                     </div>
-                </div>
-                <div class="dashboardBox4">
-                    <div class="dashbordContent">
-                        <div class="dashboardTitle">
-                            <h3>What's new</h3>
-                            <div class="spacer"></div>
-                            <div class="buttonsDiv">
-                            </div>
-                        </div>
-                        <hr class="dashboardHr" style="color:black;" />
-
-                    </div>
+                    <hr class="dashboardHr" style="color:black;" />
+                    <LineChart @ref="inventoryReportsLineChart" Class="mb-4" Width="850" />
                 </div>
             </div>
         </Content>
@@ -246,44 +239,44 @@
                     <div class="dashbordContent">
                         <div class="task-list">
                             <div class="dashboardTitle">
-                                <h3>Tasks List For Today</h3>
+                                <h3>Orders This Month</h3>
                                 <div class="spacer"></div>
                                 <div class="buttonsDiv">
                                 </div>
                             </div>
                             <hr class="dashboardHr" style="color:black;" />
-
+                            <BarChart @ref="salesOrdersThisMonthChart" Class="mb-4" Width="850" />
                         </div>
                     </div>
                 </div>
                 <div class="dashboardBox2">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>Completed Tasks</h3>
+                            <h3>Quantity Sold</h3>
                         </div>
                         <hr class="dashboardHr" style="color:black;" />
-
+                        <LineChart @ref="salesAllRejectedOrdersLineChart" Class="mb-4" Width="850" />
                     </div>
                 </div>
                 <div class="dashboardBox3">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>Tasks in Progress</h3>
+                            <h3>Completed Orders</h3>
                         </div>
                         <hr class="dashboardHr" style="color:black;" />
-
+                        <LineChart @ref="salesCompletedOrdersLineChart" Class="mb-4" Width="850" />
                     </div>
                 </div>
                 <div class="dashboardBox4">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>What's new</h3>
+                            <h3>All Orders</h3>
                             <div class="spacer"></div>
                             <div class="buttonsDiv">
                             </div>
                         </div>
                         <hr class="dashboardHr" style="color:black;" />
-
+                        <LineChart @ref="salesAllOrdersLineChart" Class="mb-4" Width="850" />
                     </div>
                 </div>
             </div>
@@ -300,44 +293,23 @@
                     <div class="dashbordContent">
                         <div class="task-list">
                             <div class="dashboardTitle">
-                                <h3>Tasks List For Today</h3>
+                                <h3>Production This Month</h3>
                                 <div class="spacer"></div>
                                 <div class="buttonsDiv">
                                 </div>
                             </div>
                             <hr class="dashboardHr" style="color:black;" />
-
+                            <BarChart @ref="productionThisMonthChart" Class="mb-4" />
                         </div>
                     </div>
                 </div>
                 <div class="dashboardBox2">
                     <div class="dashbordContent">
                         <div class="dashboardTitle">
-                            <h3>Completed Tasks</h3>
+                            <h3>Production Overall</h3>
                         </div>
                         <hr class="dashboardHr" style="color:black;" />
-
-                    </div>
-                </div>
-                <div class="dashboardBox3">
-                    <div class="dashbordContent">
-                        <div class="dashboardTitle">
-                            <h3>Tasks in Progress</h3>
-                        </div>
-                        <hr class="dashboardHr" style="color:black;" />
-
-                    </div>
-                </div>
-                <div class="dashboardBox4">
-                    <div class="dashbordContent">
-                        <div class="dashboardTitle">
-                            <h3>What's new</h3>
-                            <div class="spacer"></div>
-                            <div class="buttonsDiv">
-                            </div>
-                        </div>
-                        <hr class="dashboardHr" style="color:black;" />
-
+                        <LineChart @ref="productionOverallChart" Class="mb-4" Width="850" />
                     </div>
                 </div>
             </div>
@@ -367,6 +339,15 @@
             await RenderAllSpendingsAsync();
             await RenderAllSalesProfitAsync();
             await RenderSalesOrdersCompletedAsync();
+            await RenderAllInventoryInStockAsync();
+            await RenderAllInventoryProductsAsync();
+            await RenderAllInventoryReportsAsync();
+            await SalesOrdersThisMonthChart();
+            await RenderAllQuantitySalesOrdersAsync();
+            await RenderAllCompletedSalesOrdersAsync();
+            await RenderAllSalesOrdersAsync();
+            await ProductionThisMonthChart();
+            await RenderAllProductionOveralAsync();
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -942,7 +923,7 @@
 
     private async Task RenderAllSpendingsAsync()
     {
-        var ordersCompleted = (await financeService.GetAllPaymentsAsync()).Where(item => item.PaymentStatuId == (int)StatusForPayment.Completed).ToList();
+        var ordersCompleted = (await orderServices.GetAllPurchaseOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
 
         // Find the first created task day
         var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
@@ -958,8 +939,9 @@
         foreach (var dayLabel in listOfDays)
         {
             // Count the number of tasks created on each day
-            int tasksCreatedForDay = ordersCompleted
-                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Sum(item => item.Quantity);
 
             cumulativeTaskCount += tasksCreatedForDay;
 
@@ -1020,6 +1002,7 @@
         {
             // Count the number of tasks created on each day
             int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
                 .Sum(item => item.PricePaid);
 
             cumulativeTaskCount += tasksCreatedForDay;
@@ -1139,7 +1122,78 @@
         {
             // Count the number of tasks created on each day
             int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
                 .Sum(item => item.PricePaid);
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+        {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "Spendings",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+        };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await allSpendings.InitializeAsync(data, options);
+    }
+
+    #endregion
+
+    #region Inventory
+
+    private LineChart inventoryStockLineChart;
+    private LineChart inventoryReportsLineChart;
+    private LineChart inventoryProductsLineChart;
+
+    private async Task RenderAllInventoryInStockAsync()
+    {
+        var ordersCompleted = await inventoryService.GetAllProductsAsync();
+
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Sum(item => item.UnitsInStock);
 
             cumulativeTaskCount += tasksCreatedForDay;
 
@@ -1153,7 +1207,7 @@
             {
                 new LineChartDataset()
                 {
-                    Label = "Spendings",
+                    Label = "Profit From Sales",
                     Data = tasksCreatedForDays,
                     BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
                     BorderColor = new List<string>{ "rgb(88, 80, 141)" },
@@ -1178,20 +1232,527 @@
 
         options.Scales.X.Title.Display = true;
 
-        await allSpendings.InitializeAsync(data, options);
+        await inventoryStockLineChart.InitializeAsync(data, options);
     }
 
-    #endregion
+    private async Task RenderAllInventoryProductsAsync()
+    {
+        var ordersCompleted = await inventoryService.GetAllProductsAsync();
 
-    #region Inventory
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Count();
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "Profit From Sales",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await inventoryProductsLineChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllInventoryReportsAsync()
+    {
+        var ordersCompleted = await inventoryService.GetAllReportsAsync();
+
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Count();
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "Profit From Sales",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await inventoryReportsLineChart.InitializeAsync(data, options);
+    }
 
     #endregion
 
     #region Sales
 
+    private BarChart salesOrdersThisMonthChart;
+    private LineChart salesAllRejectedOrdersLineChart;
+    private LineChart salesCompletedOrdersLineChart;
+    private LineChart salesAllOrdersLineChart;
+
+    private async Task SalesOrdersThisMonthChart()
+    {
+        // Get the current month and year
+        DateTime currentDate = DateTime.Now;
+        int currentMonth = currentDate.Month;
+        int currentYear = currentDate.Year;
+
+        // Calculate the number of days in the current month
+        int daysInCurrentMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+        var listOfDays = new List<string>();
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            listOfDays.Add(i.ToString());
+        }
+
+        var list = (await salesService.GetAllSalesOrdersAsync()).Where(
+            item => item.CreationDate.Year == DateTime.Now.Year &&
+            item.CreationDate.Month == DateTime.Now.Month).ToList();
+
+        // Initialize a list to store daily order counts
+        var completedOrderQuantities = new List<double>();
+
+        // Populate completed order quantities based on each day of the month
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = list
+                .Count(item => item.CreationDate.Day == i);
+
+            completedOrderQuantities.Add(tasksCreatedForDay);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new BarChartDataset()
+                {
+                    Label = "Orders This Month",
+                    Data = completedOrderQuantities,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }
+            }
+            };
+
+        var options = new BarChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await salesOrdersThisMonthChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllQuantitySalesOrdersAsync()
+    {
+        var ordersCompleted = (await salesService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed);
+
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Sum(item => item.Quantity);
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "Quantity Sold",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await salesAllRejectedOrdersLineChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllCompletedSalesOrdersAsync()
+    {
+        var ordersCompleted = (await salesService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
+
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Count();
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "Completed Orders",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await salesCompletedOrdersLineChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllSalesOrdersAsync()
+    {
+        var ordersCompleted = await salesService.GetAllSalesOrdersAsync();
+
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Count();
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "All Orders",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await salesAllOrdersLineChart.InitializeAsync(data, options);
+    }
+
     #endregion
 
     #region Production
+
+    private BarChart productionThisMonthChart;
+    private LineChart productionOverallChart;
+    private LineChart productionQuantityChart;
+
+    private async Task ProductionThisMonthChart()
+    {
+        // Get the current month and year
+        DateTime currentDate = DateTime.Now;
+        int currentMonth = currentDate.Month;
+        int currentYear = currentDate.Year;
+
+        // Calculate the number of days in the current month
+        int daysInCurrentMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+        var listOfDays = new List<string>();
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            listOfDays.Add(i.ToString());
+        }
+
+        var ordersInThisMonth = (await productionService.GetAllProductionOrdersAsync()).Where(
+            item => item.ModificationDate.Year == DateTime.Now.Year &&
+            item.ModificationDate.Month == DateTime.Now.Month).ToList();
+
+        // Initialize a list to store daily order counts
+        var completedOrderQuantities = new List<double>();
+
+        // Populate completed order quantities based on each day of the month
+        for (int i = 1; i <= daysInCurrentMonth; i++)
+        {
+            // Sum the quantities of completed orders with order status "Complete" for each day
+            double quantityCompletedForDay = ordersInThisMonth
+                .Where(item => item.ModificationDate.Day == i && item.ProductionOrderStatusId == (int)StatusForProductionOrder.Completed)
+                .Sum(item => item.Quantity);
+
+            completedOrderQuantities.Add(quantityCompletedForDay);
+        }
+
+        var data = new ChartData
+        {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new BarChartDataset()
+                {
+                    Label = DateTime.Now.ToString("MMMM"),
+                    Data = completedOrderQuantities,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }
+            }
+        };
+
+        var options = new BarChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Text = "Items produced dailey";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Text = "Days In Current Month";
+        options.Scales.X.Title.Display = true;
+
+        options.Scales.Y.Title.Text = "Items Done";
+        options.Scales.Y.Title.Display = true;
+
+        await productionThisMonthChart.InitializeAsync(data, options);
+    }
+
+    private async Task RenderAllProductionOveralAsync()
+    {
+        var ordersCompleted = await productionService.GetAllProductionOrdersAsync();
+
+        // Find the first created task day
+        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
+
+        // Create a list of days starting from the first created task day
+        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                            .ToList();
+
+        // Initialize a list to store daily order counts
+        var tasksCreatedForDays = new List<double>();
+        int cumulativeTaskCount = 0;
+        foreach (var dayLabel in listOfDays)
+        {
+            // Count the number of tasks created on each day
+            int tasksCreatedForDay = (int)ordersCompleted
+                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                .Sum(item => item.Quantity);
+
+            cumulativeTaskCount += tasksCreatedForDay;
+
+            tasksCreatedForDays.Add(cumulativeTaskCount);
+        }
+
+        var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+            {
+                new LineChartDataset()
+                {
+                    Label = "Quantity Sold",
+                    Data = tasksCreatedForDays,
+                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    BorderWidth = new List<double>{2},
+                    HoverBorderWidth = new List<double>{4},
+                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                    PointRadius = new List<int>{0}, // hide points
+                    PointHoverRadius = new List<int>{4}
+                }
+            }
+            };
+
+        var options = new LineChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font.Size = 20;
+
+        options.Responsive = true;
+
+        options.Scales.X.Title.Display = true;
+
+        await productionOverallChart.InitializeAsync(data, options);
+    }
 
     #endregion
 }

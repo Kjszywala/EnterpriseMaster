@@ -44,7 +44,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
-                return (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return products;
             }
             catch (Exception e)
             {
@@ -174,6 +174,19 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             try
             {
                 return (await inventoryReportsService.AddAsync(reports));
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<List<InventoryReports>> GetAllReportsAsync()
+        {
+            try
+            {
+                return (await inventoryReportsService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }
             catch (Exception e)
             {
