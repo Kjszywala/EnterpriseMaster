@@ -1,6 +1,5 @@
 ﻿using EnterpriseMaster.DbServices.Interfaces;
 using EnterpriseMaster.DbServices.Models.Database;
-using EnterpriseMaster.DbServices.Services;
 using EnterpriseMaster.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +11,29 @@ namespace EnterpriseMaster.Controllers
         private IUsersAdressesServices usersAdressesService;
         private IErrorLogsServices errorLogsService;
         private ISubscriptionTypesServices subscriptionTypesService;
+        private ICompaniesServices companiesServices;
+        private ICompanyAddressServices companyAddressServices;
+        private IEmployeesServices employeesServices;
+        private IEmployeeAddressesServices employeeAddressesServices;
 
         public ProfileController(
             IUsersServices _usersService, 
             IUsersAdressesServices _usersAdressesService, 
             IErrorLogsServices _errorLogsService,
-            ISubscriptionTypesServices _subscriptionTypesService)
+            ISubscriptionTypesServices _subscriptionTypesService,
+            ICompaniesServices _companiesServices,
+            ICompanyAddressServices _companyAddressServices,
+            IEmployeesServices _employeesServices,
+            IEmployeeAddressesServices _employeeAddressesServices)
         {
             usersService = _usersService;
             usersAdressesService = _usersAdressesService;
             subscriptionTypesService = _subscriptionTypesService;
             errorLogsService = _errorLogsService;
+            companyAddressServices = _companyAddressServices;
+            companiesServices = _companiesServices;
+            employeesServices = _employeesServices;
+            employeeAddressesServices = _employeeAddressesServices;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -152,6 +163,122 @@ namespace EnterpriseMaster.Controllers
                     model.ProfileImage = currentUser.Image;
                 }
 
+                var companyAddressToAdd = new CompanyAddress()
+                {
+                    City = model.City,
+                    ModificationDate = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    Country = model.Country,
+                    HouseNumber = model.HouseNumber,
+                    Street = model.StreetAddress,
+                    PostCode = model.PostalCode,
+                    IsActive = true,
+                };
+
+                var addressCompany = (await companyAddressServices.GetAllAsync())
+                    .Where(item => item.Street == companyAddressToAdd.Street)
+                    .Where(item => item.HouseNumber == companyAddressToAdd.HouseNumber)
+                    .Where(item => item.PostCode == companyAddressToAdd.PostCode)
+                    .Where(item => item.Country == companyAddressToAdd.Country)
+                    .FirstOrDefault();
+
+                var company = new Companies();
+
+                if (addressCompany == null)
+                {
+                    await companyAddressServices.AddAsync(companyAddressToAdd);
+
+                    addressCompany = (await companyAddressServices.GetAllAsync())
+                        .Where(item => item.Street == companyAddressToAdd.Street)
+                        .Where(item => item.HouseNumber == companyAddressToAdd.HouseNumber)
+                        .Where(item => item.PostCode == companyAddressToAdd.PostCode)
+                        .Where(item => item.Country == companyAddressToAdd.Country)
+                        .FirstOrDefault();
+
+                    company = new Companies()
+                    {
+                        CompanyAddressId = addressCompany.Id,
+                        ContactEmail = model.Email,
+                        CreationDate = DateTime.Now,
+                        Description = model.BusinessArea,
+                        ModificationDate = DateTime.Now,
+                        Name = model.CompanyName,
+                        IsActive = true,
+                    };
+                }
+                else
+                {
+                    company = new Companies()
+                    {
+                        CompanyAddressId = addressCompany.Id,
+                        ContactEmail = model.Email,
+                        CreationDate = DateTime.Now,
+                        Description = model.BusinessArea,
+                        ModificationDate = DateTime.Now,
+                        Name = model.CompanyName,
+                        IsActive = true,
+                    };
+                }
+                var companyUser = (await companiesServices.GetAllAsync()).FirstOrDefault(item => item.Name == model.CompanyName);
+                if (companyUser == null)
+                {
+                    await companiesServices.AddAsync(company);
+                    companyUser = (await companiesServices.GetAllAsync()).FirstOrDefault(item => item.Name == model.CompanyName);
+                }
+
+                var employeeAddressToAdd = new EmployeeAddresses()
+                {
+                    City = model.City,
+                    ModificationDate = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    Country = model.Country,
+                    HouseNumber = model.HouseNumber,
+                    Street = model.StreetAddress,
+                    PostCode = model.PostalCode,
+                    IsActive = true,
+                };
+
+                var addressEmployee = (await employeeAddressesServices.GetAllAsync())
+                        .Where(item => item.Street == employeeAddressToAdd.Street)
+                        .Where(item => item.HouseNumber == employeeAddressToAdd.HouseNumber)
+                        .Where(item => item.PostCode == employeeAddressToAdd.PostCode)
+                        .Where(item => item.Country == employeeAddressToAdd.Country)
+                        .FirstOrDefault();
+                if(addressEmployee == null)
+                {
+                    await employeeAddressesServices.AddAsync(employeeAddressToAdd);
+
+                    addressEmployee = (await employeeAddressesServices.GetAllAsync())
+                        .Where(item => item.Street == employeeAddressToAdd.Street)
+                        .Where(item => item.HouseNumber == employeeAddressToAdd.HouseNumber)
+                        .Where(item => item.PostCode == employeeAddressToAdd.PostCode)
+                        .Where(item => item.Country == employeeAddressToAdd.Country)
+                        .FirstOrDefault();
+                }
+
+                var employeeToAdd = new Employees()
+                {
+                    DateOfBirth = model.DateOfBirth,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    Image = model.ProfileImage,
+                    ModificationDate = DateTime.Now,
+                    Position = model.Position,
+                    EmployeeAddressId = addressEmployee.Id,
+                    IsActive = true,
+                    EmployeeAccessId = 16,
+                    CompanyId = companyUser.Id,
+                    LastName = model.SecondName,
+                    CreationDate = DateTime.Now,
+                    UserId = currentUserId,
+                    Department = model.BusinessArea
+                };
+                var employee = (await employeesServices.GetAllAsync()).FirstOrDefault(item => item.UserId == currentUserId);
+                if(employee == null)
+                {
+                    await employeesServices.AddAsync(employeeToAdd);
+                }
+
                 var userAddressToAdd = new UsersAdresses()
                 {
                     City = model.City,
@@ -186,7 +313,8 @@ namespace EnterpriseMaster.Controllers
                     Position = model.Position,
                     SecondName = model.SecondName,
                     UserAddressId = addressId,
-                    IsActive = true
+                    IsActive = true,
+                    CompaniesId = companyUser.Id
                 };
 
                 if (model.Password == null)
