@@ -39,7 +39,7 @@ namespace EnterpriseMaster.Controllers
 
         public async Task<IActionResult> DownloadAsync()
         {
-            string path = "C:\\Users\\kamil\\Downloads\\maui\\EnterpriseMaster.DesktopApp_1.0.0.0_Debug_Test\\EnterpriseMaster.DesktopApp_1.0.0.0_x64_Debug.msix";
+            string path = "C:\\Users\\kamil\\Downloads\\maui\\EnterpriseMaster.DesktopApp_1.1.1.0_Debug_Test\\EnterpriseMaster.DesktopApp_1.1.1.0_x64_Debug.msix";
             // Check if the file exists
             if (System.IO.File.Exists(path))
             {
@@ -50,7 +50,7 @@ namespace EnterpriseMaster.Controllers
                 var contentType = "application/octet-stream"; // Use the appropriate content type
 
                 // Provide a suggested file name (optional)
-                var fileName = "EnterpriseMaster.DesktopApp_1.0.0.0_x64_Debug.msix";
+                var fileName = "EnterpriseMaster.DesktopApp_1.1.1.0_x64_Debug.msix";
 
                 // Return the file for download
                 return File(fileContent, contentType, fileName);
