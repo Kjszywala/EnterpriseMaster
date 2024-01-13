@@ -93,6 +93,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
             try
             {
                 var orders = (await productionOrderService.GetAllAsync())
+                    .Where(item => item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -124,7 +125,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
         {
             try
             {
-                var productionOrder = (await productionOrderService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var productionOrder = (await productionOrderService.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return productionOrder;
             }
@@ -169,6 +170,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.ProductionServices
         {
             try
             {
+                order.Company = Config.CompanyId;
                 var productionOrder = (await productionOrderService.AddAsync(order));
 
                 return productionOrder;

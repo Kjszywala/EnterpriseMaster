@@ -93,7 +93,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var parts = (await partsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var parts = (await partsServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 var partsViewModel = new List<PartsViewModel>();
                 foreach (var item in parts)
@@ -125,7 +125,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var parts = (await partsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var parts = (await partsServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return parts;
             }
@@ -170,6 +170,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
+                part.Company = Config.CompanyId;
                 var parts = (await partsServices.AddAsync(part));
 
                 return parts;
@@ -204,6 +205,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
+                report.Company = Config.CompanyId;
                 var purchaseOrdersReports = (await purchaseOrderReportsService.AddAsync(report));
 
                 return purchaseOrdersReports;
@@ -224,7 +226,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             try
             {
                 var purchaseOrders = (await purchaseOrdersServices.GetAllAsync())
-                    .Where(item => item.IsActive == true)
+                    .Where(item => item.IsActive == true && item.CompanyId == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -263,6 +265,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             try
             {
                 var purchaseOrders = (await purchaseOrdersServices.GetAllAsync())
+                    .Where(item => item.CompanyId == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -306,7 +309,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
             try
             {
                 var purchaseOrders = (await purchaseOrdersServices.GetAllAsync())
-                    .Where(item => item.ModificationDate > dateFrom && item.ModificationDate < dateTo)
+                    .Where(item => item.ModificationDate > dateFrom && item.ModificationDate < dateTo && item.CompanyId == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -349,7 +352,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.OrderStatuseId == (int)StatusForOrder.Open).ToList();
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync())
+                    .Where(item => item.IsActive == true && 
+                        item.OrderStatuseId == (int)StatusForOrder.Open &&
+                        item.CompanyId == Config.CompanyId)
+                    .ToList();
 
                 return purchaseOrders;
             }
@@ -364,7 +371,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).ToList();
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.CompanyId == Config.CompanyId).ToList();
 
                 return purchaseOrders;
             }
@@ -379,7 +386,11 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.OrderStatuseId == (int)StatusForOrder.InProgress).ToList();
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync())
+                    .Where(item => item.IsActive == true && 
+                        item.OrderStatuseId == (int)StatusForOrder.InProgress && 
+                        item.CompanyId == Config.CompanyId)
+                    .ToList();
 
                 return purchaseOrders;
             }
@@ -424,6 +435,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
+                order.CompanyId = Config.CompanyId;
                 var purchaseOrders = (await purchaseOrdersServices.AddAsync(order));
 
                 return purchaseOrders;
@@ -458,7 +470,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var salesOrder = (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var salesOrder = (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return salesOrder;
             }
@@ -503,6 +515,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
+                order.Company = Config.CompanyId;
                 var salesOrder = (await salesOrdersServices.AddAsync(order));
 
                 return salesOrder;
@@ -537,7 +550,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var employees = (await employeeService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var employees = (await employeeService.GetAllAsync()).Where(item => item.IsActive == true && item.CompanyId == Config.CompanyId).ToList();
 
                 return employees;
             }
@@ -729,7 +742,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var shippers = (await shippersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var shippers = (await shippersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return shippers;
             }
@@ -842,7 +855,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var suppliers = (await suppliersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var suppliers = (await suppliersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 var supplierViewModelList = new List<SuppliersViewModel>();
                 foreach (var item in suppliers)
@@ -918,6 +931,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
+                supplier.Company = Config.CompanyId;
                 var sup = (await suppliersServices.AddAsync(supplier));
 
                 return sup;
@@ -952,7 +966,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
-                var productionOrder = (await productionOrderService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var productionOrder = (await productionOrderService.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return productionOrder;
             }
@@ -982,6 +996,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OrdersServices
         {
             try
             {
+                order.Company = Config.CompanyId;
                 var productionOrder = (await productionOrderService.AddAsync(order));
 
                 return productionOrder;

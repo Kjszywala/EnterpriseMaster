@@ -62,7 +62,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
             try
             {
                 var invoices = (await invoicesServices.GetAllAsync())
-                    .Where(item => item.IsActive == true)
+                    .Where(item => item.IsActive == true && item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -97,7 +97,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
-                return (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -123,6 +123,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
+                invoice.Company = Config.CompanyId;
                 return (await invoicesServices.AddAsync(invoice));
             }
             catch (Exception e)
@@ -166,7 +167,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
-                return (await invoiceItemService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await invoiceItemService.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -192,6 +193,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
+                invoiceItem.Company = Config.CompanyId;
                 return (await invoiceItemService.AddAsync(invoiceItem));
             }
             catch (Exception e)
@@ -265,7 +267,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
-                return (await customerInformationsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await customerInformationsServices.GetAllAsync()).Where(item => item.IsActive == true && item.CompanyId == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -325,7 +327,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
-                return (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -355,7 +357,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.InvoiceServices
         {
             try
             {
-                return (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {

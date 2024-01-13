@@ -33,7 +33,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices
         {
             try
             {
-                return (await jobOffersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await jobOffersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -59,6 +59,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices
         {
             try
             {
+                jobOffer.Company = Config.CompanyId;
                 return (await jobOffersServices.AddAsync(jobOffer));
             }
             catch (Exception e)
@@ -102,7 +103,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices
         {
             try
             {
-                return (await trainingsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await trainingsServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -128,6 +129,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.HumanResourcesServices
         {
             try
             {
+                training.Company = Config.CompanyId;
                 return (await trainingsServices.AddAsync(training));
             }
             catch (Exception e)

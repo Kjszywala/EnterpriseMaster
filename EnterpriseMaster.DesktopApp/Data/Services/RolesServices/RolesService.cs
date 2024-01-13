@@ -102,7 +102,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.RolesServices
         {
             try
             {
-                return (await userRolesService.GetAllAsync()).ToList();
+                return (await userRolesService.GetAllAsync()).Where(item => item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -128,6 +128,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.RolesServices
         {
             try
             {
+                roles.Company = Config.CompanyId;
                 return (await userRolesService.AddAsync(roles));
             }
             catch (Exception e)

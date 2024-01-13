@@ -58,6 +58,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
+                report.Company = Config.CompanyId;
                 return (await paymentReportsServices.AddAsync(report));
             }
             catch (Exception e)
@@ -106,7 +107,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             try
             {
                 var paymentList = (await paymentServices.GetAllAsync())
-                    .Where(item => item.IsActive == true)
+                    .Where(item => item.IsActive == true && item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -143,7 +144,9 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
             try
             {
                 var paymentList = (await paymentServices.GetAllAsync())
-                    .Where(item => item.ModificationDate > dateFrom && item.ModificationDate < dateTo)
+                    .Where(item => item.ModificationDate > dateFrom && 
+                        item.ModificationDate < dateTo && 
+                        item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -177,7 +180,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
 
         public async Task<List<PaymentsMonthly>> CalculateMonthlySumAsync()
         {
-            var payments = (await GetAllPaymentsAsync()).Where(item => item.ModificationDate.Year == DateTime.Now.Year);
+            var payments = (await GetAllPaymentsAsync()).Where(item => item.ModificationDate.Year == DateTime.Now.Year && item.Company == Config.CompanyId);
 
             var monthlySum = payments
                 .GroupBy(payment => new { Year = payment.ModificationDate.Year, Month = payment.ModificationDate.Month })
@@ -196,7 +199,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
 
         public async Task<List<double>> CalculateMonthlyTotalAmountsAsync()
         {
-            var payments = await GetAllPaymentsAsync();
+            var payments = (await GetAllPaymentsAsync()).Where(item => item.Company == Config.CompanyId);
 
             var monthlyTotalAmounts = payments
                 .GroupBy(payment => new { Year = payment.ModificationDate.Year, Month = payment.ModificationDate.Month })
@@ -211,7 +214,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
-                return (await paymentServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await paymentServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -237,6 +240,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
+                payment.Company = Config.CompanyId;
                 return (await paymentServices.AddAsync(payment));
             }
             catch (Exception e)
@@ -310,7 +314,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
-                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var purchaseOrders = (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return purchaseOrders;
             }
@@ -344,7 +348,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
-                var salesOrder = (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var salesOrder = (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return salesOrder;
             }
@@ -378,7 +382,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.FinanceServices
         {
             try
             {
-                return (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {

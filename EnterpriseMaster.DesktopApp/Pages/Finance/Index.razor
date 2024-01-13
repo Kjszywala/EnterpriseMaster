@@ -466,11 +466,14 @@
     {
         currentYear = DateTime.Now.Year.ToString();
         var payments = await financeService.GetAllPaymentsAsync();
-        totalSpendings = (await this.CalculateTotalSpendingsAsync(payments));
-        averageMonthlySpendings = (await this.CalculateAverageMonthlySpendingsAsync(payments));
-        spendingChangeFromPreviousPeriod = (await this.CalculateSpendingChangeFromPreviousMonthAsync(payments));
-        budgetVsActualSpending = (await this.CalculateBudgetVsActualSpendingAsync(payments, 100000m));
-        biggestSinglePurchase = (await this.FindBiggestSinglePurchaseAsync(payments));
+        if(payments.Count > 0)
+        {
+            totalSpendings = (await this.CalculateTotalSpendingsAsync(payments));
+            averageMonthlySpendings = (await this.CalculateAverageMonthlySpendingsAsync(payments));
+            spendingChangeFromPreviousPeriod = (await this.CalculateSpendingChangeFromPreviousMonthAsync(payments));
+            budgetVsActualSpending = (await this.CalculateBudgetVsActualSpendingAsync(payments, 100000m));
+            biggestSinglePurchase = (await this.FindBiggestSinglePurchaseAsync(payments));
+        }
 
         var monthlyPayments = await financeService.CalculateMonthlySumAsync();
         var colors = ColorBuilder.CategoricalTwelveColors;

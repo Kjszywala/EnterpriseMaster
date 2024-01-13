@@ -53,7 +53,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await purchaseOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -83,7 +83,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await salesOrdersServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -113,7 +113,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await employeesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await employeesServices.GetAllAsync()).Where(item => item.IsActive == true && item.CompanyId == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -143,7 +143,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await productionOrderServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await productionOrderServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -173,7 +173,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await invoicesServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -203,7 +203,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await productsServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -233,7 +233,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await tasksServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await tasksServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -263,7 +263,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.AnalyticsServices
         {
             try
             {
-                return (await offerServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await offerServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {

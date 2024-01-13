@@ -384,6 +384,7 @@
     private List<Employees> employees;
     private List<Employees> employeesList = new List<Employees>();
     private List<UserRoles> rolesList = new List<UserRoles>();
+    private List<Roles> roles = new List<Roles>();
     private Grid<Employees> gridEmployees;
 
     protected async override void OnInitialized()
@@ -391,6 +392,7 @@
         employees = await employeeService.GetEmployeesAsync();
         employeesList = await employeeService.GetEmployeesAsync();
         employeeAccesses = await employeeService.GetEmployeeAccessesAsync();
+        roles = await rolesService.GetAllRolesAsync();
     }
 
     private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)
@@ -711,6 +713,7 @@
                 SubscriptionTypeId = Config.SubscriptionId,
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
                 UserAddressId = fullUserAddress.Id,
+                CompaniesId = Config.CompanyId
             };
 
             if(!await employeeService.AddUserAsync(user))
@@ -743,7 +746,7 @@
 
             if (await employeeService.AddEmployeesAsync(employee))
             {
-                foreach(var item in rolesList)
+                foreach (var item in roles)
                 {
                     await rolesService.AddUserRolesAsync(new UserRoles()
                     {
@@ -753,11 +756,15 @@
                         RoleId = item.Id,
                         UserId = (await employeeService.GetUserBasedOnEmail(employee.Email)).Id,
                         UserRole = false,
+                        Company = Config.CompanyId
                     });
                 }
                 preloadService.Hide();
-                ShowMessage(ToastType.Success, "Success!", "New employee has been added!");
+                ShowMessage(ToastType.Success, "Success!", "New employee has been added!"); 
+                employees = await employeeService.GetEmployeesAsync();
+                employeesList = await employeeService.GetEmployeesAsync();
                 await gridEmployees.RefreshDataAsync();
+                StateHasChanged();
                 return true;
             };
             preloadService.Hide();

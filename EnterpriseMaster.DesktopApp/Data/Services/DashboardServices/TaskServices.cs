@@ -61,6 +61,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             try
             {
                 return (await tasksServices.GetAllAsync())
+                    .Where(item => item.Company == Config.CompanyId)
                     .ToList();
             }
             catch (Exception e)

@@ -30,7 +30,10 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
-                return (await whatsNewsServices.GetAllAsync()).Where(item => item.IsActive == true).OrderByDescending(item => item.ModificationDate).ToList();
+                return (await whatsNewsServices.GetAllAsync())
+                    .Where(item => item.IsActive == true && item.Company == Config.CompanyId)
+                    .OrderByDescending(item => item.ModificationDate)
+                    .ToList();
             }
             catch (Exception e)
             {
@@ -43,6 +46,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
+                whatsNew.Company = Config.CompanyId;
                 var response = await whatsNewsServices.AddAsync(whatsNew);
                 if (response)
                 {

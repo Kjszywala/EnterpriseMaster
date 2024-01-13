@@ -40,6 +40,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
             try
             {
                 var offers = (await offerServices.GetAllAsync())
+                    .Where(item => item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -73,7 +74,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         {
             try
             {
-                return (await offerServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await offerServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {
@@ -99,6 +100,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         {
             try
             {
+                offers.Company = Config.CompanyId;
                 return (await offerServices.AddAsync(offers));
             }
             catch (Exception e)
@@ -142,7 +144,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         {
             try
             {
-                var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }
@@ -170,6 +172,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         {
             try
             {
+                product.Company = Config.CompanyId;
                 return (await productsServices.AddAsync(product));
             }
             catch (Exception e)
@@ -213,7 +216,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.OffersServices
         {
             try
             {
-                var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                var products = (await productsServices.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
 
                 return (await customerInformationsServices.GetAllAsync()).Where(item => item.IsActive == true).ToList();
             }

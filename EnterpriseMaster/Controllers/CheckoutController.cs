@@ -132,6 +132,7 @@ namespace EnterpriseMaster.Controllers
                                 RoleId = item.Id,
                                 UserId = currentUser.Id,
                                 UserRole = true,
+                                Company = currentUser.CompaniesId
                             });
                         }
                     }

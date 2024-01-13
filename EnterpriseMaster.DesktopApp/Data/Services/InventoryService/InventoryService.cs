@@ -40,7 +40,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
             try
             {
                 var products = (await productsServices.GetAllAsync())
-                    .Where(item => item.IsActive == true)
+                    .Where(item => item.IsActive == true && item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
                     .ToList();
 
@@ -70,6 +70,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
         {
             try
             {
+                product.Company = Config.CompanyId;
                 return (await productsServices.AddAsync(product));
             }
             catch (Exception e)
@@ -173,6 +174,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
         {
             try
             {
+                reports.Company = Config.CompanyId;
                 return (await inventoryReportsService.AddAsync(reports));
             }
             catch (Exception e)
@@ -186,7 +188,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.Inventory
         {
             try
             {
-                return (await inventoryReportsService.GetAllAsync()).Where(item => item.IsActive == true).ToList();
+                return (await inventoryReportsService.GetAllAsync()).Where(item => item.IsActive == true && item.Company == Config.CompanyId).ToList();
             }
             catch (Exception e)
             {

@@ -383,50 +383,53 @@
         tasksInThisMonth = (await taskServices.GetAllTasks()).Where(
             item => item.CreationDate.Year == DateTime.Now.Year &&
             item.CreationDate.Month == DateTime.Now.Month).ToList();
-
-        // Initialize a list to store daily order counts
-        var completedOrderQuantities = new List<double>();
-
-        // Populate completed order quantities based on each day of the month
-        for (int i = 1; i <= daysInCurrentMonth; i++)
+        if (tasksInThisMonth.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = tasksInThisMonth
-                .Count(item => item.CreationDate.Day == i);
+            // Initialize a list to store daily order counts
+            var completedOrderQuantities = new List<double>();
 
-            completedOrderQuantities.Add(tasksCreatedForDay);
-        }
+            // Populate completed order quantities based on each day of the month
+            for (int i = 1; i <= daysInCurrentMonth; i++)
+            {
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = tasksInThisMonth
+                    .Count(item => item.CreationDate.Day == i);
 
-        var data = new ChartData
-            {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new BarChartDataset()
-                {
-                    Label = DateTime.Now.ToString("MMMM"),
-                    Data = completedOrderQuantities,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    CategoryPercentage = 0.8,
-                    BarPercentage = 1,
-                }
+                completedOrderQuantities.Add(tasksCreatedForDay);
             }
+
+            var data = new ChartData
+            {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new BarChartDataset()
+                    {
+                        Label = DateTime.Now.ToString("MMMM"),
+                        Data = completedOrderQuantities,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        CategoryPercentage = 0.8,
+                        BarPercentage = 1,
+                    }
+                }
             };
 
-        var options = new BarChartOptions();
+            var options = new BarChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Text = "Tasks In Current Month";
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Text = "Tasks In Current Month";
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Text = "Tasks In Current Month";
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Text = "Tasks In Current Month";
+            options.Scales.X.Title.Display = true;
 
-        await barChart.InitializeAsync(data, options);
+            await barChart.InitializeAsync(data, options);
+        }
+
     }
 
     private async Task RenderTasksCompletedAsync()
@@ -448,178 +451,187 @@
             item => item.ModificationDate.Year == DateTime.Now.Year &&
             item.ModificationDate.Month == DateTime.Now.Month &&
             item.TaskStatusId == 3).ToList();
-
-        // Initialize a list to store daily order counts
-        var completedOrderQuantities = new List<double>();
-
-        // Populate completed order quantities based on each day of the month
-        for (int i = 1; i <= daysInCurrentMonth; i++)
+        if (tasksCompletedInThisMonth.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = tasksCompletedInThisMonth
-                .Count(item => item.ModificationDate.Day == i);
+            // Initialize a list to store daily order counts
+            var completedOrderQuantities = new List<double>();
 
-            completedOrderQuantities.Add(tasksCreatedForDay);
-        }
+            // Populate completed order quantities based on each day of the month
+            for (int i = 1; i <= daysInCurrentMonth; i++)
+            {
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = tasksCompletedInThisMonth
+                    .Count(item => item.ModificationDate.Day == i);
 
-        var data = new ChartData
-            {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new BarChartDataset()
-                {
-                    Label = DateTime.Now.ToString("MMMM"),
-                    Data = completedOrderQuantities,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    CategoryPercentage = 0.8,
-                    BarPercentage = 1,
-                }
+                completedOrderQuantities.Add(tasksCreatedForDay);
             }
+
+            var data = new ChartData
+            {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new BarChartDataset()
+                    {
+                        Label = DateTime.Now.ToString("MMMM"),
+                        Data = completedOrderQuantities,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        CategoryPercentage = 0.8,
+                        BarPercentage = 1,
+                    }
+                }
             };
 
-        var options = new BarChartOptions();
+            var options = new BarChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Text = "Completed Tasks In Current Month";
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Text = "Completed Tasks In Current Month";
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Text = "Completed Tasks In Current Month";
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Text = "Completed Tasks In Current Month";
+            options.Scales.X.Title.Display = true;
 
-        await barChartCompleted.InitializeAsync(data, options);
+            await barChartCompleted.InitializeAsync(data, options);
+        }
+
     }
 
     private async Task RenderAllTasksAsync()
     {
 
         var tasks = (await taskServices.GetAllTasks()).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = tasks.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(tasks.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = tasks
-                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+            // Find the first created task day
+            var earliestCreationDate = tasks.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
+            {
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = tasks
+                    .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
+            }
+
+            var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = DateTime.Now.ToString("MMMM"),
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+            };
+
+            var options = new LineChartOptions();
+
+            options.Interaction.Mode = InteractionMode.Index;
+
+            options.Plugins.Title.Text = "All Tasks";
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
+
+            options.Responsive = true;
+
+            options.Scales.X.Title.Text = "All Tasks";
+            options.Scales.X.Title.Display = true;
+
+            await lineChart.InitializeAsync(data, options);
         }
 
-        var data = new ChartData
-        {
-            Labels = listOfDays,
-            Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = DateTime.Now.ToString("MMMM"),
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
-            }
-        };
-
-        var options = new LineChartOptions();
-
-        options.Interaction.Mode = InteractionMode.Index;
-
-        options.Plugins.Title.Text = "All Tasks";
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
-
-        options.Responsive = true;
-
-        options.Scales.X.Title.Text = "All Tasks";
-        options.Scales.X.Title.Display = true;
-
-        await lineChart.InitializeAsync(data, options);
     }
 
     private async Task RenderAllCompletedTasksAsync()
     {
 
         var tasks = (await taskServices.GetAllTasks()).Where(item => item.TaskStatusId == 3).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = tasks.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(tasks.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = tasks
-                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+            // Find the first created task day
+            var earliestCreationDate = tasks.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = DateTime.Now.ToString("MMMM"),
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = tasks
+                    .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-            };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = DateTime.Now.ToString("MMMM"),
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+                };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Text = "All Completed Tasks";
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Text = "All Completed Tasks";
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Text = "All Completed Tasks";
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await lineChartCompleted.InitializeAsync(data, options);
+            options.Scales.X.Title.Text = "All Completed Tasks";
+            options.Scales.X.Title.Display = true;
+
+            await lineChartCompleted.InitializeAsync(data, options);
+        }
+        
     }
     #endregion
 
@@ -732,184 +744,193 @@
     private async Task RenderAllCompletedPurchaseOrdersAsync()
     {
         var ordersCompleted = (await orderServices.GetAllPurchaseOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = ordersCompleted
-                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+             // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
-        {
-            Labels = listOfDays,
-            Datasets = new List<IChartDataset>()
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                new LineChartDataset()
-                {
-                    Label = "Completed",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = ordersCompleted
+                    .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-        };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+            {
+                Labels = listOfDays,
+                Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Completed",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+            };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await lineChartCompletedPurchaseOrders.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await lineChartCompletedPurchaseOrders.InitializeAsync(data, options);
+        }
+       
     }
 
     private async Task RenderAllRejectedPurchaseOrdersAsync()
     {
         var ordersCompleted = (await orderServices.GetAllPurchaseOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Rejected).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = ordersCompleted
-                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "Rejected",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = ordersCompleted
+                    .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-            };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Rejected",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+                };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await lineChartRejectedPurchaseOrders.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await lineChartRejectedPurchaseOrders.InitializeAsync(data, options);
+        }
+      
     }
 
     private async Task RenderAllPurchaseOrdersAsync()
     {
         var ordersCompleted = await orderServices.GetAllPurchaseOrdersAsync();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = ordersCompleted
-                .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "All Purchase Orders",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = ordersCompleted
+                    .Count(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-            };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "All Purchase Orders",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+                };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await lineChartAllPurchaseOrders.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await lineChartAllPurchaseOrders.InitializeAsync(data, options);
+        }
+       
     }
 
     #endregion
@@ -924,125 +945,131 @@
     private async Task RenderAllSpendingsAsync()
     {
         var ordersCompleted = (await orderServices.GetAllPurchaseOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Sum(item => item.Quantity);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "All Spendings",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Sum(item => item.Quantity);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
+
+            var data = new ChartData
+            {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "All Spendings",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
             };
 
-        var options = new LineChartOptions();
+            var options = new LineChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await allPurchaseOrdersBuys.InitializeAsync(data, options);
+            await allPurchaseOrdersBuys.InitializeAsync(data, options);
+        }
+        
     }
 
     private async Task RenderAllSalesProfitAsync()
     {
         var ordersCompleted = (await salesService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Sum(item => item.PricePaid);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "Profit From Sales",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Sum(item => item.PricePaid);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
+
+            var data = new ChartData
+            {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Profit From Sales",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
             };
 
-        var options = new LineChartOptions();
+            var options = new LineChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await allSalesOrdersProfit.InitializeAsync(data, options);
+            await allSalesOrdersProfit.InitializeAsync(data, options);
+        }
+       
     }
 
     private async Task RenderSalesOrdersCompletedAsync()
@@ -1064,105 +1091,111 @@
             item.CreationDate.Month == DateTime.Now.Month &&
             item.OrderStatuseId == (int)StatusForOrder.Completed)
             .ToList();
-
-        // Initialize a list to store daily order counts
-        var completedOrderQuantities = new List<double>();
-
-        // Populate completed order quantities based on each day of the month
-        for (int i = 1; i <= daysInCurrentMonth; i++)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = ordersCompleted
-                .Count(item => item.CreationDate.Day == i);
+            // Initialize a list to store daily order counts
+            var completedOrderQuantities = new List<double>();
 
-            completedOrderQuantities.Add(tasksCreatedForDay);
-        }
+            // Populate completed order quantities based on each day of the month
+            for (int i = 1; i <= daysInCurrentMonth; i++)
+            {
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = ordersCompleted
+                    .Count(item => item.CreationDate.Day == i);
 
-        var data = new ChartData
-            {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new BarChartDataset()
-                {
-                    Label = "Completed Sales Orders",
-                    Data = completedOrderQuantities,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    CategoryPercentage = 0.8,
-                    BarPercentage = 1,
-                }
+                completedOrderQuantities.Add(tasksCreatedForDay);
             }
+
+            var data = new ChartData
+            {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new BarChartDataset()
+                    {
+                        Label = "Completed Sales Orders",
+                        Data = completedOrderQuantities,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        CategoryPercentage = 0.8,
+                        BarPercentage = 1,
+                    }
+                }
             };
 
-        var options = new BarChartOptions();
-        options.Interaction.Mode = InteractionMode.Index;
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
-        options.Responsive = true;
-        options.Scales.X.Title.Display = true;
-        await barChartSalesOrdersCompleted.InitializeAsync(data, options);
+            var options = new BarChartOptions();
+            options.Interaction.Mode = InteractionMode.Index;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
+            options.Responsive = true;
+            options.Scales.X.Title.Display = true;
+            await barChartSalesOrdersCompleted.InitializeAsync(data, options);
+        }
+       
     }
 
     private async Task RenderAllSpendingsTwoAsync()
     {
         var ordersCompleted = (await orderServices.GetAllPurchaseOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Sum(item => item.PricePaid);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
-        {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                new LineChartDataset()
-                {
-                    Label = "Spendings",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Sum(item => item.PricePaid);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-        };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+            {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Spendings",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+            };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await allSpendings.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await allSpendings.InitializeAsync(data, options);
+        }
+       
     }
 
     #endregion
@@ -1177,186 +1210,196 @@
     {
         var ordersCompleted = await inventoryService.GetAllProductsAsync();
 
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Sum(item => item.UnitsInStock);
+             // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "Profit From Sales",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Sum(item => item.UnitsInStock);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-            };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Profit From Sales",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+                };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await inventoryStockLineChart.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await inventoryStockLineChart.InitializeAsync(data, options);
+        }
+       
     }
 
     private async Task RenderAllInventoryProductsAsync()
     {
         var ordersCompleted = await inventoryService.GetAllProductsAsync();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Count();
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "Profit From Sales",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Count();
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-            };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Profit From Sales",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+                };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await inventoryProductsLineChart.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await inventoryProductsLineChart.InitializeAsync(data, options);
+        }
+       
     }
 
     private async Task RenderAllInventoryReportsAsync()
     {
         var ordersCompleted = await inventoryService.GetAllReportsAsync();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if (ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Count();
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
-            {
-                new LineChartDataset()
-                {
-                    Label = "Profit From Sales",
-                    Data = tasksCreatedForDays,
-                    BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    BorderWidth = new List<double>{2},
-                    HoverBorderWidth = new List<double>{4},
-                    PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
-                    PointRadius = new List<int>{0}, // hide points
-                    PointHoverRadius = new List<int>{4}
-                }
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Count();
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
             }
-            };
 
-        var options = new LineChartOptions();
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
+                {
+                    new LineChartDataset()
+                    {
+                        Label = "Profit From Sales",
+                        Data = tasksCreatedForDays,
+                        BackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        BorderWidth = new List<double>{2},
+                        HoverBorderWidth = new List<double>{4},
+                        PointBackgroundColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointBorderColor = new List<string>{ "rgb(88, 80, 141)" },
+                        PointRadius = new List<int>{0}, // hide points
+                        PointHoverRadius = new List<int>{4}
+                    }
+                }
+                };
 
-        options.Interaction.Mode = InteractionMode.Index;
+            var options = new LineChartOptions();
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Responsive = true;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Scales.X.Title.Display = true;
+            options.Responsive = true;
 
-        await inventoryReportsLineChart.InitializeAsync(data, options);
+            options.Scales.X.Title.Display = true;
+
+            await inventoryReportsLineChart.InitializeAsync(data, options);
+        }
+       
     }
 
     #endregion
@@ -1387,23 +1430,25 @@
             item => item.CreationDate.Year == DateTime.Now.Year &&
             item.CreationDate.Month == DateTime.Now.Month).ToList();
 
-        // Initialize a list to store daily order counts
-        var completedOrderQuantities = new List<double>();
-
-        // Populate completed order quantities based on each day of the month
-        for (int i = 1; i <= daysInCurrentMonth; i++)
+        if(list.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = list
-                .Count(item => item.CreationDate.Day == i);
+            // Initialize a list to store daily order counts
+            var completedOrderQuantities = new List<double>();
 
-            completedOrderQuantities.Add(tasksCreatedForDay);
-        }
-
-        var data = new ChartData
+            // Populate completed order quantities based on each day of the month
+            for (int i = 1; i <= daysInCurrentMonth; i++)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = list
+                    .Count(item => item.CreationDate.Day == i);
+
+                completedOrderQuantities.Add(tasksCreatedForDay);
+            }
+
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
             {
                 new BarChartDataset()
                 {
@@ -1414,53 +1459,56 @@
                     BarPercentage = 1,
                 }
             }
-            };
+                };
 
-        var options = new BarChartOptions();
+            var options = new BarChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await salesOrdersThisMonthChart.InitializeAsync(data, options);
+            await salesOrdersThisMonthChart.InitializeAsync(data, options);
+        }
     }
 
     private async Task RenderAllQuantitySalesOrdersAsync()
     {
-        var ordersCompleted = (await salesService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed);
+        var ordersCompleted = (await salesService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
 
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Sum(item => item.Quantity);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Sum(item => item.Quantity);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
+            }
+
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
             {
                 new LineChartDataset()
                 {
@@ -1476,53 +1524,56 @@
                     PointHoverRadius = new List<int>{4}
                 }
             }
-            };
+                };
 
-        var options = new LineChartOptions();
+            var options = new LineChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await salesAllRejectedOrdersLineChart.InitializeAsync(data, options);
+            await salesAllRejectedOrdersLineChart.InitializeAsync(data, options);
+        }
     }
 
     private async Task RenderAllCompletedSalesOrdersAsync()
     {
         var ordersCompleted = (await salesService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
 
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Count();
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Count();
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
+            }
+
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
             {
                 new LineChartDataset()
                 {
@@ -1538,53 +1589,55 @@
                     PointHoverRadius = new List<int>{4}
                 }
             }
-            };
+                };
 
-        var options = new LineChartOptions();
+            var options = new LineChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await salesCompletedOrdersLineChart.InitializeAsync(data, options);
+            await salesCompletedOrdersLineChart.InitializeAsync(data, options);
+        }
     }
 
     private async Task RenderAllSalesOrdersAsync()
     {
         var ordersCompleted = await salesService.GetAllSalesOrdersAsync();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Count();
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Count();
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
+            }
+
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
             {
                 new LineChartDataset()
                 {
@@ -1600,20 +1653,21 @@
                     PointHoverRadius = new List<int>{4}
                 }
             }
-            };
+                };
 
-        var options = new LineChartOptions();
+            var options = new LineChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await salesAllOrdersLineChart.InitializeAsync(data, options);
+            await salesAllOrdersLineChart.InitializeAsync(data, options);
+        }
     }
 
     #endregion
@@ -1642,24 +1696,26 @@
             item => item.ModificationDate.Year == DateTime.Now.Year &&
             item.ModificationDate.Month == DateTime.Now.Month).ToList();
 
-        // Initialize a list to store daily order counts
-        var completedOrderQuantities = new List<double>();
-
-        // Populate completed order quantities based on each day of the month
-        for (int i = 1; i <= daysInCurrentMonth; i++)
+        if(ordersInThisMonth.Count > 0)
         {
-            // Sum the quantities of completed orders with order status "Complete" for each day
-            double quantityCompletedForDay = ordersInThisMonth
-                .Where(item => item.ModificationDate.Day == i && item.ProductionOrderStatusId == (int)StatusForProductionOrder.Completed)
-                .Sum(item => item.Quantity);
+            // Initialize a list to store daily order counts
+            var completedOrderQuantities = new List<double>();
 
-            completedOrderQuantities.Add(quantityCompletedForDay);
-        }
+            // Populate completed order quantities based on each day of the month
+            for (int i = 1; i <= daysInCurrentMonth; i++)
+            {
+                // Sum the quantities of completed orders with order status "Complete" for each day
+                double quantityCompletedForDay = ordersInThisMonth
+                    .Where(item => item.ModificationDate.Day == i && item.ProductionOrderStatusId == (int)StatusForProductionOrder.Completed)
+                    .Sum(item => item.Quantity);
 
-        var data = new ChartData
-        {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+                completedOrderQuantities.Add(quantityCompletedForDay);
+            }
+
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
             {
                 new BarChartDataset()
                 {
@@ -1670,58 +1726,60 @@
                     BarPercentage = 1,
                 }
             }
-        };
+                };
 
-        var options = new BarChartOptions();
+            var options = new BarChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Text = "Items produced dailey";
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Text = "Items produced dailey";
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Text = "Days In Current Month";
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Text = "Days In Current Month";
+            options.Scales.X.Title.Display = true;
 
-        options.Scales.Y.Title.Text = "Items Done";
-        options.Scales.Y.Title.Display = true;
+            options.Scales.Y.Title.Text = "Items Done";
+            options.Scales.Y.Title.Display = true;
 
-        await productionThisMonthChart.InitializeAsync(data, options);
+            await productionThisMonthChart.InitializeAsync(data, options);
+        }
     }
 
     private async Task RenderAllProductionOveralAsync()
     {
         var ordersCompleted = await productionService.GetAllProductionOrdersAsync();
-
-        // Find the first created task day
-        var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
-
-        // Create a list of days starting from the first created task day
-        var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
-                            .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
-                            .ToList();
-
-        // Initialize a list to store daily order counts
-        var tasksCreatedForDays = new List<double>();
-        int cumulativeTaskCount = 0;
-        foreach (var dayLabel in listOfDays)
+        if(ordersCompleted.Count > 0)
         {
-            // Count the number of tasks created on each day
-            int tasksCreatedForDay = (int)ordersCompleted
-                .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
-                .Sum(item => item.Quantity);
+            // Find the first created task day
+            var earliestCreationDate = ordersCompleted.Min(item => item.CreationDate);
 
-            cumulativeTaskCount += tasksCreatedForDay;
+            // Create a list of days starting from the first created task day
+            var listOfDays = Enumerable.Range(0, (DateTime.Now - earliestCreationDate).Days + 1)
+                                .Select(offset => earliestCreationDate.AddDays(offset).ToString("yyyy/MM/dd"))
+                                .ToList();
 
-            tasksCreatedForDays.Add(cumulativeTaskCount);
-        }
-
-        var data = new ChartData
+            // Initialize a list to store daily order counts
+            var tasksCreatedForDays = new List<double>();
+            int cumulativeTaskCount = 0;
+            foreach (var dayLabel in listOfDays)
             {
-                Labels = listOfDays,
-                Datasets = new List<IChartDataset>()
+                // Count the number of tasks created on each day
+                int tasksCreatedForDay = (int)ordersCompleted
+                    .Where(item => item.CreationDate.ToString("yyyy/MM/dd") == dayLabel)
+                    .Sum(item => item.Quantity);
+
+                cumulativeTaskCount += tasksCreatedForDay;
+
+                tasksCreatedForDays.Add(cumulativeTaskCount);
+            }
+
+            var data = new ChartData
+                {
+                    Labels = listOfDays,
+                    Datasets = new List<IChartDataset>()
             {
                 new LineChartDataset()
                 {
@@ -1737,20 +1795,21 @@
                     PointHoverRadius = new List<int>{4}
                 }
             }
-            };
+                };
 
-        var options = new LineChartOptions();
+            var options = new LineChartOptions();
 
-        options.Interaction.Mode = InteractionMode.Index;
+            options.Interaction.Mode = InteractionMode.Index;
 
-        options.Plugins.Title.Display = true;
-        options.Plugins.Title.Font.Size = 20;
+            options.Plugins.Title.Display = true;
+            options.Plugins.Title.Font.Size = 20;
 
-        options.Responsive = true;
+            options.Responsive = true;
 
-        options.Scales.X.Title.Display = true;
+            options.Scales.X.Title.Display = true;
 
-        await productionOverallChart.InitializeAsync(data, options);
+            await productionOverallChart.InitializeAsync(data, options);
+        }
     }
 
     #endregion
