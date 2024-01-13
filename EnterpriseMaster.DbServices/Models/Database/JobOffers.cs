@@ -11,6 +11,7 @@
         public decimal? Salary { get; set; }
         public string? EmploymentType { get; set; }
         public DateTime? ExpirationDate { get; set; }
+        public int? Company { get; set; }
         public string? ContactEmail { get; set; }
         public string? ContactPhone { get; set; }
         public string? Status { get; set; }

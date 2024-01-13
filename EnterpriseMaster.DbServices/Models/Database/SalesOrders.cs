@@ -34,5 +34,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public List<Invoices>? Invoices { get; set; }
         public List<Returns>? Returns { get; set; }
         public List<Payments>? Payments { get; set; }
+        public int? Company { get; set; }
     }
 }

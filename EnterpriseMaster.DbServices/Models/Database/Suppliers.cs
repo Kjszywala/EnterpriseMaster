@@ -11,5 +11,6 @@
         public SuppliersAddresses? SupplierAddress { get; set; }
         public List<PurchaseOrders>? PurchaseOrders { get; set; }
         public List<Parts>? Parts { get; set; }
+        public int? Company { get; set; }
     }
 }

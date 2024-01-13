@@ -14,5 +14,6 @@
         public QuantityTypes? QuantityTypes { get; set; }
         public List<PurchaseOrders>? PurchaseOrders { get; set; }
         public List<PaymentReports>? PaymentReports { get; set; }
+        public int? Company { get; set; }
     }
 }

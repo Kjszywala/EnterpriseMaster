@@ -14,5 +14,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public int? PaymentMethodId { get; set; }
         public PaymentMethods? RefundMethod { get; set; }
         public string Notes { get; set; }
+        public int? Company { get; set; }
     }
 }

@@ -4,5 +4,6 @@
 	{
         public int? StatusId { get; set; }
         public OrderStatuses? Status { get; set; }
+        public int? Company { get; set; }
     }
 }

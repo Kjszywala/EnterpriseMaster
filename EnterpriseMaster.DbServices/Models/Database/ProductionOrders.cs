@@ -10,5 +10,6 @@
         public int? ProductionOrderStatusId { get; set; }
         public ProductionOrderStatus? ProductionOrderStatus { get; set; }
         public List<SalesOrders>? SalesOrders { get; set; }
+        public int? Company { get; set; }
     }
 }

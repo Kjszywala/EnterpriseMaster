@@ -16,5 +16,6 @@
         public string? Prerequisites { get; set; }
         public string? Format { get; set; }
         public string? TargetAudience { get; set; }
+        public int? Company { get; set; }
     }
 }

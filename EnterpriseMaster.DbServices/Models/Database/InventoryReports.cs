@@ -12,5 +12,6 @@
         public Products? Product { get; set; }
         public int? EmployeeId { get; set; }
         public Employees? Employee { get; set; }
+        public int? Company { get; set; }
     }
 }

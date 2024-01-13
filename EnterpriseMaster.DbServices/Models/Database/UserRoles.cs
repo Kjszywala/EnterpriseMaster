@@ -7,5 +7,6 @@
         public int? RoleId { get; set; }
         public Roles? Roles { get; set; }
         public bool UserRole { get; set; }
+        public int? Company { get; set; }
     }
 }

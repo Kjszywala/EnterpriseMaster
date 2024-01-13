@@ -10,6 +10,7 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public string OfferName { get; set; }
         public string OfferDescrition { get; set; }
         public bool IsRejected { get; set; }
+        public int? Company { get; set; }
         public string? RejectReason { get; set; }
         public DateTime AvailableFrom { get; set; }
         public DateTime AvailableTo { get; set; }

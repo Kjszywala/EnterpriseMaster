@@ -10,6 +10,7 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public int? OrderId { get; set; }
         public Orders? Order { get; set; }
         public int? PurchaseOrderId { get; set; }
+        public int? Company { get; set; }
         public PurchaseOrders? PurchaseOrder { get; set; }
         public int? InvoiceItemId { get; set; }
         public InvoiceItem? InvoiceItem { get; set; }

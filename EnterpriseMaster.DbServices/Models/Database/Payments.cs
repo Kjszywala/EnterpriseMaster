@@ -17,5 +17,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public SalesOrders? SalesOrder { get; set; }
         public int? PaymentStatuId { get; set; }
         public PaymentStatus? PaymentStatu { get; set; }
+        public int? Company { get; set; }
     }
 }

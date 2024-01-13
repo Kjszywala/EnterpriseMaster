@@ -10,5 +10,6 @@
         public ShippingAddresses? ShippersAddress { get; set; }
         public int? ShippersAddressId { get; set; }
         public ShippersAddresses? ShippersAddresses { get; set; }
+        public int? Company { get; set; }
     }
 }

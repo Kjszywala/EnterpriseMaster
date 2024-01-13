@@ -25,5 +25,6 @@
         public string MostFrequentlyPaymentMethod { get; set; }
         public string LargestQuantity { get; set; }
         public string QuantityTotal { get; set; }
+        public int? Company { get; set; }
     }
 }

@@ -15,5 +15,6 @@
         public Employees? Employee { get; set; }
         public int? PurchaseOrderId { get; set; }
         public PurchaseOrders? PurchaseOrder { get; set; }
+        public int? Company { get; set; }
     }
 }

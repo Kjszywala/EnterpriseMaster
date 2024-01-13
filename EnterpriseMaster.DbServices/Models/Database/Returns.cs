@@ -9,5 +9,6 @@
         public int? ReturnsStatusesId { get; set; }
         public ReturnsStatuses? Status { get; set; }
         public List<Refunds> Refunds { get; set; }
+        public int? Company { get; set; }
     }
 }

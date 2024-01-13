@@ -11,5 +11,6 @@ namespace EnterpriseMaster.DbServices.Models.Database
         public decimal UnitPrice { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalPrice => Quantity * UnitPrice;
+        public int? Company { get; set; }
     }
 }

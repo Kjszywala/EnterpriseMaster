@@ -11,5 +11,6 @@
         public Employees? Employee { get; set; }
         public int? TaskStatusId { get; set; }
         public TaskStatus? TaskStatus { get; set; }
+        public int? Company { get; set; }
     }
 }
