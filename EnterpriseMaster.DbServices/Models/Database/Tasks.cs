@@ -12,5 +12,8 @@
         public int? TaskStatusId { get; set; }
         public TaskStatus? TaskStatus { get; set; }
         public int? Company { get; set; }
+        public int? TasksPriorityId { get; set; }
+        public TasksPriorities? TasksPriorities { get; set; }
+        public int? EffortPoints { get; set; }
     }
 }
