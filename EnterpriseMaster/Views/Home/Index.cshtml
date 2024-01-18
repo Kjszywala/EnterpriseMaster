@@ -26,8 +26,8 @@
                 <img src="data:image;base64,@Convert.ToBase64String(Model.MainImage)" style="width:100%; max-height: 800px;">
             }
             <div class="text">
-                <h2 style="color: black;">Welcome to Enterprise Master solutions</h2>
-                <p>Your One-Stop Shop for Efficient Business Management</p>
+                <h2 style="color: black;">@Model.TitleOverButton</h2>
+                <p>@Model.TextOverButton</p>
                 <a href="#pricing" class="cta-button">Get Started</a>
             </div>
         </div>
@@ -37,16 +37,23 @@
 <section id="features" class="features">
     <div class="feature-container">
         <div class="feature-description">
-            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">Key Advantages of Analytics</h2>
+            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">@Model.AnalyticsTitle</h2>
+            @{
+                var Enhanced = @Model.AnalyticsOption1.Split(':');
+                var Optimized = @Model.AnalyticsOption2.Split(':');
+                var Deeper = @Model.AnalyticsOption3.Split(':');
+                var Market = @Model.AnalyticsOption4.Split(':');
+                var Risk = @Model.AnalyticsOption5.Split(':');
+            }
             <ul style="list-style-type: disc; padding-left: 20px; font-size: 16px; color: #333;">
-                <li><strong>Enhanced Decision-Making:</strong> Analytics enables informed and data-backed decision-making, giving you the upper hand in the marketplace.</li>
-                <li><strong>Optimized Performance:</strong> Uncover opportunities for operational efficiency and cost savings that lead to increased profitability.</li>
-                <li><strong>Deeper Customer Insights:</strong> Understand your customers better, personalize experiences, and foster loyalty through tailored solutions.</li>
-                <li><strong>Market Trend Identification:</strong> Stay ahead of the curve by identifying market trends and adapting your strategies accordingly.</li>
-                <li><strong>Risk Mitigation:</strong> Spot potential risks and challenges early on, allowing you to proactively address issues before they become major setbacks.</li>
+                <li><strong>@Enhanced[0]:</strong> @Enhanced[1]</li>
+                <li><strong>@Optimized[0]:</strong> @Optimized[1]</li>
+                <li><strong>@Deeper[0]:</strong> @Deeper[1]</li>
+                <li><strong>@Market[0]:</strong> @Market[1]</li>
+                <li><strong>@Risk[0]:</strong> @Risk[1]</li>
             </ul>
             <p style="font-size: 16px; line-height: 1.4; color: #333;">
-                Invest in analytics, and watch your business thrive with data-driven success. Whether it's web analytics, business intelligence, or data science, analytics is a powerful tool that can transform your business across various industries and sectors.
+                @Model.AnalyticsText
             </p>
         </div>
         <div class="feature-image">
@@ -64,35 +71,51 @@
                 <img src="data:image;base64,@Convert.ToBase64String(Model.Sales)" alt="Feature 1 Image" style="max-width: 100%; height: auto;">
             }
         </div>
+        @{
+            var Increased = @Model.SalesOption1.Split(':');
+            var Streamlined = @Model.SalesOption2.Split(':');
+            var Customer = @Model.SalesOption3.Split(':');
+            var Data = @Model.SalesOption4.Split(':');
+            var Market2 = @Model.SalesOption5.Split(':');
+            var Market23 = @Model.SalesText.Split(':');
+        }
         <div class="feature-description">
-            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">Unlock Sales Management Advantages</h2>
+            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">@Model.SalesTitle</h2>
             <p style="font-size: 16px; line-height: 1.4; color: #333;">
-                Effective sales management is your path to success in a competitive marketplace. Discover how managing sales can benefit your business in numerous ways:
+                @Market23[0]:
                 <ul style="list-style-type: disc; padding-left: 20px; font-size: 16px; color: #333;">
-                    <li><strong>Increased Revenue:</strong> By optimizing your sales processes, you can boost revenue and maximize profits.</li>
-                    <li><strong>Streamlined Operations:</strong> Efficient sales management streamlines your business operations, reducing waste and increasing productivity.</li>
-                    <li><strong>Customer Satisfaction:</strong> Delight your customers with superior service, tailored solutions, and timely responses, leading to enhanced satisfaction and loyalty.</li>
-                    <li><strong>Data-Driven Insights:</strong> Gain valuable data insights that inform your sales strategies, helping you identify opportunities and address challenges proactively.</li>
-                    <li><strong>Market Expansion:</strong> With effective sales management, you can expand your market reach and tap into new customer segments.</li>
+                    <li><strong>@Increased[0]:</strong> @Increased[1]</li>
+                    <li><strong>@Streamlined[0]:</strong> @Streamlined[1]</li>
+                    <li><strong>@Customer[0]:</strong> @Customer[1]</li>
+                    <li><strong>@Data[0]:</strong> @Data[1]</li>
+                    <li><strong>@Market2[0]:</strong> @Market2[1]</li>
                 </ul>
-                Invest in sales management, and watch your business thrive with data-driven success. Whether you're in e-commerce, retail, or B2B, effective sales management is a powerful tool to drive growth and success across various industries and sectors.
+                @Market23[1]
             </p>
         </div>
     </div>
     <hr />
+    @{
+        var Inventory = @Model.WarehouseOption1.Split(':');
+        var Operating = @Model.WarehouseOption2.Split(':');
+        var Order = @Model.WarehouseOption3.Split(':');
+        var Insights = @Model.WarehouseOption4.Split(':');
+        var Service = @Model.WarehouseOption5.Split(':');
+        var management = @Model.WarehouseText.Split(':');
+    }
     <div class="feature-container">
         <div class="feature-description">
-            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">Experience the Benefits of Warehouse Management</h2>
+            <h2 style="font-size: 24px; margin-bottom: 10px; color: #333;">@Model.WarehouseTitle</h2>
             <p style="font-size: 16px; line-height: 1.4; color: #333;">
-                Warehouse management is the backbone of efficient supply chain operations. Discover how strategic warehouse management can transform your business with a range of advantages:
+                @management[0]:
                 <ul style="list-style-type: disc; padding-left: 20px; font-size: 16px; color: #333;">
-                    <li><strong>Optimized Inventory:</strong> Maintain precise control over your inventory, reducing carrying costs while ensuring products are readily available when needed.</li>
-                    <li><strong>Reduced Operating Costs:</strong> Efficient warehouse management helps reduce operating costs through better resource utilization and streamlined processes.</li>
-                    <li><strong>Swift Order Fulfillment:</strong> Accelerate order processing, packing, and shipping, delivering orders to customers faster and enhancing their satisfaction.</li>
-                    <li><strong>Accurate Data Insights:</strong> Leverage data-driven insights to make informed decisions, monitor inventory trends, and forecast demand, improving overall decision-making.</li>
-                    <li><strong>Enhanced Customer Service:</strong> Satisfy customers with on-time, error-free deliveries and real-time order tracking, boosting loyalty and repeat business.</li>
+                    <li><strong>@Inventory[0]:</strong> @Inventory[1]</li>
+                    <li><strong>@Operating[0]:</strong> @Operating[1]</li>
+                    <li><strong>@Order[0]:</strong> @Order[1]</li>
+                    <li><strong>@Insights[0]:</strong> @Insights[1]</li>
+                    <li><strong>@Service[0]:</strong> @Service[1]</li>
                 </ul>
-                Invest in warehouse management and witness your business flourish with efficiency and precision. Whether you operate in manufacturing, e-commerce, or logistics, effective warehouse management is a game-changer for success across various industries and sectors.
+                @management[1]
             </p>
         </div>
         <div class="feature-image">
@@ -117,21 +140,21 @@
                     }
                 </div>
                 <div class="plan-details-container" style="min-height: 300px;">
-                    <h3 class="plan-name">Basic Plan</h3>
+                    <h3 class="plan-name">@Model.BasicPlanText</h3>
                     <hr />
                     <ul class="plan-features">
-                        <li>Essential features for small businesses</li>
-                        <li>Modules: Sales, Inventory, Basic Financial Management</li>
-                        <li>Create offers, manage orders, track inventory, and generate invoices</li>
-                        <li>Ideal for startups and small companies</li>
+                        <li>@Model.BasicPlanOption1</li>
+                        <li>@Model.BasicPlanOption2</li>
+                        <li>@Model.BasicPlanOption3</li>
+                        <li>@Model.BasicPlanOption4</li>
                     </ul>
                 </div>
                 <div class="plan-description-container">
-                    <p class="plan-description">Perfect for small businesses</p>
+                    <p class="plan-description">@Model.BasicPlanOption5</p>
                 </div>
                 <div class="plan-price-container">
                     <hr />
-                    <p class="plan-price">$99/month</p>
+                    <p class="plan-price">@Model.BasicPlanPrice</p>
                 </div>
             </a>
         </div>
@@ -144,21 +167,21 @@
                     }
                 </div>
                 <div class="plan-details-container" style="min-height: 300px;">
-                    <h3 class="plan-name">Pro Plan</h3>
+                    <h3 class="plan-name">@Model.ProPlanText</h3>
                     <hr />
                     <ul class="plan-features">
-                        <li>Extends Basic Plan with CRM and advanced Financial Management</li>
-                        <li>Manage customer data, inquiries, and complaints</li>
-                        <li>Plan sales activities and create customer profiles</li>
-                        <li>Advanced accounting, reporting, and cost analysis</li>
+                        <li>@Model.ProPlanOption1</li>
+                        <li>@Model.ProPlanOption2</li>
+                        <li>@Model.ProPlanOption3</li>
+                        <li>@Model.ProPlanOption4</li>
                     </ul>
                 </div>
                 <div class="plan-description-container">
-                    <p class="plan-description">For growing businesses</p>
+                    <p class="plan-description">@Model.ProPlanOption5</p>
                 </div>
                 <div class="plan-price-container">
                     <hr />
-                    <p class="plan-price">$199/month</p>
+                    <p class="plan-price">@Model.ProPlanPrice</p>
                 </div>
             </a>
         </div>
@@ -172,22 +195,22 @@
                     }
                 </div>
                 <div class="plan-details-container" style="min-height: 285px;">
-                    <h3 class="plan-name">Enterprise Plan</h3>
+                    <h3 class="plan-name">@Model.EnterprisePlanText</h3>
                     <hr />
                     <ul class="plan-features">
-                        <li>Comprehensive ERP for large enterprises</li>
-                        <li>Includes Production Management, HR, Project Management, and Analytics & Reporting</li>
-                        <li>Optimize production, plan and monitor progress</li>
-                        <li>Cover recruitment, salaries, employee evaluations, and reporting</li>
-                        <li>Data analysis, report generation, and visual charts for informed decisions</li>
+                        <li>@Model.EnterprisePlanOption1</li>
+                        <li>@Model.EnterprisePlanOption2</li>
+                        <li>@Model.EnterprisePlanOption3</li>
+                        <li>@Model.EnterprisePlanOption4</li>
+                        <li>@Model.EnterprisePlanOption5</li>
                     </ul>
                 </div>
                 <div class="plan-description-container">
-                    <p class="plan-description">Comprehensive ERP for large enterprises</p>
+                    <p class="plan-description">@Model.EnterprisePlanOption6</p>
                 </div>
                 <div class="plan-price">
                     <hr style="color:#7012b3; margin-top:23px;" />
-                    <p>$399/month</p>
+                    <p>@Model.EnterprisePlanPrice</p>
                 </div>
             </a>
         </div>

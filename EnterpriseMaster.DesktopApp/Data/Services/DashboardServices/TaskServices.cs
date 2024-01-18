@@ -40,7 +40,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             try
             {
                 var currentEmployee = (await employeesServices.GetAllAsync())
-                    .Where(item => item.UserId == Config.UserId)
+                    .Where(item => item.UserId == Config.UserId && item.CompanyId == Config.CompanyId)
                     .OrderBy(item => item.ModificationDate)
                     .FirstOrDefault();
 
@@ -75,7 +75,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
-                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
+                var currentEmployee = (await employeesServices.GetAllAsync())
+                    .Where(item => item.UserId == Config.UserId && item.CompanyId == Config.CompanyId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.TaskStatusId == 3)
                     .Where(item3 => item3.EmployeeId == currentEmployee.Id)
@@ -92,7 +93,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
-                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
+                var currentEmployee = (await employeesServices.GetAllAsync())
+                    .Where(item => item.UserId == Config.UserId && item.CompanyId == Config.CompanyId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.TaskStatusId == 3)
                     .Where(item2 => item2.ModificationDate >= DateTime.Now.AddDays(-5))
@@ -110,6 +112,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
+                task.Company = Config.CompanyId;
                 var response = await tasksServices.AddAsync(task);
                 if (response)
                 {
@@ -128,7 +131,8 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         {
             try
             {
-                var currentEmployee = (await employeesServices.GetAllAsync()).Where(item => item.UserId == Config.UserId).FirstOrDefault();
+                var currentEmployee = (await employeesServices.GetAllAsync())
+                    .Where(item => item.UserId == Config.UserId && item.CompanyId == Config.CompanyId).FirstOrDefault();
                 return (await tasksServices.GetAllAsync())
                     .Where(item => item.TaskStatusId == 2)
                     .Where(item3 => item3.EmployeeId == currentEmployee.Id)

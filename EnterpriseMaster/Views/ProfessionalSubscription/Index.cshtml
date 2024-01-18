@@ -8,9 +8,12 @@
 <link href="~/css/subscriptions.css" rel="stylesheet" type="text/css">
 <br />
 <br />
+@{
+    var notes = @Model.Notes.Split(':');
+}
 <div class="basic-subscription-details">
-    <h1>Essential Features for Growing Business</h1>
-    <p>Upgrade your business with the Professional Plan. Take it to the next level with advanced features.</p>
+    <h1>@notes[0]</h1>
+    <p>@notes[1]</p>
 </div>
 <div class="basic-subscription-container">
     <div class="basic-subscription-container">
@@ -21,15 +24,15 @@
                 <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.ProfessionalPlan)" alt="Basic Financial Management">
             }
             <div class="basic-feature-text">
-                <h2>Professional Plan</h2>
-                <p>Upgrade to the Professional Plan to get access to all the features from the Basic Plan. Additionally, you can enjoy advanced features such as CRM, advanced Financial Management, enhanced inventory management, powerful marketing tools, and comprehensive reporting and analytics.</p>
+                <h2>@Model.ProfessionalPlanTextTitle</h2>
+                <p>@Model.ProfessionalPlanText</p>
             </div>
         </div>
 
         <div class="basic-feature professional-feature">
             <div class="basic-feature-text">
-                <h2>Manage Customer Data</h2>
-                <p>Effortlessly manage customer data, inquiries, and complaints. Provide top-notch customer support and keep track of customer interactions with ease.</p>
+                <h2>@Model.ManageCustomerDataTextTitle</h2>
+                <p>@Model.ManageCustomerDataText</p>
             </div>
             @if (Model.ManageCustomerData != null)
             {
@@ -47,8 +50,8 @@
                 <img class="basic-subscription-img" src="data:image;base64,@Convert.ToBase64String(Model.PlanSalesActivities)" alt="Basic Financial Management">
             }
             <div class="basic-feature-text">
-                <h2>Plan Sales Activities</h2>
-                <p>Create comprehensive sales strategies, plan activities, and build detailed customer profiles. Boost sales and improve customer satisfaction through effective planning.</p>
+                <h2>@Model.PlanSalesActivitiesTextTitle</h2>
+                <p>@Model.PlanSalesActivitiesText</p>
             </div>
         </div>
 
@@ -58,8 +61,8 @@
         <!-- Professional Feature 3 -->
         <div class="basic-feature professional-feature">
             <div class="basic-feature-text">
-                <h2>Advanced Accounting</h2>
-                <p>Take control of your finances with advanced accounting features. Perform in-depth cost analysis, generate complex financial reports, and gain valuable insights into your business's financial health.</p>
+                <h2>@Model.AdvancedAccountingTextTitle</h2>
+                <p>@Model.AdvancedAccountingText</p>
             </div>
             @if (Model.AdvancedAccounting != null)
             {
@@ -71,6 +74,6 @@
 <div class="subscription-container-pay">
     <div class="buy-now-container">
         <button class="button-71" onclick="location.href='@Url.Action("Index", "Checkout", new { type = "professional" })'">Buy Now</button>
-        <p class="buy-now-description">Get started with these essential features for your small business.</p>
+        <p class="buy-now-description">@Model.GetStarted</p>
     </div>
 </div>
