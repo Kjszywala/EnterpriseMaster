@@ -12,6 +12,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
         IEmployeesServices employeesServices;
         ITasksStatusesService tasksStatusesServices;
         IUsersServices usersServices;
+        ITasksPrioritiesService tasksPrioritiesService;
 
         #endregion
 
@@ -22,13 +23,15 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             ITasksServices _iTasksServices,
             IEmployeesServices _employeesServices,
             ITasksStatusesService _tasksStatusesServices,
-            IUsersServices _usersServices)
+            IUsersServices _usersServices,
+            ITasksPrioritiesService _tasksPrioritiesService)
         {
             errorLogsServices = _iErrorLogsServices;
             tasksServices = _iTasksServices;
             employeesServices = _employeesServices;
             tasksStatusesServices = _tasksStatusesServices;
             usersServices = _usersServices;
+            tasksPrioritiesService = _tasksPrioritiesService;
         }
 
         #endregion
@@ -270,6 +273,36 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
             {
                 var statuses = (await tasksStatusesServices.GetAllAsync()).ToList();
                 return statuses;
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        #endregion
+
+        #region TaskPriorities
+
+        public async Task<List<TasksPriorities>> GetAllTasksPriorities()
+        {
+            try
+            {
+                return (await tasksPrioritiesService.GetAllAsync()).ToList();
+            }
+            catch (Exception e)
+            {
+                await errorLogsServices.AddAsync(new ErrorLogs() { Date = DateTime.Now, Message = e.Message, Exception = e.StackTrace });
+                throw new Exception(e.Message, e);
+            }
+        }
+
+        public async Task<TasksPriorities> GetTaskPrioritiesAsync(int id)
+        {
+            try
+            {
+                return await tasksPrioritiesService.GetAsync(id);
             }
             catch (Exception e)
             {

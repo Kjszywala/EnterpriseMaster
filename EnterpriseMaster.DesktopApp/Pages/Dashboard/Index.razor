@@ -44,8 +44,8 @@
                     <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
                         @context.Description
                     </GridColumn>
-                    <GridColumn TItem="Tasks" HeaderText="CompleteBy" PropertyName="CompleteBy" SortKeySelector="item => item.CompleteBy" FilterTextboxWidth="40">
-                        @context.CompleteBy.ToString("dd-MM-yyyy")
+                    <GridColumn TItem="Tasks" HeaderText="Priority" PropertyName="Notes" SortKeySelector="item => item.Notes" FilterTextboxWidth="40">
+                        @context.Notes
                     </GridColumn>
                 </Grid>
             </div>
@@ -80,8 +80,8 @@
                 <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
                     @context.Description
                 </GridColumn>
-                <GridColumn TItem="Tasks" HeaderText="DateCompleted" PropertyName="ModificationDate" SortKeySelector="item => item.ModificationDate" FilterTextboxWidth="40">
-                    @context.ModificationDate.ToString("dd-MM-yyyy")
+                <GridColumn TItem="Tasks" HeaderText="Priority" PropertyName="Notes" SortKeySelector="item => item.Notes" FilterTextboxWidth="40">
+                    @context.Notes
                 </GridColumn>
             </Grid>
         </div>
@@ -115,8 +115,8 @@
                 <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
                     @context.Description
                 </GridColumn>
-                <GridColumn TItem="Tasks" HeaderText="DateCompleted" PropertyName="ModificationDate" SortKeySelector="item => item.ModificationDate" FilterTextboxWidth="40">
-                    @context.ModificationDate.ToString("dd-MM-yyyy")
+                <GridColumn TItem="Tasks" HeaderText="Priority" PropertyName="Notes" SortKeySelector="item => item.Notes" FilterTextboxWidth="40">
+                    @context.Notes
                 </GridColumn>
             </Grid>
         </div>
@@ -163,6 +163,10 @@
             <span><strong>Status:</strong></span>
             <span>@modalTask.TaskStatus.Status</span>
         </div>
+        <div class="task-priority">
+            <span><strong>Priority:</strong></span>
+            <span>@modalTask.TasksPriorities.Priority</span>
+        </div>
         <div class="task-complete-by">
             <span><strong>Complete By:</strong></span>
             <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
@@ -194,6 +198,10 @@
             <span><strong>Status:</strong></span>
             <span>@modalTask.TaskStatus.Status</span>
         </div>
+        <div class="task-priority">
+            <span><strong>Priority:</strong></span>
+            <span>@modalTask.TasksPriorities.Priority</span>
+        </div>
         <div class="task-complete-by">
             <span><strong>Complete By:</strong></span>
             <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
@@ -224,6 +232,10 @@
         <div class="task-status">
             <span><strong>Status:</strong></span>
             <span>@modalTask.TaskStatus.Status</span>
+        </div>
+        <div class="task-priority">
+            <span><strong>Priority:</strong></span>
+            <span>@modalTask.TasksPriorities.Priority</span>
         </div>
         <div class="task-complete-by">
             <span><strong>Complete By:</strong></span>
@@ -293,6 +305,23 @@
                 </select>
             }
         </div>
+        <div class="form-group">
+            <label for="taskStatusId">Task Priority:</label>
+            @if (tasksPriorities == null)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <select class="styled-select" @onchange="OnTaskPrioritySelected" required>
+                    <option value="">Select a Task Status</option>
+                    @foreach (var access in tasksPriorities)
+                    {
+                        <option value="@access.Id">@access.Priority</option>
+                    }
+                </select>
+            }
+        </div>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Success" @onclick="addTask">Add new task</Button>
@@ -355,21 +384,39 @@
     private List<Employees> employeesList = new List<Employees>();
     private Grid<Tasks> gridTasks;
     private Grid<Tasks> gridTasksCompleted;
-    //[Inject] NavigationManager NavigationManager { get; set; }
+    private List<TasksPriorities> tasksPriorities = new List<TasksPriorities>();
 
     protected async override void OnInitialized()
     {
         tasks = (await taskServices.GetAllActiveTasks());
+        foreach (var item in tasks)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
         tasksCompleted = (await taskServices.GetAllCompletedTasks());
+        foreach (var item in tasksCompleted)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
         taskStatusList = (await taskServices.GetAllTaskStatuses()).ToList();
         employeesList = (await taskServices.GetAllEmployeesForCurrentCompany()).ToList();
         tasksInProgress = (await taskServices.GetAllInProgressTasks()).ToList();
+        foreach (var item in tasksInProgress)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
+        tasksPriorities = (await taskServices.GetAllTasksPriorities()).ToList();
         news = (await newsServices.GetAllActiveNews()).ToList();
         await gridTasks.RefreshDataAsync();
         await gridTasksCompleted.RefreshDataAsync();
         await gridTasksInProgress.RefreshDataAsync();
         StateHasChanged();
     }
+
+
 
     #region News
 
@@ -467,6 +514,11 @@
         if (tasks is null) // pull employees only one time for client-side filtering, sorting, and paging
             tasks = await taskServices.GetAllActiveTasks(); // call a service or an API to pull the employees
 
+        foreach(var item in tasks)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
         return await Task.FromResult(request.ApplyTo(tasks));
     }
 
@@ -474,7 +526,11 @@
     {
         if (tasksCompleted is null) // pull employees only one time for client-side filtering, sorting, and paging
             tasksCompleted = await taskServices.GetAllCompletedTasks(); // call a service or an API to pull the employees
-
+        foreach (var item in tasksCompleted)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
         return await Task.FromResult(request.ApplyTo(tasksCompleted));
     } 
 
@@ -482,7 +538,11 @@
     {
         if (tasksInProgress is null) // pull employees only one time for client-side filtering, sorting, and paging
             tasksInProgress = await taskServices.GetAllInProgressTasks(); // call a service or an API to pull the employees
-
+        foreach (var item in tasksInProgress)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
         return await Task.FromResult(request.ApplyTo(tasksInProgress));
     }
 
@@ -649,8 +709,9 @@
     #region ModalAddTask
 
     private Modal modalAddTask;
-    private int selectedTaskStatusId; // To hold the selected value
-    private int selectedEmployeeId; // To hold the selected value
+    private int selectedTaskStatusId; 
+    private int selectedEmployeeId; 
+    private int selectedPriorityId; 
     private Tasks taskModel = new Tasks();
 
     private async Task OnShowModalAddTaskClick()
@@ -663,6 +724,14 @@
     private async Task OnHideModalAddTaskClick()
     {
         await modalAddTask?.HideAsync();
+    }
+
+    private void OnTaskPrioritySelected(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPriorityId = selectedId;
+        }
     }
 
     private void OnTaskAccessSelected(ChangeEventArgs e)
@@ -696,11 +765,12 @@
             taskModel.EmployeeId = selectedEmployeeId;
             taskModel.IsActive = true;
             taskModel.TaskStatusId = selectedTaskStatusId;
+            taskModel.TasksPriorityId = selectedPriorityId;
             var response = await taskServices.AddNewTask(taskModel);
             tasks = await taskServices.GetAllActiveTasks();
             tasksCompleted = await taskServices.GetAllCompletedTasks();
             tasksInProgress = await taskServices.GetAllInProgressTasks();
-            
+
             tasks = (await taskServices.GetAllActiveTasks()).ToList();
             preloadService.Hide();
             //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
@@ -734,6 +804,7 @@
     private async Task OnShowModalClick(GridRowEventArgs<Tasks> args)
     {
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
+        modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         await modal?.ShowAsync();
     }
@@ -741,6 +812,7 @@
     private async Task OnShowCompletedModalClick(GridRowEventArgs<Tasks> args)
     {
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
+        modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         await modalComplete?.ShowAsync();
     } 
@@ -748,6 +820,7 @@
     private async Task OnShowProgressModalClick(GridRowEventArgs<Tasks> args)
     {
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
+        modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         await modalProgressTask?.ShowAsync();
     }
