@@ -118,3 +118,16 @@
         font-size: 16px;
         color: #333;
     }
+.form-group {
+    margin-bottom: 20px;
+}
+
+.custom-file-label {
+    position: relative;
+    display: inline-block;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border-radius: .25rem;
+    overflow: hidden;
+}

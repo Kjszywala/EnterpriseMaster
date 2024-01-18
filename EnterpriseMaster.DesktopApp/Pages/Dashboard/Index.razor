@@ -140,7 +140,19 @@
                     </CardHeader>
                     <CardBody>
                         <CardTitle>@whatsNew.Title</CardTitle>
-                        <CardText>@whatsNew.Description</CardText>
+                        <div style="display: flex; align-items: center;">
+
+                            @if (whatsNew.Image != null)
+                            {
+                                <div style="width: 100px; margin-right: 10px;">
+                                    <img src="data:image;base64,@Convert.ToBase64String(whatsNew.Image)" style="width: 100%; height: auto; border-radius: 5px;" />
+                                </div>
+                            }
+
+                            <div style="flex: 1; margin: 2px;">
+                                <CardText>@whatsNew.Description</CardText>
+                            </div>
+                        </div>
                     </CardBody>
                 </Card>
             }
@@ -369,6 +381,16 @@
             <label for="completeBy">Date released:</label>
             <input type="date" id="completeBy" class="form-control" @bind="whatsNewModel.CreationDate" required>
         </div>
+
+        <div class="form-group">
+            <label class="custom-file-label">
+                <span class="file-icon">&#128193;</span>
+                <span class="file-name">Choose File</span>
+            </label>
+            <div class="custom-file">
+                <InputFile class="custom-file-input" OnChange="HandleFileChange" />
+            </div>
+        </div>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Success" @onclick="AddNews">Add Info</Button>
@@ -424,6 +446,7 @@
     private Modal newsModal;
     private Modal modalAddNews;
     private WhatsNew whatsNewModel = new WhatsNew();
+    private byte[] fileBytes;
 
     private async Task OnShowModalNewsClick(GridRowEventArgs<Tasks> args)
     {
@@ -453,6 +476,8 @@
         try
         {
             whatsNewModel.IsActive = true;
+            whatsNewModel.Image = fileBytes;
+            whatsNewModel.ModificationDate = DateTime.Now;
             var response = await whatsNewServices.AddNews(whatsNewModel);
             await modalAddNews?.HideAsync();
             if (response)
@@ -502,6 +527,27 @@
         catch (Exception e)
         {
             ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing this component!");
+        }
+    }
+
+    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    {
+        var selectedFile = e.File;
+
+        if (selectedFile != null)
+        {
+            using (var stream = selectedFile.OpenReadStream())
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await stream.CopyToAsync(memoryStream);
+                    fileBytes = memoryStream.ToArray();
+                }
+            }
+        }
+        else
+        {
+            fileBytes = null;
         }
     }
 

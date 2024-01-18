@@ -33,6 +33,7 @@ namespace EnterpriseMaster.DesktopApp.Data.Services.DashboardServices
                 return (await whatsNewsServices.GetAllAsync())
                     .Where(item => item.IsActive == true && item.Company == Config.CompanyId)
                     .OrderByDescending(item => item.ModificationDate)
+                    .Take(6)
                     .ToList();
             }
             catch (Exception e)
