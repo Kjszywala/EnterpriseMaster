@@ -26,8 +26,8 @@
                     AllowPaging="true"
                     AllowSorting="true"
                     AllowRowClick="true"
-                    Class="table table-hover table-bordered table-striped"
                     DataProvider="TasksDataProvider"
+                    Class="table table-hover table-bordered table-striped"
                     FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
                     HeaderRowCssClass="bg-dark text-white border-bottom-0"
                     PageSize="5"
@@ -38,7 +38,7 @@
                     Responsive="true"
                     OnRowClick="OnShowModalClick"
                     >
-                    <GridColumn TItem="Tasks" HeaderText="Task" PropertyName="Task" SortKeySelector="item => item.Task" FilterTextboxWidth="80">
+                    <GridColumn TItem="Tasks" HeaderText="Task" PropertyName="Task" SortKeySelector="item => item.Task" FilterTextboxWidth="80" Style="height: 10px;">
                         @context.Task
                     </GridColumn>
                     <GridColumn TItem="Tasks" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description" SortString="Description">
@@ -162,65 +162,193 @@
 <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 <Modal @ref="modal" Title="@modalTask.Title" IsVerticallyCentered="true">
+    <HeaderTemplate>
+        @if (!canEdit)
+        {
+            <Button Color="ButtonColor.Info" @onclick="editTaskFlag" Outline="true"> Edit </Button>
+        }
+        else
+        {
+        }
+    </HeaderTemplate>
     <BodyTemplate>
         <div class="task-id">
-            <span><strong>Task:</strong></span>
-            <span>@modalTask.Task</span>
+            <span><strong>Task:</strong></span><br />
+            @if (canEdit)
+            {
+                <input type="text" class="custom-input" @bind="@modalTask.Task" />
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.Task</span>
+            }
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-description">
-            <span><strong>Description:</strong></span>
-            <span>@modalTask.Description</span>
+            <span><strong>Description:</strong></span><br />
+            @if (canEdit)
+            {
+                <input type="text" class="custom-input" @bind="@modalTask.Description" />
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.Description</span>
+            }
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-status">
-            <span><strong>Status:</strong></span>
-            <span>@modalTask.TaskStatus.Status</span>
+            <span><strong>Status:</strong></span><br />
+            @if (canEdit)
+            {
+                @if (taskStatusList == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    <select class="styled-select" @onchange="OnTaskAccessSelectedEdit" required>
+                        <option value="">Select a Task Status</option>
+                        @foreach (var access in taskStatusList)
+                        {
+                            <option value="@access.Id">@access.Status</option>
+                        }
+                    </select>
+                }
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.TaskStatus.Status</span>
+            }
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-priority">
-            <span><strong>Priority:</strong></span>
-            <span>@modalTask.TasksPriorities.Priority</span>
+            <span><strong>Priority:</strong></span><br />
+            @if (canEdit)
+            {
+                @if (tasksPriorities == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    <select class="styled-select" @onchange="OnTaskPrioritySelectedEdit" required>
+                        <option value="">Select a Task Status</option>
+                        @foreach (var access in tasksPriorities)
+                        {
+                            <option value="@access.Id">@access.Priority</option>
+                        }
+                    </select>
+                }
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
+            }
         </div>
+        <hr class="dashboardHr" style="color:black;" />
+        <div class="task-effort">
+            <span><strong>Effort Points:</strong></span><br />
+            <div class="star-rating">
+                @if (canEdit)
+                {
+                    <span class="star @(1 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(1)">★</span>
+                    <span class="star @(2 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(2)">★</span>
+                    <span class="star @(3 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(3)">★</span>
+                    <span class="star @(4 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(4)">★</span>
+                    <span class="star @(5 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(5)">★</span>
+                }
+                else
+                {
+                    <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+                }
+            </div>
+        </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-complete-by">
-            <span><strong>Complete By:</strong></span>
-            <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            <span><strong>Complete By:</strong></span><br />
+            @if (canEdit)
+            {
+                <input type="date" id="completeBy" class="form-control" @bind-value="modalTask.CompleteBy">
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            }
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-creation-date">
-            <span><strong>Creation Date:</strong></span>
-            <span>@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
+            <span><strong>Creation Date:</strong></span><br />
+            <span class="custom-span">@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalTask.Id)">Set As Complete</Button>
-        <Button Color="ButtonColor.Success" @onclick="(e) => setInProgress(modalTask.Id)">In Progress</Button>
-        <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Remove</Button>
-        <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+        @if (!canEdit)
+        {
+            <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalTask.Id)">Set As Complete</Button>
+            <Button Color="ButtonColor.Success" @onclick="(e) => setInProgress(modalTask.Id)">In Progress</Button>
+            <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Remove</Button>
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalClick">Close</Button>
+        }
+        else
+        {
+
+            <div style="display: flex;">
+                <div>
+                    <Button Color="ButtonColor.Success" @onclick="() => editTask(modalTask)" Outline="true"> Save </Button>
+                </div>
+                <div style="margin-left: 5px;">
+                    <Button Color="ButtonColor.Danger" @onclick="cancelFlag" Outline="true"> Cancel </Button>
+                </div>
+            </div>
+        }
     </FooterTemplate>
 </Modal>
 
 <Modal @ref="modalProgressTask" Title="@modalTask.Title" IsVerticallyCentered="true">
     <BodyTemplate>
         <div class="task-id">
-            <span><strong>Task:</strong></span>
-            <span>@modalTask.Task</span>
+            <span><strong>Task:</strong></span><br />
+            <span class="custom-span">@modalTask.Task</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-description">
-            <span><strong>Description:</strong></span>
-            <span>@modalTask.Description</span>
+            <span><strong>Description:</strong></span><br />
+            <span class="custom-span">@modalTask.Description</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-status">
-            <span><strong>Status:</strong></span>
-            <span>@modalTask.TaskStatus.Status</span>
+            <span><strong>Status:</strong></span><br />
+            <span class="custom-span">@modalTask.TaskStatus.Status</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-priority">
-            <span><strong>Priority:</strong></span>
-            <span>@modalTask.TasksPriorities.Priority</span>
+            <span><strong>Priority:</strong></span><br />
+            <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
+        <div class="task-effort">
+            <span><strong>Effort Points:</strong></span><br />
+            <div class="star-rating">
+                <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+            </div>
+        </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-complete-by">
-            <span><strong>Complete By:</strong></span>
-            <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            <span><strong>Complete By:</strong></span><br />
+            <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-creation-date">
-            <span><strong>Creation Date:</strong></span>
-            <span>@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
+            <span><strong>Creation Date:</strong></span><br />
+            <span class="custom-span">@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
         </div>
     </BodyTemplate>
     <FooterTemplate>
@@ -234,28 +362,44 @@
 <Modal @ref="modalComplete" Title="@modalTask.Title" IsVerticallyCentered="true">
     <BodyTemplate>
         <div class="task-id">
-            <span><strong>Task:</strong></span>
-            <span>@modalTask.Task</span>
+            <span><strong>Task:</strong></span><br />
+            <span class="custom-span">@modalTask.Task</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-description">
-            <span><strong>Description:</strong></span>
-            <span>@modalTask.Description</span>
+            <span><strong>Description:</strong></span><br />
+            <span class="custom-span">@modalTask.Description</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-status">
-            <span><strong>Status:</strong></span>
-            <span>@modalTask.TaskStatus.Status</span>
+            <span><strong>Status:</strong></span><br />
+            <span class="custom-span">@modalTask.TaskStatus.Status</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-priority">
-            <span><strong>Priority:</strong></span>
-            <span>@modalTask.TasksPriorities.Priority</span>
+            <span><strong>Priority:</strong></span><br />
+            <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
+        <div class="task-effort">
+            <span><strong>Effort Points:</strong></span><br />
+            <div class="star-rating">
+                <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
+                <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+            </div>
+        </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-complete-by">
-            <span><strong>Complete By:</strong></span>
-            <span>@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            <span><strong>Complete By:</strong></span><br />
+            <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
         </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-creation-date">
-            <span><strong>Creation Date:</strong></span>
-            <span>@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
+            <span><strong>Creation Date:</strong></span><br />
+            <span class="custom-span">@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
         </div>
     </BodyTemplate>
     <FooterTemplate>
@@ -281,7 +425,16 @@
             <label for="completeBy">Complete By:</label>
             <input type="date" id="completeBy" class="form-control" @bind="taskModel.CompleteBy" required>
         </div>
-
+        <div class="task-effort">
+            <span><strong>Effort Points:</strong></span>
+            <div class="star-rating">
+                <span class="star @(1 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(1)">★</span>
+                <span class="star @(2 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(2)">★</span>
+                <span class="star @(3 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(3)">★</span>
+                <span class="star @(4 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(4)">★</span>
+                <span class="star @(5 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(5)">★</span>
+            </div>
+        </div>
         <div class="form-group">
             <label for="employeeId">Employee:</label>
             @if (employeesList == null)
@@ -410,26 +563,9 @@
 
     protected async override void OnInitialized()
     {
-        tasks = (await taskServices.GetAllActiveTasks());
-        foreach (var item in tasks)
-        {
-            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
-            item.Notes = item.TasksPriorities.Priority;
-        }
-        tasksCompleted = (await taskServices.GetAllCompletedTasks());
-        foreach (var item in tasksCompleted)
-        {
-            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
-            item.Notes = item.TasksPriorities.Priority;
-        }
+        await updateAllTasks();
         taskStatusList = (await taskServices.GetAllTaskStatuses()).ToList();
         employeesList = (await taskServices.GetAllEmployeesForCurrentCompany()).ToList();
-        tasksInProgress = (await taskServices.GetAllInProgressTasks()).ToList();
-        foreach (var item in tasksInProgress)
-        {
-            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
-            item.Notes = item.TasksPriorities.Priority;
-        }
         tasksPriorities = (await taskServices.GetAllTasksPriorities()).ToList();
         news = (await newsServices.GetAllActiveNews()).ToList();
         await gridTasks.RefreshDataAsync();
@@ -438,7 +574,13 @@
         StateHasChanged();
     }
 
-
+    private int effortPoints;
+    private Tasks modalTaskHistory = new Tasks();
+    private bool canEdit = false;
+    private void ToggleEffortPoint(int starNumber)
+    {
+        effortPoints = (effortPoints == starNumber) ? 0 : starNumber;
+    }
 
     #region News
 
@@ -604,8 +746,7 @@
             var isCompleted = await taskServices.CompleteTask(id);
             var taskCompleted = await taskServices.GetTaskAsync(id);
             tasks = await taskServices.GetAllActiveTasks();
-            tasksCompleted = await taskServices.GetAllCompletedTasks();
-            tasksInProgress = await taskServices.GetAllInProgressTasks();
+            await updateAllTasks();
             await modal?.HideAsync();
             await modalProgressTask?.HideAsync();
             preloadService.Hide();
@@ -627,17 +768,13 @@
         }
     }
 
-
     private async Task reverseCompleted(int id)
     {
         try
         {
             var isReversed = await taskServices.ReverseTask(id);
-            tasks = await taskServices.GetAllActiveTasks();
-            tasksCompleted = await taskServices.GetAllCompletedTasks();
-            tasksInProgress = await taskServices.GetAllInProgressTasks();
+            await updateAllTasks();
             var taskReversed = await taskServices.GetTaskAsync(id);
-            //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
             await modalComplete?.HideAsync();
             if (isReversed)
             {
@@ -663,9 +800,7 @@
         {
             var taskRemoved = await taskServices.GetTaskAsync(id);
             var isRemoved = await taskServices.RemoveTask(id);
-            tasks = await taskServices.GetAllActiveTasks();
-            tasksCompleted = await taskServices.GetAllCompletedTasks();
-            tasksInProgress = await taskServices.GetAllInProgressTasks();
+            await updateAllTasks();
             await modalComplete?.HideAsync();
             if (isRemoved)
             {
@@ -692,9 +827,7 @@
             var taskProgress = await taskServices.GetTaskAsync(id);
             taskProgress.TaskStatusId = 2;
             var isInProgress = await taskServices.UpdateTask(taskProgress);
-            tasks = await taskServices.GetAllActiveTasks();
-            tasksCompleted = await taskServices.GetAllCompletedTasks();
-            tasksInProgress = await taskServices.GetAllInProgressTasks();
+            await updateAllTasks();
             await modalComplete?.HideAsync();
             await modal?.HideAsync();
             if (isInProgress)
@@ -714,6 +847,28 @@
         }
     }
 
+    private async Task updateAllTasks()
+    {
+        tasks = await taskServices.GetAllActiveTasks();
+        foreach (var item in tasksInProgress)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
+        tasksCompleted = await taskServices.GetAllCompletedTasks();
+        foreach (var item in tasksInProgress)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
+        tasksInProgress = await taskServices.GetAllInProgressTasks();
+        foreach (var item in tasksInProgress)
+        {
+            item.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(item.TasksPriorityId.Value);
+            item.Notes = item.TasksPriorities.Priority;
+        }
+    }
+
     private async Task setAsOpen(int id)
     {
         try
@@ -721,9 +876,7 @@
             var taskProgress = await taskServices.GetTaskAsync(id);
             taskProgress.TaskStatusId = 1;
             var isInProgress = await taskServices.UpdateTask(taskProgress);
-            tasks = await taskServices.GetAllActiveTasks();
-            tasksCompleted = await taskServices.GetAllCompletedTasks();
-            tasksInProgress = await taskServices.GetAllInProgressTasks();
+            await updateAllTasks();
             await modalProgressTask?.HideAsync();
             if (isInProgress)
             {
@@ -734,6 +887,56 @@
                 ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while setting a task to open");
             }
             await gridTasks.RefreshDataAsync();
+            await gridTasksInProgress.RefreshDataAsync();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+        }
+    }
+
+    private async Task editTaskFlag()
+    {
+        modalTaskHistory = modalTask;
+        canEdit = !canEdit;
+    } 
+    private async Task cancelFlag()
+    {
+        modalTask = modalTaskHistory;
+        canEdit = !canEdit;
+    }
+    private async Task editTask(Tasks task)
+    {
+        try
+        {
+            task.EffortPoints = effortPoints;
+
+            if (selectedPriorityIdEdit == 0 || selectedStatusIdEdit == 0)
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "You must select priority and status of the task!");
+                modal?.HideAsync();
+                canEdit = false;
+                return;
+            }
+
+            task.TasksPriorityId = selectedPriorityIdEdit;
+            task.TaskStatusId = selectedStatusIdEdit;
+            var response = await taskServices.UpdateTask(task);
+            await updateAllTasks();
+            tasks = (await taskServices.GetAllActiveTasks()).ToList();
+            preloadService.Hide();
+            modal?.HideAsync();
+            if (response)
+            {
+                ShowMessage(ToastType.Success, "Success!", "Task updated succesfully");
+            }
+            else
+            {
+                ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a task!");
+            }
+            canEdit = false;
+            await gridTasks.RefreshDataAsync();
+            await gridTasksCompleted.RefreshDataAsync();
             await gridTasksInProgress.RefreshDataAsync();
         }
         catch (Exception e)
@@ -758,6 +961,8 @@
     private int selectedTaskStatusId; 
     private int selectedEmployeeId; 
     private int selectedPriorityId; 
+    private int selectedPriorityIdEdit = 0;
+    private int selectedStatusIdEdit = 0;
     private Tasks taskModel = new Tasks();
 
     private async Task OnShowModalAddTaskClick()
@@ -771,6 +976,21 @@
     {
         await modalAddTask?.HideAsync();
     }
+
+    private void OnTaskPrioritySelectedEdit(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedPriorityIdEdit = selectedId;
+        }
+    }  
+    private void OnTaskAccessSelectedEdit(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int selectedId))
+        {
+            selectedStatusIdEdit = selectedId;
+        }
+    } 
 
     private void OnTaskPrioritySelected(ChangeEventArgs e)
     {
@@ -813,11 +1033,7 @@
             taskModel.TaskStatusId = selectedTaskStatusId;
             taskModel.TasksPriorityId = selectedPriorityId;
             var response = await taskServices.AddNewTask(taskModel);
-            tasks = await taskServices.GetAllActiveTasks();
-            tasksCompleted = await taskServices.GetAllCompletedTasks();
-            tasksInProgress = await taskServices.GetAllInProgressTasks();
-
-            tasks = (await taskServices.GetAllActiveTasks()).ToList();
+            await updateAllTasks();
             preloadService.Hide();
             //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
             if (response)
@@ -852,22 +1068,25 @@
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
         modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
+        effortPoints = (int)modalTask.EffortPoints;
         await modal?.ShowAsync();
     }
-    
+
     private async Task OnShowCompletedModalClick(GridRowEventArgs<Tasks> args)
     {
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
         modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
+        effortPoints = (int)modalTask.EffortPoints;
         await modalComplete?.ShowAsync();
     } 
-    
+
     private async Task OnShowProgressModalClick(GridRowEventArgs<Tasks> args)
     {
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
         modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
+        effortPoints = (int)modalTask.EffortPoints;
         await modalProgressTask?.ShowAsync();
     }
 

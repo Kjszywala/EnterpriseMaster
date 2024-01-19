@@ -131,3 +131,49 @@
     border-radius: .25rem;
     overflow: hidden;
 }
+.star-rating {
+    font-size: 24px;
+}
+
+.star {
+    cursor: pointer;
+    color: #ddd; /* Empty star color */
+    margin-right: 5px;
+}
+
+.filled {
+    color: #FFD700; /* Gold color for filled stars */
+}
+.custom-input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+/* Optional: Add styles for when the input is in focus */
+.custom-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+/* Define a class for spans containing strong */
+.custom-strong-span {
+    display: block; /* Ensures each span is on a new line */
+    margin-bottom: 5px;
+}
+
+/* Define a class for spans */
+.custom-span {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Optional: Add styles for when the span is in focus (though spans cannot be focused by default) */
+.custom-span:focus {
+    outline: none;
+}
