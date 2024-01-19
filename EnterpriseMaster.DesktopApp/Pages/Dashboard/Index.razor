@@ -1032,6 +1032,7 @@
             taskModel.IsActive = true;
             taskModel.TaskStatusId = selectedTaskStatusId;
             taskModel.TasksPriorityId = selectedPriorityId;
+            taskModel.EffortPoints = effortPoints;
             var response = await taskServices.AddNewTask(taskModel);
             await updateAllTasks();
             preloadService.Hide();
