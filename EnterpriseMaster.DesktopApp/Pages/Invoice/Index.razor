@@ -107,16 +107,27 @@
 @code {
     protected async override void OnInitialized()
     {
-        invoices = await invoiceService.GetAllInvoicesForGridAsync();
-        salesOrdersList = (await orderService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
-        foreach(var item in salesOrdersList)
+        try
         {
-            item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
-            item.OrderStatuse = await salesService.GetOrderStatusAsync(item.OrderStatuseId.Value);
-            item.CustomerInformation = await customerDataService.GetCustomerInformationAsync(item.CustomerInformationId.Value);
-        }
+            preloadService.Show(SpinnerColor.Dark);
+            invoices = await invoiceService.GetAllInvoicesForGridAsync();
+            salesOrdersList = (await orderService.GetAllSalesOrdersAsync()).Where(item => item.OrderStatuseId == (int)StatusForOrder.Completed).ToList();
+            foreach(var item in salesOrdersList)
+            {
+                item.Product = await inventoryService.GetProductAsync(item.ProductId.Value);
+                item.OrderStatuse = await salesService.GetOrderStatusAsync(item.OrderStatuseId.Value);
+                item.CustomerInformation = await customerDataService.GetCustomerInformationAsync(item.CustomerInformationId.Value);
+            }
 
-        await gridInvoiceViewModel.RefreshDataAsync();
+            await gridInvoiceViewModel.RefreshDataAsync();
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
+        
     }
 
     #region InvoiceViewModelRegion

@@ -3,9 +3,12 @@
 @using EnterpriseMaster.DbServices.Models.Database;
 @using EnterpriseMaster.DesktopApp.Data.Models;
 @using EnterpriseMaster.DesktopApp.Data.Services.DashboardServices;
+@using System.Text;
+@using System.Text.Json;
 @inject TaskServices taskServices
 @inject WhatsNewInfoService whatsNewServices
 @inject WhatsNewInfoService newsServices
+@inject Helpers.Interfaces.IFolderPick _folderPicker
 @inherits MainLayout
 
 <div class="dashboardGrid">
@@ -280,6 +283,64 @@
             }
         </div>
         <hr class="dashboardHr" style="color:black;" />
+        <div class="form-group">
+            <span><strong>Files:</strong></span><br />
+            @if(!canEdit)
+            {
+                @if (fileModels.Count > 0)
+                {
+                    <div>
+                        @foreach (var fileModel in fileModels)
+                        {
+                            <div class="file-container">
+                                <span class="file-name">@fileModel.FileName</span>
+                                <div style="flex: 1;"></div>
+                                <button class="download-btn" @onclick="() => downloadFile(fileModel)">Download</button>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No files available.</p>
+                }
+            }
+            else
+            { 
+                @if (fileModels.Count > 0)
+                {
+                    @foreach (var fileModel in fileModels)
+                    {
+                        <div class="file-container" style="display: flex;">
+                            <span class="file-name">@fileModel.FileName</span>
+                            <div style="flex: 1;"></div>
+                            <button class="delete-btn" @onclick="() => RemoveFile(fileModel)">Delete</button>
+                        </div>
+                    }
+                    <hr class="dashboardHr" style="color:black;" />
+                    <label class="custom-file-label">
+                        <span class="file-icon">&#128193;</span>
+                        <span class="file-name">Choose File</span>
+                    </label>
+                    <div class="custom-file">
+                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                    </div>
+                }
+                else
+                {
+                    <p>No files available.</p>
+                    <hr class="dashboardHr" style="color:black;" />
+                    <label class="custom-file-label">
+                        <span class="file-icon">&#128193;</span>
+                        <span class="file-name">Choose File</span>
+                    </label>
+                    <div class="custom-file">
+                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                    </div>
+                }
+            }
+        </div>
+        <hr class="dashboardHr" style="color:black;" />
         <div class="task-creation-date">
             <span><strong>Creation Date:</strong></span><br />
             <span class="custom-span">@modalTask.CreationDate.ToString("yyyy-MM-dd")</span>
@@ -309,41 +370,180 @@
 </Modal>
 
 <Modal @ref="modalProgressTask" Title="@modalTask.Title" IsVerticallyCentered="true">
+    <HeaderTemplate>
+        @if (!canEdit)
+        {
+            <Button Color="ButtonColor.Info" @onclick="editTaskFlag" Outline="true"> Edit </Button>
+        }
+        else
+        {
+        }
+    </HeaderTemplate>
     <BodyTemplate>
         <div class="task-id">
             <span><strong>Task:</strong></span><br />
-            <span class="custom-span">@modalTask.Task</span>
+            @if (canEdit)
+            {
+                <input type="text" class="custom-input" @bind="@modalTask.Task" />
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.Task</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-description">
             <span><strong>Description:</strong></span><br />
-            <span class="custom-span">@modalTask.Description</span>
+            @if (canEdit)
+            {
+                <input type="text" class="custom-input" @bind="@modalTask.Description" />
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.Description</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-status">
             <span><strong>Status:</strong></span><br />
-            <span class="custom-span">@modalTask.TaskStatus.Status</span>
+            @if (canEdit)
+            {
+                @if (taskStatusList == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    <select class="styled-select" @onchange="OnTaskAccessSelectedEdit" required>
+                        <option value="">Select a Task Status</option>
+                        @foreach (var access in taskStatusList)
+                        {
+                            <option value="@access.Id">@access.Status</option>
+                        }
+                    </select>
+                }
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.TaskStatus.Status</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-priority">
             <span><strong>Priority:</strong></span><br />
-            <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
+            @if (canEdit)
+            {
+                @if (tasksPriorities == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    <select class="styled-select" @onchange="OnTaskPrioritySelectedEdit" required>
+                        <option value="">Select a Task Status</option>
+                        @foreach (var access in tasksPriorities)
+                        {
+                            <option value="@access.Id">@access.Priority</option>
+                        }
+                    </select>
+                }
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-effort">
             <span><strong>Effort Points:</strong></span><br />
             <div class="star-rating">
-                <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+                @if (canEdit)
+                {
+                    <span class="star @(1 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(1)">★</span>
+                    <span class="star @(2 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(2)">★</span>
+                    <span class="star @(3 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(3)">★</span>
+                    <span class="star @(4 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(4)">★</span>
+                    <span class="star @(5 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(5)">★</span>
+                }
+                else
+                {
+                    <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+                }
             </div>
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-complete-by">
             <span><strong>Complete By:</strong></span><br />
-            <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            @if (canEdit)
+            {
+                <input type="date" id="completeBy" class="form-control" @bind-value="modalTask.CompleteBy">
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            }
+        </div>
+        <hr class="dashboardHr" style="color:black;" />
+        <div class="form-group">
+            <span><strong>Files:</strong></span><br />
+            @if (!canEdit)
+            {
+                @if (fileModels.Count > 0)
+                {
+                    <div>
+                        @foreach (var fileModel in fileModels)
+                        {
+                            <div class="file-container">
+                                <span class="file-name">@fileModel.FileName</span>
+                                <div style="flex: 1;"></div>
+                                <button class="download-btn" @onclick="() => downloadFile(fileModel)">Download</button>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No files available.</p>
+                }
+            }
+            else
+            {
+                @if (fileModels.Count > 0)
+                {
+                    @foreach (var fileModel in fileModels)
+                    {
+                        <div class="file-container" style="display: flex;">
+                            <span class="file-name">@fileModel.FileName</span>
+                            <div style="flex: 1;"></div>
+                            <button class="delete-btn" @onclick="() => RemoveFile(fileModel)">Delete</button>
+                        </div>
+                    }
+                    <hr class="dashboardHr" style="color:black;" />
+                    <label class="custom-file-label">
+                        <span class="file-icon">&#128193;</span>
+                        <span class="file-name">Choose File</span>
+                    </label>
+                    <div class="custom-file">
+                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                    </div>
+                }
+                else
+                {
+                    <p>No files available.</p>
+                    <hr class="dashboardHr" style="color:black;" />
+                    <label class="custom-file-label">
+                        <span class="file-icon">&#128193;</span>
+                        <span class="file-name">Choose File</span>
+                    </label>
+                    <div class="custom-file">
+                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                    </div>
+                }
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-creation-date">
@@ -352,49 +552,202 @@
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Success" @onclick="(e) => setAsOpen(modalTask.Id)">Set As Open</Button>
-        <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalTask.Id)">Complete</Button>
-        <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Remove</Button>
-        <Button Color="ButtonColor.Danger" @onclick="OnHideModalProgressClick">Close</Button>
+        @if(!canEdit)
+        {
+            <Button Color="ButtonColor.Success" @onclick="(e) => setAsOpen(modalTask.Id)">Set As Open</Button>
+            <Button Color="ButtonColor.Success" @onclick="(e) => setCompleted(modalTask.Id)">Complete</Button>
+            <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Remove</Button>
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalProgressClick">Close</Button>
+        }
+        else
+        {
+            <div style="display: flex;">
+                <div>
+                    <Button Color="ButtonColor.Success" @onclick="() => editTask(modalTask)" Outline="true"> Save </Button>
+                </div>
+                <div style="margin-left: 5px;">
+                    <Button Color="ButtonColor.Danger" @onclick="cancelFlag" Outline="true"> Cancel </Button>
+                </div>
+            </div>
+        }
     </FooterTemplate>
 </Modal>
 
 <Modal @ref="modalComplete" Title="@modalTask.Title" IsVerticallyCentered="true">
+    <HeaderTemplate>
+        @if (!canEdit)
+        {
+            <Button Color="ButtonColor.Info" @onclick="editTaskFlag" Outline="true"> Edit </Button>
+        }
+        else
+        {
+        }
+    </HeaderTemplate>
     <BodyTemplate>
         <div class="task-id">
             <span><strong>Task:</strong></span><br />
-            <span class="custom-span">@modalTask.Task</span>
+            @if (canEdit)
+            {
+                <input type="text" class="custom-input" @bind="@modalTask.Task" />
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.Task</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-description">
             <span><strong>Description:</strong></span><br />
-            <span class="custom-span">@modalTask.Description</span>
+            @if (canEdit)
+            {
+                <input type="text" class="custom-input" @bind="@modalTask.Description" />
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.Description</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-status">
             <span><strong>Status:</strong></span><br />
-            <span class="custom-span">@modalTask.TaskStatus.Status</span>
+            @if (canEdit)
+            {
+                @if (taskStatusList == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    <select class="styled-select" @onchange="OnTaskAccessSelectedEdit" required>
+                        <option value="">Select a Task Status</option>
+                        @foreach (var access in taskStatusList)
+                        {
+                            <option value="@access.Id">@access.Status</option>
+                        }
+                    </select>
+                }
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.TaskStatus.Status</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-priority">
             <span><strong>Priority:</strong></span><br />
-            <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
+            @if (canEdit)
+            {
+                @if (tasksPriorities == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+                    <select class="styled-select" @onchange="OnTaskPrioritySelectedEdit" required>
+                        <option value="">Select a Task Status</option>
+                        @foreach (var access in tasksPriorities)
+                        {
+                            <option value="@access.Id">@access.Priority</option>
+                        }
+                    </select>
+                }
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.TasksPriorities.Priority</span>
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-effort">
             <span><strong>Effort Points:</strong></span><br />
             <div class="star-rating">
-                <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
-                <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+                @if (canEdit)
+                {
+                    <span class="star @(1 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(1)">★</span>
+                    <span class="star @(2 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(2)">★</span>
+                    <span class="star @(3 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(3)">★</span>
+                    <span class="star @(4 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(4)">★</span>
+                    <span class="star @(5 <= effortPoints ? "filled" : "")" @onclick="(e) => ToggleEffortPoint(5)">★</span>
+                }
+                else
+                {
+                    <span class="star @(1 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(2 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(3 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(4 <= effortPoints ? "filled" : "")">★</span>
+                    <span class="star @(5 <= effortPoints ? "filled" : "")">★</span>
+                }
             </div>
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-complete-by">
             <span><strong>Complete By:</strong></span><br />
-            <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            @if (canEdit)
+            {
+                <input type="date" id="completeBy" class="form-control" @bind-value="modalTask.CompleteBy">
+            }
+            else
+            {
+                <span class="custom-span">@modalTask.CompleteBy.ToString("yyyy-MM-dd")</span>
+            }
+        </div>
+        <hr class="dashboardHr" style="color:black;" />
+        <div class="form-group">
+            <span><strong>Files:</strong></span><br />
+            @if (!canEdit)
+            {
+                @if (fileModels.Count > 0)
+                {
+                    <div>
+                        @foreach (var fileModel in fileModels)
+                        {
+                            <div class="file-container">
+                                <span class="file-name">@fileModel.FileName</span>
+                                <div style="flex: 1;"></div>
+                                <button class="download-btn" @onclick="() => downloadFile(fileModel)">Download</button>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No files available.</p>
+                }
+            }
+            else
+            {
+                @if (fileModels.Count > 0)
+                {
+                    @foreach (var fileModel in fileModels)
+                    {
+                        <div class="file-container" style="display: flex;">
+                            <span class="file-name">@fileModel.FileName</span>
+                            <div style="flex: 1;"></div>
+                            <button class="delete-btn" @onclick="() => RemoveFile(fileModel)">Delete</button>
+                        </div>
+                    }
+                    <hr class="dashboardHr" style="color:black;" />
+                    <label class="custom-file-label">
+                        <span class="file-icon">&#128193;</span>
+                        <span class="file-name">Choose File</span>
+                    </label>
+                    <div class="custom-file">
+                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                    </div>
+                }
+                else
+                {
+                    <p>No files available.</p>
+                    <hr class="dashboardHr" style="color:black;" />
+                    <label class="custom-file-label">
+                        <span class="file-icon">&#128193;</span>
+                        <span class="file-name">Choose File</span>
+                    </label>
+                    <div class="custom-file">
+                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                    </div>
+                }
+            }
         </div>
         <hr class="dashboardHr" style="color:black;" />
         <div class="task-creation-date">
@@ -403,9 +756,23 @@
         </div>
     </BodyTemplate>
     <FooterTemplate>
-        <Button Color="ButtonColor.Success" @onclick="(e) => reverseCompleted(modalTask.Id)">Reverse Task</Button>
-        <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Remove Task</Button>
-        <Button Color="ButtonColor.Danger" @onclick="OnHideModalCompleteClick">Close</Button>
+        @if(!canEdit)
+        {
+            <Button Color="ButtonColor.Success" @onclick="(e) => reverseCompleted(modalTask.Id)">Reverse Task</Button>
+            <Button Color="ButtonColor.Danger" @onclick="(e) => removeTask(modalTask.Id)">Remove Task</Button>
+            <Button Color="ButtonColor.Danger" @onclick="OnHideModalCompleteClick">Close</Button>
+        }
+        else
+        {
+            <div style="display: flex;">
+                <div>
+                    <Button Color="ButtonColor.Success" @onclick="() => editTask(modalTask)" Outline="true"> Save </Button>
+                </div>
+                <div style="margin-left: 5px;">
+                    <Button Color="ButtonColor.Danger" @onclick="cancelFlag" Outline="true"> Cancel </Button>
+                </div>
+            </div>
+        }
     </FooterTemplate>
 </Modal>
 
@@ -560,18 +927,30 @@
     private Grid<Tasks> gridTasks;
     private Grid<Tasks> gridTasksCompleted;
     private List<TasksPriorities> tasksPriorities = new List<TasksPriorities>();
-
+    private List<FileModel> fileModels = new List<FileModel>();
     protected async override void OnInitialized()
     {
-        await updateAllTasks();
-        taskStatusList = (await taskServices.GetAllTaskStatuses()).ToList();
-        employeesList = (await taskServices.GetAllEmployeesForCurrentCompany()).ToList();
-        tasksPriorities = (await taskServices.GetAllTasksPriorities()).ToList();
-        news = (await newsServices.GetAllActiveNews()).ToList();
-        await gridTasks.RefreshDataAsync();
-        await gridTasksCompleted.RefreshDataAsync();
-        await gridTasksInProgress.RefreshDataAsync();
-        StateHasChanged();
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            await updateAllTasks();
+            preloadService.Show();
+            taskStatusList = (await taskServices.GetAllTaskStatuses()).ToList();
+            employeesList = (await taskServices.GetAllEmployeesForCurrentCompany()).ToList();
+            tasksPriorities = (await taskServices.GetAllTasksPriorities()).ToList();
+            news = (await newsServices.GetAllActiveNews()).ToList();
+            await gridTasks.RefreshDataAsync();
+            await gridTasksCompleted.RefreshDataAsync();
+            await gridTasksInProgress.RefreshDataAsync();
+            preloadService.Hide();
+            ShowMessage(ToastType.Success, "Details Correct!", "Welcome to Enterprise Master! You have successfully logged in");
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
     }
 
     private int effortPoints;
@@ -737,6 +1116,30 @@
     #endregion
 
     #region TasksMethods
+
+    void RemoveFile(FileModel fileModel)
+    {
+        fileModels.Remove(fileModel);
+    }
+
+    private async Task downloadFile(FileModel fileModel)
+    {
+        try
+        {
+            var path = _folderPicker.DisplayFolderPicker();
+            if (path != null)
+            {
+                byte[] fileBytes = Convert.FromBase64String(fileModel.FileContent);
+
+                File.WriteAllBytes(Path.Combine(path, fileModel.FileName), fileBytes);
+            }
+            ShowMessage(ToastType.Success, "Success!", "Successfully downloaded!");
+        }
+        catch(Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating downloading file!");
+        }
+    }
 
     private async Task setCompleted(int id)
     {
@@ -909,8 +1312,16 @@
     {
         try
         {
+            preloadService.Show(SpinnerColor.Dark);
             task.EffortPoints = effortPoints;
-
+            if(fileModels.Count > 0)
+            {
+                task.Files = JsonSerializer.Serialize(fileModels);
+            }
+            else
+            {
+                task.Files = string.Empty;
+            }
             if (selectedPriorityIdEdit == 0 || selectedStatusIdEdit == 0)
             {
                 ShowMessage(ToastType.Warning, "Warning!", "You must select priority and status of the task!");
@@ -925,7 +1336,6 @@
             await updateAllTasks();
             tasks = (await taskServices.GetAllActiveTasks()).ToList();
             preloadService.Hide();
-            modal?.HideAsync();
             if (response)
             {
                 ShowMessage(ToastType.Success, "Success!", "Task updated succesfully");
@@ -938,13 +1348,36 @@
             await gridTasks.RefreshDataAsync();
             await gridTasksCompleted.RefreshDataAsync();
             await gridTasksInProgress.RefreshDataAsync();
+            preloadService.Hide();
         }
         catch (Exception e)
         {
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
         }
     }
 
+    async Task HandleFileChangeTasks(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var fileModel = new FileModel
+            {
+                FileName = file.Name,
+                FileType = file.ContentType,
+                FileSize = (int)file.Size
+            };
+
+            using (var stream = file.OpenReadStream())
+            using (var reader = new StreamReader(stream))
+            {
+                var fileContentBytes = Encoding.UTF8.GetBytes(await reader.ReadToEndAsync());
+                fileModel.FileContent = Convert.ToBase64String(fileContentBytes);
+            }
+
+            fileModels.Add(fileModel);
+        }
+    }
     #endregion
 
     #region InProgress
@@ -1036,7 +1469,6 @@
             var response = await taskServices.AddNewTask(taskModel);
             await updateAllTasks();
             preloadService.Hide();
-            //NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
             if (response)
             {
                 ShowMessage(ToastType.Success, "Success!", "Task added succesfully");
@@ -1066,28 +1498,43 @@
 
     private async Task OnShowModalClick(GridRowEventArgs<Tasks> args)
     {
+        fileModels.Clear();
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
         modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         effortPoints = (int)modalTask.EffortPoints;
+        if (!string.IsNullOrEmpty(modalTask.Files))
+        {
+            fileModels = JsonSerializer.Deserialize<List<FileModel>>(modalTask.Files);
+        }
         await modal?.ShowAsync();
     }
 
     private async Task OnShowCompletedModalClick(GridRowEventArgs<Tasks> args)
     {
+        fileModels.Clear();
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
         modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         effortPoints = (int)modalTask.EffortPoints;
+        if (!string.IsNullOrEmpty(modalTask.Files))
+        {
+            fileModels = JsonSerializer.Deserialize<List<FileModel>>(modalTask.Files);
+        }
         await modalComplete?.ShowAsync();
     } 
 
     private async Task OnShowProgressModalClick(GridRowEventArgs<Tasks> args)
     {
+        fileModels.Clear();
         modalTask = await taskServices.GetTaskAsync(args.Item.Id);
         modalTask.TasksPriorities = await taskServices.GetTaskPrioritiesAsync(modalTask.TasksPriorityId.Value);
         modalTask.TaskStatus = taskStatusList.Where(item => item.Id == modalTask.TaskStatusId).FirstOrDefault();
         effortPoints = (int)modalTask.EffortPoints;
+        if (!string.IsNullOrEmpty(modalTask.Files))
+        {
+            fileModels = JsonSerializer.Deserialize<List<FileModel>>(modalTask.Files);
+        }
         await modalProgressTask?.ShowAsync();
     }
 

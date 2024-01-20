@@ -164,11 +164,13 @@
     {
         try
         {
+            preloadService.Show(SpinnerColor.Dark);
             productionOrders = await productionService.GetAllProductionOrdersForGridAsync();
             gridListProductionOrdersViewModel = (await productionService.GetAllProductionOrdersForGridAsync()).Where(item => item.ProductionOrderStatus == "In Progress").ToList();
             await gridOrderViewModel.RefreshDataAsync();
             await gridOrderInProgressViewModel.RefreshDataAsync();
             StateHasChanged();
+            preloadService.Hide();
         }
         catch (Exception e)
         {

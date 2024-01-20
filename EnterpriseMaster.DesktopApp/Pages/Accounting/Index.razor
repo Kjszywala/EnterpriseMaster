@@ -389,10 +389,21 @@
 
     protected async override void OnInitialized()
     {
-        employees = await employeeService.GetEmployeesAsync();
-        employeesList = await employeeService.GetEmployeesAsync();
-        employeeAccesses = await employeeService.GetEmployeeAccessesAsync();
-        roles = await rolesService.GetAllRolesAsync();
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            employees = await employeeService.GetEmployeesAsync();
+            employeesList = await employeeService.GetEmployeesAsync();
+            employeeAccesses = await employeeService.GetEmployeeAccessesAsync();
+            roles = await rolesService.GetAllRolesAsync();
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
+        
     }
 
     private async Task<GridDataProviderResult<Employees>> EmployeesDataProvider(GridDataProviderRequest<Employees> request)

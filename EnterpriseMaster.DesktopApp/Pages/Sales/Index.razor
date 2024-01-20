@@ -695,23 +695,33 @@
 @code {
     protected async override void OnInitialized()
     {
-        salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
-        shippersList = await orderService.GetAllShippersForGridAsync();
-        shippers = await orderService.GetAllShippersAsync();
-        customerInformation = await customerDataService.GetAllCustomerInformationAsync();
-        customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
-        customersForSelect = customerInformation;
-        quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
-        productsForOrder = await inventoryService.GetAllProductsAsync();
-        foreach(var item in shippers)
+         try
         {
-            item.ShippersAddresses = await orderService.GetShipperAddressAsync(item.ShippersAddressId.Value);
+            preloadService.Show(SpinnerColor.Dark);
+            salesOrders = await orderService.GetAllSalesOrdersForGridAsync();
+            shippersList = await orderService.GetAllShippersForGridAsync();
+            shippers = await orderService.GetAllShippersAsync();
+            customerInformation = await customerDataService.GetAllCustomerInformationAsync();
+            customerManagementViewModels = await customerDataService.GetAllCustomerInformationForGridAsync();
+            customersForSelect = customerInformation;
+            quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
+            productsForOrder = await inventoryService.GetAllProductsAsync();
+            foreach(var item in shippers)
+            {
+                item.ShippersAddresses = await orderService.GetShipperAddressAsync(item.ShippersAddressId.Value);
+            }
+            refundsList = await orderService.GetAllRefundsAsync();
+            await gridOrderViewModel.RefreshDataAsync();
+            await gridShippers.RefreshDataAsync();
+            await gridCustomerManagement.RefreshDataAsync();
+            StateHasChanged();
+            preloadService.Hide();
         }
-        refundsList = await orderService.GetAllRefundsAsync();
-        await gridOrderViewModel.RefreshDataAsync();
-        await gridShippers.RefreshDataAsync();
-        await gridCustomerManagement.RefreshDataAsync();
-        StateHasChanged();
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
     }
 
     #region Make an order

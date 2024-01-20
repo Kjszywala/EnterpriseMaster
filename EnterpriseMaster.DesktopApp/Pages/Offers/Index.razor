@@ -211,7 +211,8 @@
     protected async override void OnInitialized()
     {
         try
-        {        
+        {
+            preloadService.Show(SpinnerColor.Dark);
             offers = await offerServices.GetAllOffersForGridAsync();
             products = await inventoryService.GetAllProductsAsync();
             offersToApprove = await offerServices.GetAllOffersAsync();
@@ -221,10 +222,12 @@
             }
             await gridOffersViewModel.RefreshDataAsync();
             StateHasChanged();
+            preloadService.Hide();
         }
         catch (Exception e)
         {
-            ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
         }
     }
 

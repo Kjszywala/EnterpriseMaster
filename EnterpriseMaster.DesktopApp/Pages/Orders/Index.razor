@@ -738,6 +738,7 @@
     {
         try
         {
+            preloadService.Show(SpinnerColor.Dark);
             suppliers = await orderService.GetAllSupplierForGridAsync();
             purchaseOrders = await orderService.GetAllPurchaseOrdersForGridAsync();
             suppliersList = await orderService.GetAllSupplierAsync();
@@ -758,10 +759,12 @@
             await gridPurchaseOrderManagementViewModel.RefreshDataAsync();
             await gridPurchaseOrderReportViewModel.RefreshDataAsync();
             StateHasChanged();
+            preloadService.Hide();
         }
         catch(Exception e)
         {
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
         }
 
     }

@@ -354,32 +354,43 @@
 
     protected async override void OnInitialized()
     {
-        products = await inventoryService.GetAllProductsAsync();
-        categories = await inventoryService.GetAllCategoriesAsync();
-        quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
-        foreach (var product in products)
+        try
         {
-            product.Category = await inventoryService.GetCategoriesAsync(product.CategoryId.Value);
-            product.QuantityType = await inventoryService.GetQuantityTypesAsync(product.QuantityTypeId.Value);
+            preloadService.Show(SpinnerColor.Dark);
+            products = await inventoryService.GetAllProductsAsync();
+            categories = await inventoryService.GetAllCategoriesAsync();
+            quantityTypes = await inventoryService.GetAllQuantityTypesAsync();
+            foreach (var product in products)
+            {
+                product.Category = await inventoryService.GetCategoriesAsync(product.CategoryId.Value);
+                product.QuantityType = await inventoryService.GetQuantityTypesAsync(product.QuantityTypeId.Value);
+            }
+            inventoryReport = products;
+            if(inventoryReport.Count > 0)
+            {
+                largestUnitInStock = products.OrderByDescending(item => item.UnitsInStock).FirstOrDefault().UnitsInStock.ToString();
+                heaviestItem = products.OrderByDescending(item => item.Weight).FirstOrDefault().Weight.ToString();
+                mostExpensiveItem = products.OrderByDescending(item => item.Price).FirstOrDefault().Price.ToString();
+                totalInStock = products.Sum(item => item.UnitsInStock).ToString();
+            }
+            else
+            {
+                largestUnitInStock = "0";
+                heaviestItem = "0";
+                mostExpensiveItem = "0";
+                totalInStock = "0";
+            }
+            await gridProducts.RefreshDataAsync();
+            await gridProductsReportViewModel.RefreshDataAsync();
+            StateHasChanged();
+            preloadService.Hide();
         }
-        inventoryReport = products;
-        if(inventoryReport.Count > 0)
+        catch (Exception e)
         {
-            largestUnitInStock = products.OrderByDescending(item => item.UnitsInStock).FirstOrDefault().UnitsInStock.ToString();
-            heaviestItem = products.OrderByDescending(item => item.Weight).FirstOrDefault().Weight.ToString();
-            mostExpensiveItem = products.OrderByDescending(item => item.Price).FirstOrDefault().Price.ToString();
-            totalInStock = products.Sum(item => item.UnitsInStock).ToString();
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
         }
-        else
-        {
-            largestUnitInStock = "0";
-            heaviestItem = "0";
-            mostExpensiveItem = "0";
-            totalInStock = "0";
-        }
-        await gridProducts.RefreshDataAsync();
-        await gridProductsReportViewModel.RefreshDataAsync();
-        StateHasChanged();
+        
     }
 
     #region Stock List

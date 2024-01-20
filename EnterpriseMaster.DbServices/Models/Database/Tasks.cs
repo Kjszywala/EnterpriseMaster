@@ -15,5 +15,6 @@
         public int? TasksPriorityId { get; set; }
         public TasksPriorities? TasksPriorities { get; set; }
         public int? EffortPoints { get; set; }
+        public string? Files { get; set; }
     }
 }

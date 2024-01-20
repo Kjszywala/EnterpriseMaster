@@ -325,32 +325,43 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        try
         {
-            await RenderTasksAsync();
-            await RenderTasksCompletedAsync();
-            await RenderAllTasksAsync();
-            await RenderAllCompletedTasksAsync();
-            await AllPurchaseOrdersDoughnut();
-            await RenderAllCompletedPurchaseOrdersAsync();
-            await RenderAllRejectedPurchaseOrdersAsync();
-            await RenderAllPurchaseOrdersAsync();
-            await RenderAllSpendingsTwoAsync();
-            await RenderAllSpendingsAsync();
-            await RenderAllSalesProfitAsync();
-            await RenderSalesOrdersCompletedAsync();
-            await RenderAllInventoryInStockAsync();
-            await RenderAllInventoryProductsAsync();
-            await RenderAllInventoryReportsAsync();
-            await SalesOrdersThisMonthChart();
-            await RenderAllQuantitySalesOrdersAsync();
-            await RenderAllCompletedSalesOrdersAsync();
-            await RenderAllSalesOrdersAsync();
-            await ProductionThisMonthChart();
-            await RenderAllProductionOveralAsync();
-        }
+            preloadService.Show(SpinnerColor.Dark);
+            if (firstRender)
+            {
+                await RenderTasksAsync();
+                await RenderTasksCompletedAsync();
+                await RenderAllTasksAsync();
+                await RenderAllCompletedTasksAsync();
+                await AllPurchaseOrdersDoughnut();
+                await RenderAllCompletedPurchaseOrdersAsync();
+                await RenderAllRejectedPurchaseOrdersAsync();
+                await RenderAllPurchaseOrdersAsync();
+                await RenderAllSpendingsTwoAsync();
+                await RenderAllSpendingsAsync();
+                await RenderAllSalesProfitAsync();
+                await RenderSalesOrdersCompletedAsync();
+                await RenderAllInventoryInStockAsync();
+                await RenderAllInventoryProductsAsync();
+                await RenderAllInventoryReportsAsync();
+                await SalesOrdersThisMonthChart();
+                await RenderAllQuantitySalesOrdersAsync();
+                await RenderAllCompletedSalesOrdersAsync();
+                await RenderAllSalesOrdersAsync();
+                await ProductionThisMonthChart();
+                await RenderAllProductionOveralAsync();
+            }
 
-        await base.OnAfterRenderAsync(firstRender);
+            await base.OnAfterRenderAsync(firstRender);
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
+        
     }
 
     #region Tasks

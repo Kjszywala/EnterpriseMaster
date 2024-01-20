@@ -304,6 +304,7 @@
     {
         try
         {
+            preloadService.Show(SpinnerColor.Dark);
             payments = await financeService.GetAllPaymentsForGridAsync();
             purchaseOrders = await orderService.GetAllOpenPurchaseOrdersAsync();
             foreach(var item in purchaseOrders)
@@ -317,10 +318,12 @@
             }
             lastPurchaseOrders = lastPurchaseOrdersApproved.OrderByDescending(item => item.ModificationDate).Take(5).ToList();
             await gridPayments.RefreshDataAsync();
+            preloadService.Hide();
         }
         catch(Exception e)
         {
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
+            preloadService.Hide();
         }
     }
 

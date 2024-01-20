@@ -450,18 +450,29 @@
 
     protected async override void OnInitialized()
     {
-        jobOffers = await hrService.GetAllJobOffersAsync();
-        jobOffer.CreationDate = DateTime.Now;
-        jobOffer.ExpirationDate = DateTime.Now;
-        jobOffer.ApplicationDeadline = DateTime.Now;
-        trainingsOffers = await hrService.GetAllTrainingsAsync();
-        training.StartDate = DateTime.Now;
-        training.EndDate = DateTime.Now;
-        training.CreationDate = DateTime.Now;
-        training.RegistrationDeadline = DateTime.Now;
-        await gridJobOffers.RefreshDataAsync();
-        await gridTrainings.RefreshDataAsync();
-        StateHasChanged();
+        try
+        {
+            preloadService.Show(SpinnerColor.Dark);
+            jobOffers = await hrService.GetAllJobOffersAsync();
+            jobOffer.CreationDate = DateTime.Now;
+            jobOffer.ExpirationDate = DateTime.Now;
+            jobOffer.ApplicationDeadline = DateTime.Now;
+            trainingsOffers = await hrService.GetAllTrainingsAsync();
+            training.StartDate = DateTime.Now;
+            training.EndDate = DateTime.Now;
+            training.CreationDate = DateTime.Now;
+            training.RegistrationDeadline = DateTime.Now;
+            await gridJobOffers.RefreshDataAsync();
+            await gridTrainings.RefreshDataAsync();
+            StateHasChanged();
+            preloadService.Hide();
+        }
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
+        
     }
 
     #region JobOffers

@@ -88,17 +88,28 @@
 @code {
     protected async override void OnInitialized()
     {
-        customerInformation = await customerService.GetAllCustomerInformationForGridAsync();
-        feedbacks = (await customerService.GetAllCustomerFeedbacksAsync()).OrderByDescending(item => item.ModificationDate).ToList();
-        foreach(var item in feedbacks)
+        try
         {
-            if(item.CustomerId != null)
+            preloadService.Show(SpinnerColor.Dark);
+            customerInformation = await customerService.GetAllCustomerInformationForGridAsync();
+            feedbacks = (await customerService.GetAllCustomerFeedbacksAsync()).OrderByDescending(item => item.ModificationDate).ToList();
+            foreach(var item in feedbacks)
             {
-                item.Customer = await customerService.GetCustomerInformationAsync(item.CustomerId.Value);
+                if(item.CustomerId != null)
+                {
+                    item.Customer = await customerService.GetCustomerInformationAsync(item.CustomerId.Value);
+                }
             }
+            await gridCustomerDataViewModel.RefreshDataAsync();
+            StateHasChanged();
+            preloadService.Hide();
         }
-        await gridCustomerDataViewModel.RefreshDataAsync();
-        StateHasChanged();
+        catch (Exception e)
+        {
+            ShowMessage(ToastType.Warning, "Warning!", "Something went wrong!");
+            preloadService.Hide();
+        }
+        
     }
 
     #region CustomerDataViewModel
