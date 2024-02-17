@@ -320,10 +320,10 @@
                     <hr class="dashboardHr" style="color:black;" />
                     <label class="custom-file-label">
                         <span class="file-icon">&#128193;</span>
-                        <span class="file-name">Choose File</span>
+                        <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
                     </div>
                 }
                 else
@@ -332,10 +332,10 @@
                     <hr class="dashboardHr" style="color:black;" />
                     <label class="custom-file-label">
                         <span class="file-icon">&#128193;</span>
-                        <span class="file-name">Choose File</span>
+                <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
                     </div>
                 }
             }
@@ -525,10 +525,10 @@
                     <hr class="dashboardHr" style="color:black;" />
                     <label class="custom-file-label">
                         <span class="file-icon">&#128193;</span>
-                        <span class="file-name">Choose File</span>
+                        <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
                     </div>
                 }
                 else
@@ -537,10 +537,10 @@
                     <hr class="dashboardHr" style="color:black;" />
                     <label class="custom-file-label">
                         <span class="file-icon">&#128193;</span>
-                        <span class="file-name">Choose File</span>
+                <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
                     </div>
                 }
             }
@@ -729,10 +729,10 @@
                     <hr class="dashboardHr" style="color:black;" />
                     <label class="custom-file-label">
                         <span class="file-icon">&#128193;</span>
-                        <span class="file-name">Choose File</span>
+                <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
                     </div>
                 }
                 else
@@ -741,10 +741,10 @@
                     <hr class="dashboardHr" style="color:black;" />
                     <label class="custom-file-label">
                         <span class="file-icon">&#128193;</span>
-                        <span class="file-name">Choose File</span>
+                        <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <InputFile class="custom-file-input" multiple OnChange="HandleFileChangeTasks" />
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
                     </div>
                 }
             }
@@ -905,10 +905,10 @@
         <div class="form-group">
             <label class="custom-file-label">
                 <span class="file-icon">&#128193;</span>
-                <span class="file-name">Choose File</span>
+                <span class="file-name">@(string.IsNullOrEmpty(fileName) ? "Choose File" : fileName)</span>
             </label>
             <div class="custom-file">
-                <InputFile class="custom-file-input" OnChange="HandleFileChange" />
+                <Button Color="ButtonColor.Success" @onclick="HandleFileChange">Add Info</Button>
             </div>
         </div>
     </BodyTemplate>
@@ -921,6 +921,7 @@
 <Preload />
 @code {
     private IEnumerable<Tasks> tasks;
+    private string fileName;
     private IEnumerable<Tasks> tasksCompleted;
     private List<EnterpriseMaster.DbServices.Models.Database.TaskStatus> taskStatusList = new List<DbServices.Models.Database.TaskStatus>();
     private List<Employees> employeesList = new List<Employees>();
@@ -1049,26 +1050,29 @@
         {
             ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while removing this component!");
         }
-    }
+    } 
 
-    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    private async Task HandleFileChange()
     {
-        var selectedFile = e.File;
-
-        if (selectedFile != null)
+        try
         {
-            using (var stream = selectedFile.OpenReadStream())
+            var selectedFile = await FilePicker.Default.PickAsync();
+            fileName = selectedFile.FileName;
+            if (selectedFile != null)
             {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await stream.CopyToAsync(memoryStream);
-                    fileBytes = memoryStream.ToArray();
-                }
+                using var stream = await selectedFile.OpenReadAsync();
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+                fileBytes = memoryStream.ToArray();
+            }
+            else
+            {
+                fileBytes = null;
             }
         }
-        else
+        catch (Exception ex)
         {
-            fileBytes = null;
+            ShowMessage(ToastType.Warning, "Warning!", ex.Message);
         }
     }
 
@@ -1167,6 +1171,7 @@
         }
         catch (Exception e)
         {
+            preloadService.Hide();
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
@@ -1193,6 +1198,7 @@
         }
         catch (Exception e)
         {
+            preloadService.Hide();
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
@@ -1219,6 +1225,7 @@
         }
         catch (Exception e)
         {
+            preloadService.Hide();
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
@@ -1246,6 +1253,7 @@
         }
         catch (Exception e)
         {
+            preloadService.Hide();
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
@@ -1294,6 +1302,7 @@
         }
         catch (Exception e)
         {
+            preloadService.Hide();
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
@@ -1352,32 +1361,67 @@
         }
         catch (Exception e)
         {
-            ShowMessage(ToastType.Warning, "Warning!", e.Message);
             preloadService.Hide();
+            ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
 
-    async Task HandleFileChangeTasks(InputFileChangeEventArgs e)
+    //async Task HandleFileChangeTasks(InputFileChangeEventArgs e)
+    //{
+    //    foreach (var file in e.GetMultipleFiles())
+    //    {
+    //        var fileModel = new FileModel
+    //        {
+    //            FileName = file.Name,
+    //            FileType = file.ContentType,
+    //            FileSize = (int)file.Size
+    //        };
+
+    //        using (var stream = file.OpenReadStream())
+    //        using (var reader = new StreamReader(stream))
+    //        {
+    //            var fileContentBytes = Encoding.UTF8.GetBytes(await reader.ReadToEndAsync());
+    //            fileModel.FileContent = Convert.ToBase64String(fileContentBytes);
+    //        }
+
+    //        fileModels.Add(fileModel);
+    //    }
+    //}
+
+    private string fileNames;
+    async Task HandleFileChangeTasks()
     {
-        foreach (var file in e.GetMultipleFiles())
+        var selectedFiles = await FilePicker.Default.PickMultipleAsync();
+        int i = 0;
+        foreach (var selectedFile in selectedFiles)
         {
+            if(i == 0)
+            {
+                fileNames += selectedFile.FileName;
+            }
+            else
+            {
+                fileNames += ", " + selectedFile.FileName;
+            }
+            fileName = selectedFile.FileName;
+            using var stream = await selectedFile.OpenReadAsync();
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            var file = memoryStream.ToArray();
+
             var fileModel = new FileModel
             {
-                FileName = file.Name,
-                FileType = file.ContentType,
-                FileSize = (int)file.Size
+                FileName = selectedFile.FileName,
+                FileType = selectedFile.ContentType,
+                FileSize = file.Length
             };
-
-            using (var stream = file.OpenReadStream())
-            using (var reader = new StreamReader(stream))
-            {
-                var fileContentBytes = Encoding.UTF8.GetBytes(await reader.ReadToEndAsync());
-                fileModel.FileContent = Convert.ToBase64String(fileContentBytes);
-            }
+            fileModel.FileContent = Convert.ToBase64String(file);
 
             fileModels.Add(fileModel);
+            i++;
         }
     }
+
     #endregion
 
     #region InProgress
@@ -1484,6 +1528,7 @@
         }
         catch (Exception e)
         {
+            preloadService.Hide();
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
