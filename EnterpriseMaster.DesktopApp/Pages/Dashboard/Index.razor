@@ -213,7 +213,7 @@
                         <option value="">Select a Task Status</option>
                         @foreach (var access in taskStatusList)
                         {
-                            <option value="@access.Id">@access.Status</option>
+                            <option value="@access.Id" selected="@(modalTask.TaskStatus.Status == access.Status)">@access.Status</option>
                         }
                     </select>
                 }
@@ -238,7 +238,7 @@
                         <option value="">Select a Task Status</option>
                         @foreach (var access in tasksPriorities)
                         {
-                            <option value="@access.Id">@access.Priority</option>
+                            <option value="@access.Id" selected="@(modalTask.TasksPriorities.Priority == access.Priority)">@access.Priority</option>
                         }
                     </select>
                 }
@@ -323,7 +323,7 @@
                         <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Choose File</Button>
                     </div>
                 }
                 else
@@ -335,7 +335,7 @@
                 <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Choose File</Button>
                     </div>
                 }
             }
@@ -418,7 +418,7 @@
                         <option value="">Select a Task Status</option>
                         @foreach (var access in taskStatusList)
                         {
-                            <option value="@access.Id">@access.Status</option>
+                            <option value="@access.Id" selected="@(modalTask.TaskStatus.Status == access.Status)">@access.Status</option>
                         }
                     </select>
                 }
@@ -443,7 +443,7 @@
                         <option value="">Select a Task Status</option>
                         @foreach (var access in tasksPriorities)
                         {
-                            <option value="@access.Id">@access.Priority</option>
+                            <option value="@access.Id" selected="@(modalTask.TasksPriorities.Priority == access.Priority)">@access.Priority</option>
                         }
                     </select>
                 }
@@ -528,7 +528,7 @@
                         <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Choose File</Button>
                     </div>
                 }
                 else
@@ -540,7 +540,7 @@
                 <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Choose File</Button>
                     </div>
                 }
             }
@@ -622,7 +622,7 @@
                         <option value="">Select a Task Status</option>
                         @foreach (var access in taskStatusList)
                         {
-                            <option value="@access.Id">@access.Status</option>
+                            <option value="@access.Id" selected="@(modalTask.TaskStatus.Status == access.Status)">@access.Status</option>
                         }
                     </select>
                 }
@@ -647,7 +647,7 @@
                         <option value="">Select a Task Status</option>
                         @foreach (var access in tasksPriorities)
                         {
-                            <option value="@access.Id">@access.Priority</option>
+                            <option value="@access.Id" selected="@(modalTask.TasksPriorities.Priority == access.Priority)">@access.Priority</option>
                         }
                     </select>
                 }
@@ -732,7 +732,7 @@
                 <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Choose File</Button>
                     </div>
                 }
                 else
@@ -744,7 +744,7 @@
                         <span class="file-name">@(string.IsNullOrEmpty(fileNames) ? "Choose File" : fileName)</span>
                     </label>
                     <div class="custom-file">
-                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Add Info</Button>
+                        <Button Color="ButtonColor.Success" @onclick="HandleFileChangeTasks">Choose File</Button>
                     </div>
                 }
             }
@@ -908,7 +908,7 @@
                 <span class="file-name">@(string.IsNullOrEmpty(fileName) ? "Choose File" : fileName)</span>
             </label>
             <div class="custom-file">
-                <Button Color="ButtonColor.Success" @onclick="HandleFileChange">Add Info</Button>
+                <Button Color="ButtonColor.Success" @onclick="HandleFileChange">Choose File</Button>
             </div>
         </div>
     </BodyTemplate>
@@ -1331,16 +1331,14 @@
             {
                 task.Files = string.Empty;
             }
-            if (selectedPriorityIdEdit == 0 || selectedStatusIdEdit == 0)
+            if (selectedStatusIdEdit != 0)
             {
-                ShowMessage(ToastType.Warning, "Warning!", "You must select priority and status of the task!");
-                modal?.HideAsync();
-                canEdit = false;
-                return;
+                task.TaskStatusId = selectedStatusIdEdit;
             }
-
-            task.TasksPriorityId = selectedPriorityIdEdit;
-            task.TaskStatusId = selectedStatusIdEdit;
+            if (selectedPriorityIdEdit != 0)
+            {
+                task.TasksPriorityId = selectedPriorityIdEdit;
+            }
             var response = await taskServices.UpdateTask(task);
             await updateAllTasks();
             tasks = (await taskServices.GetAllActiveTasks()).ToList();
@@ -1353,6 +1351,8 @@
             {
                 ShowMessage(ToastType.Warning, "Warning!", "Something went wrong while updating a task!");
             }
+            selectedPriorityIdEdit = 0;
+            selectedStatusIdEdit = 0;
             canEdit = false;
             await gridTasks.RefreshDataAsync();
             await gridTasksCompleted.RefreshDataAsync();
@@ -1365,28 +1365,6 @@
             ShowMessage(ToastType.Warning, "Warning!", e.Message);
         }
     }
-
-    //async Task HandleFileChangeTasks(InputFileChangeEventArgs e)
-    //{
-    //    foreach (var file in e.GetMultipleFiles())
-    //    {
-    //        var fileModel = new FileModel
-    //        {
-    //            FileName = file.Name,
-    //            FileType = file.ContentType,
-    //            FileSize = (int)file.Size
-    //        };
-
-    //        using (var stream = file.OpenReadStream())
-    //        using (var reader = new StreamReader(stream))
-    //        {
-    //            var fileContentBytes = Encoding.UTF8.GetBytes(await reader.ReadToEndAsync());
-    //            fileModel.FileContent = Convert.ToBase64String(fileContentBytes);
-    //        }
-
-    //        fileModels.Add(fileModel);
-    //    }
-    //}
 
     private string fileNames;
     async Task HandleFileChangeTasks()
